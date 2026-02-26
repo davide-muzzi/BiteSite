@@ -1,25 +1,31 @@
 <script setup>
-import { ref } from 'vue';
+    import { ref } from 'vue';
 
-const email = ref('');
-const password = ref('');
+    const username = ref('');
+    const email = ref('');
+    const password = ref('');
 
-const handleLogin = async () => {
+    const handleLogin = async () => {
 
-  console.log("Login with:", email.value, password.value);
-};
+      console.log("Login with:", email.value, password.value);
+    };
 
 </script>
 
 <template>
-
-    <button class="back-button">
-        <RouterLink to="/">< Back</RouterLink>
-    </button>
-
-    <div class="account-page">
-        <div class="login-card">
+    <div class="login-card">
             <form class="login-form" @submit.prevent="handleLogin">
+                
+                <div class="form-group">
+                    <label for ="username">Username</label>
+                    <input
+                        id="username"
+                        type="text"
+                        v-model="username"
+                        placeholder="Username..."
+                        required
+                    />
+                </div>
                 
                 <div class="form-group">
                     <label for="email">E-Mail</label>
@@ -51,29 +57,13 @@ const handleLogin = async () => {
             </button>
 
              <p class="register-text">
-                Don't have an account? <RouterLink to="/register">Register</RouterLink>
+                Already have an account? <RouterLink to="/login">Login</RouterLink>
              </p>
 
         </div>
-    </div>
 </template>
 
-<style scoped>
-body {
-  background: var(--background);
-  font-family: var(--font);
-  color: var(--font-color-dark-blue);
-}
-
-.account-page {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  flex-direction: column;
-}
-
-
+<style>
 .login-card {
   background-color: #ffeede;
   width: 517px; 
@@ -122,26 +112,11 @@ body {
 }
 
 .login-button:hover {
-    background-color: var(--button-hover-color);
+  background-color: var(--button-hover-color);
 }
 
 .register-text {
-    font-size: 18px;
-    font-weight: 600;
-}
-
-.back-button {
-    background: none;
-    border: none;
-    font-size: 20px;
-    cursor: pointer;
-    color: var(--font-color-dark-blue);
-    font-weight: 600;
-    margin-left: 70px;
-    font-family: var(--font);
-}
-
-.back-button > a {
-    text-decoration: none;
+  font-size: 18px;
+  font-weight: 600;
 }
 </style>
