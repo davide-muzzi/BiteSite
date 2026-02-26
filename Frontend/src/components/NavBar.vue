@@ -5,7 +5,7 @@ const loggedIn = ref(true)
 
 <template>
 <div class="top">
-    <h1 class="title">BiteSite</h1>
+    <h1 class="logo">BiteSite</h1>
     <div v-if="loggedIn">
       <div class="navbar-items">
         <h2>Overview</h2>
@@ -24,7 +24,7 @@ const loggedIn = ref(true)
 </template>
 
 <style>
-.title{
+.logo{
     color: var(--accent);
     cursor: pointer;
 }
