@@ -1,13 +1,24 @@
 <script setup>
+import { ref } from 'vue';
+const loggedIn = ref(true)
 </script>
 
 <template>
 <div class="top">
     <h1 class="title">BiteSite</h1>
-    <div class="navbar-items">
+    <div v-if="loggedIn">
+      <div class="navbar-items">
+        <h2>Overview</h2>
         <h2>Restaurants</h2>
+        <h2>Benutzer</h2>
+      </div>
+    </div>
+    <div v-else>
+      <div class="navbar-items">
         <h2>What BiteSite offers</h2>
+        <h2>Restaurants</h2>
         <h2>Login</h2>
+      </div>
     </div>
 </div>
 </template>
