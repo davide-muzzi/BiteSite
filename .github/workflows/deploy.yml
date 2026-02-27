@@ -19,7 +19,9 @@ jobs:
           node-version: 20
           cache: npm
 
+      # -------------------------
       # Frontend
+      # -------------------------
       - name: Install frontend deps
         working-directory: Frontend
         run: npm ci
@@ -30,17 +32,23 @@ jobs:
           VITE_API_URL: ${{ secrets.VITE_API_URL }}
         run: npm run build
 
-      # Backend (optional to install here, not strictly needed)
+      # -------------------------
+      # Backend
+      # -------------------------
       - name: Install backend deps
         working-directory: Backend
-        run: npm ci
+        run: npm install
 
-      # Prepare deploy bundle
+      # -------------------------
+      # Copy files to server
+      # -------------------------
       - name: Prepare deploy bundle
         run: |
           rm -rf .deploy
-          mkdir -p .deploy/frontend .deploy/backend
+          mkdir -p .deploy/frontend
+          mkdir -p .deploy/backend
 
+          # Frontend output (Vite -> dist)
           if [ -d "Frontend/dist" ]; then
             cp -R Frontend/dist/* .deploy/frontend/
           else
@@ -49,7 +57,8 @@ jobs:
             exit 1
           fi
 
-          rsync -a Backend/ .deploy/backend/ --exclude node_modules --exclude .env
+          # Backend (copy everything except node_modules and .env)
+          rsync -a Backend/ .deploy/backend/ --exclude node_modules  --exclude .env
 
           echo "Deploy bundle contents:"
           find .deploy -maxdepth 3 -type f | head -n 50
@@ -65,6 +74,9 @@ jobs:
           target: ${{ secrets.DEPLOY_PATH }}
           strip_components: 1
 
+      # -------------------------
+      # Run remote commands
+      # -------------------------
       - name: Run remote setup
         uses: appleboy/ssh-action@v1.2.0
         with:
@@ -76,10 +88,12 @@ jobs:
             set -e
             cd ${{ secrets.DEPLOY_PATH }}/backend
 
+            # install production deps
             if [ -f package-lock.json ]; then
               npm ci --omit=dev
             else
               npm install --omit=dev
             fi
 
+            # restart backend (PM2)
             pm2 restart bitesite-backend || pm2 start server.js --name bitesite-backend
