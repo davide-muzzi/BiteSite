@@ -50,8 +50,8 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: ${{ secrets.SSH_PORT }}
           source: |
-            Frontend/dist/*
-            Backend/*
+            Frontend/dist
+            Backend
           target: ${{ secrets.DEPLOY_PATH }}
 
       # -------------------------
