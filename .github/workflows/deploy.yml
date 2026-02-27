@@ -1,0 +1,147 @@
+name: Deploy BiteSite (SSH)
+
+on:
+  push:
+    branches: ["main"]
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-bitesite
+  cancel-in-progress: true
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      # -------------------------
+      # Build Frontend
+      # -------------------------
+      - name: Frontend - install
+        working-directory: Frontend
+        run: npm ci
+
+      - name: Frontend - build
+        working-directory: Frontend
+        run: npm run build
+
+      # -------------------------
+      # Backend - install deps (runner side)
+      # If backend needs a build (TypeScript), add npm run build here.
+      # -------------------------
+      - name: Backend - install
+        working-directory: Backend
+        run: npm ci
+
+      # If your backend is TS, uncomment:
+      # - name: Backend - build
+      #   working-directory: Backend
+      #   run: npm run build
+
+      # -------------------------
+      # Package deploy bundle
+      # -------------------------
+      - name: Prepare deploy bundle
+        run: |
+          rm -rf .deploy
+          mkdir -p .deploy/frontend
+          mkdir -p .deploy/backend
+
+          # Frontend output folder: common ones are dist/ or build/
+          # Adjust if yours differs.
+          if [ -d "Frontend/dist" ]; then
+            cp -R Frontend/dist/* .deploy/frontend/
+          elif [ -d "Frontend/build" ]; then
+            cp -R Frontend/build/* .deploy/frontend/
+          else
+            echo "❌ Could not find Frontend/dist or Frontend/build. Adjust deploy.yml."
+            exit 1
+          fi
+
+          # Backend: copy source (or built output if you have it)
+          # Adjust excludes as needed.
+          rsync -a Backend/ .deploy/backend/ \
+            --exclude node_modules \
+            --exclude .env \
+            --exclude dist \
+            --exclude build
+
+          # If backend build output exists, include it:
+          if [ -d "Backend/dist" ]; then
+            mkdir -p .deploy/backend/dist
+            cp -R Backend/dist/* .deploy/backend/dist/
+          fi
+          if [ -d "Backend/build" ]; then
+            mkdir -p .deploy/backend/build
+            cp -R Backend/build/* .deploy/backend/build/
+          fi
+
+          # Include helper script(s)
+          mkdir -p .deploy/scripts
+          cp -R scripts/remote-deploy.sh .deploy/scripts/remote-deploy.sh
+          chmod +x .deploy/scripts/remote-deploy.sh
+
+          # Create archive
+          tar -czf deploy.tar.gz -C .deploy .
+
+      # -------------------------
+      # Upload to server via SCP
+      # -------------------------
+      - name: Copy deploy bundle to server
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: ${{ secrets.SSH_PORT }}
+          source: "deploy.tar.gz"
+          target: "/tmp/bitesite-deploy"
+
+      # -------------------------
+      # Run remote deploy script via SSH
+      # -------------------------
+      - name: Remote deploy (SSH)
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: ${{ secrets.SSH_PORT }}
+          script: |
+            set -e
+            DEPLOY_PATH="${{ secrets.DEPLOY_PATH }}"
+            mkdir -p "$DEPLOY_PATH"
+            cd "$DEPLOY_PATH"
+
+            # Extract bundle into a temp folder
+            rm -rf /tmp/bitesite-release
+            mkdir -p /tmp/bitesite-release
+            tar -xzf /tmp/bitesite-deploy/deploy.tar.gz -C /tmp/bitesite-release
+
+            # Run the deploy logic
+            bash /tmp/bitesite-release/scripts/remote-deploy.sh "$DEPLOY_PATH"
+
+      # Optional: write .env from secret (if you want it automated)
+      # - name: Write backend .env from secret
+      #   uses: appleboy/ssh-action@v1.2.0
+      #   with:
+      #     host: ${{ secrets.SSH_HOST }}
+      #     username: ${{ secrets.SSH_USER }}
+      #     key: ${{ secrets.SSH_PRIVATE_KEY }}
+      #     port: ${{ secrets.SSH_PORT }}
+      #     script: |
+      #       set -e
+      #       DEPLOY_PATH="${{ secrets.DEPLOY_PATH }}"
+      #       mkdir -p "$DEPLOY_PATH/backend"
+      #       cat > "$DEPLOY_PATH/backend/.env" << 'EOF'
+      #       ${{ secrets.BACKEND_ENV_FILE }}
+      #       EOF
