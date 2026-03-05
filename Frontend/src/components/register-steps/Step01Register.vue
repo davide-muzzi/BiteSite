@@ -5,16 +5,16 @@
     const email = ref('');
     const password = ref('');
 
-    const handleLogin = async () => {
+    const handleregister = async () => {
 
-      console.log("Login with:", email.value, password.value);
+      console.log("register with:", email.value, password.value);
     };
 
 </script>
 
 <template>
-    <div class="login-card">
-            <form class="login-form" @submit.prevent="handleLogin">
+    <div class="register-card">
+            <form class="register-form" @submit.prevent="handleregister">
                 
                 <div class="form-group">
                     <label for ="username">Username</label>
@@ -50,11 +50,12 @@
                     />
                 </div>
 
+                <button type="submit" class="register-button">
+                    register
+                </button>
+
             </form>
             
-            <button type="submit" class="login-button">
-                Login
-            </button>
 
              <p class="register-text">
                 Already have an account? <RouterLink to="/login">Login</RouterLink>
@@ -63,9 +64,15 @@
         </div>
 </template>
 
-<style>
-.login-card {
-  background-color: #ffeede;
+<style scoped>
+body {
+  background: var(--background);
+  font-family: var(--font);
+  color: var(--font-color-dark-blue);
+}
+
+.register-card {
+  background-color: #d9b99c;
   width: 517px; 
   height: 580px; 
   border-radius: 46px;
@@ -73,6 +80,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  
 }
 
 .form-group label {
@@ -97,7 +105,7 @@
   box-sizing: border-box;
 }
 
-.login-button {
+.register-button {
   width: 445px;
   height: 63px;
   border-radius: 46px;
@@ -111,7 +119,7 @@
   box-sizing: border-box;
 }
 
-.login-button:hover {
+.register-button:hover {
   background-color: var(--button-hover-color);
 }
 

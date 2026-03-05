@@ -15,7 +15,7 @@ import router from '@/router';
     </div>
 </template>
 
-<style scoped>
+<style>
 body {
   background: var(--background);
   font-family: var(--font);
