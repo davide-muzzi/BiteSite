@@ -13,55 +13,47 @@
 </script>
 
 <template>
-    <div class="register-card">
-            <form class="register-form" @submit.prevent="handleregister">
-                
-                <div class="form-group">
-                    <label for ="username">Username</label>
-                    <input
-                        id="username"
-                        type="text"
-                        v-model="username"
-                        placeholder="Username..."
-                        required
-                    />
-                </div>
-                
-                <div class="form-group">
-                    <label for="email">E-Mail</label>
-                    <input
-                        id="email"
-                        type="email"
-                        v-model="email"
-                        placeholder="E-Mail..."
-                        required
-                    />
-                </div>
-
-              
-                <div class="form-group">
-                    <label for="password">Password</label>
-                    <input
-                        id="password"
-                        type="password"
-                        v-model="password"
-                        placeholder="Password..."
-                        required
-                    />
-                </div>
-
-                <button type="submit" class="register-button">
-                    register
-                </button>
-
-            </form>
-            
-
-             <p class="register-text">
-                Already have an account? <RouterLink to="/login">Login</RouterLink>
-             </p>
-
+  <div class="register-card">
+    <form class="register-form" @submit.prevent="handleregister">
+        <div class="form-group">
+            <label for ="username">Username</label>
+            <input
+                id="username"
+                type="text"
+                v-model="username"
+                placeholder="Username..."
+                required
+            />
         </div>
+        <div class="form-group">
+                <label for="email">E-Mail</label>
+                <input
+                    id="email"
+                    type="email"
+                    v-model="email"
+                    placeholder="E-Mail..."
+                    required
+                />
+        </div>
+      
+        <div class="form-group">
+            <label for="password">Password</label>
+            <input
+                id="password"
+                type="password"
+                v-model="password"
+                placeholder="Password..."
+                required
+            />
+        </div>
+        <button type="submit" class="register-button">
+            Register
+        </button>
+    </form>
+      <p class="register-text">
+        Already have an account? <RouterLink to="/login">Login</RouterLink>
+     </p>
+  </div>
 </template>
 
 <style scoped>
@@ -72,7 +64,7 @@ body {
 }
 
 .register-card {
-  background-color: #d9b99c;
+  background-color: #ffeede;
   width: 517px; 
   height: 580px; 
   border-radius: 46px;
