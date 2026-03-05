@@ -9,7 +9,8 @@ import {
     Mail,
     User,
     Trash,
-    Check
+    Check,
+    Save
 } from "lucide-vue-next";
 
 const isPublished = ref(true);
@@ -116,7 +117,10 @@ function togglePublish() {
 
                 <div class="actions">
 
-                    <button class="save">Save</button>
+                    <button class="save">
+                        <Save class="icon" />
+                        Save
+                    </button>
 
                     <button class="outline" @click="togglePublish">
                         <component :is="isPublished ? GlobeOff : Globe" class="icon" />
@@ -304,6 +308,11 @@ button {
     border: none;
     padding: 8px 18px;
     border-radius: 20px;
+
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    justify-content: center;
 }
 
 .outline {
