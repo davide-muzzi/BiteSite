@@ -58,65 +58,65 @@
 
 <style scoped>
 body {
-  background: var(--background);
-  font-family: var(--font);
-  color: var(--font-color-dark-blue);
+   background: var(--background);
+   font-family: var(--font);
+   color: var(--font-color-dark-blue);
 }
 
 .register-card {
-  background-color: #ffeede;
-  width: 517px; 
-  height: 580px; 
-  border-radius: 46px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  
+    background-color: #ffeede;
+    width: 517px; 
+    height: 580px; 
+    border-radius: 46px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
 }
 
 .form-group label {
-  display: block;
-  font-size: 22px;
-  display: flex;
-  justify-content: center;
-  margin-top: 14px;
-  font-weight: 600;
+    display: block;
+    font-size: 22px;
+    display: flex;
+    justify-content: center;
+    margin-top: 14px;
+    font-weight: 600;
 }
 
 .form-group input {
-  width: 445px;
-  height: 63px;
-  border-radius: 46px;
-  border: none;
-  font-size: 22px;
-  font-family: var(--font);
-  margin-top: 12px;
-  padding-left: 29px;
-  padding-right: 29px;
-  box-sizing: border-box;
+    width: 445px;
+    height: 63px;
+    border-radius: 46px;
+    border: none;
+    font-size: 22px;
+    font-family: var(--font);
+    margin-top: 12px;
+    padding-left: 29px;
+    padding-right: 29px;
+    box-sizing: border-box;
 }
 
 .register-button {
-  width: 445px;
-  height: 63px;
-  border-radius: 46px;
-  border: none;
-  margin-top: 45px;
-  background-color: var(--accent);
-  color: white;
-  font-size: 22px;
-  cursor: pointer;
-  font-weight: 600;
-  box-sizing: border-box;
+    width: 445px;
+    height: 63px;
+    border-radius: 46px;
+    border: none;
+    margin-top: 45px;
+    background-color: var(--accent);
+    color: white;
+    font-size: 22px;
+    cursor: pointer;
+    font-weight: 600;
+    box-sizing: border-box;
 }
 
 .register-button:hover {
-  background-color: var(--button-hover-color);
+    background-color: var(--button-hover-color);
 }
 
 .register-text {
-  font-size: 18px;
-  font-weight: 600;
+    font-size: 18px;
+    font-weight: 600;
 }
 </style>
