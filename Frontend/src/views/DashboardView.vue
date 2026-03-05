@@ -35,23 +35,23 @@ function togglePublish() {
 
                 <div class="field">
                     <label>Project name:</label>
-                    <input value="BitesFood v1" />
+                    <input placeholder="BitesFood v1" />
                 </div>
 
                 <div class="field">
                     <label>Website title:</label>
-                    <input value="BitesFood" />
+                    <input placeholder="BitesFood" />
                 </div>
 
                 <div class="field">
-                    <label>Subdomain (must be unique):</label>
+                    <label>Route (must be unique):</label>
 
                     <div class="subdomain">
-                        <input value="bitesfood" />
-                        <span class="domain">
-                            .bitesite.com
-                            <Check class="icon check" />
-                        </span>
+                        <div class="domain">
+                            bitesite.com/
+                        </div>
+                        <input class="sub-input" placeholder="bitesfood" />
+                        <Check class="icon check" />
                     </div>
                 </div>
 
@@ -99,7 +99,7 @@ function togglePublish() {
                                 <div class="stat-label">39 Reviews</div>
                                 <div class="rating-value">
                                     4.9
-                                    <Star class="star" fill="gold" />
+                                    <Star class="star" />
                                 </div>
                             </div>
                         </div>
@@ -198,6 +198,7 @@ function togglePublish() {
 label {
     display: block;
     margin-bottom: 6px;
+    font-weight: 600;
 }
 
 input {
@@ -210,11 +211,21 @@ input {
 .subdomain {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 14px;
+    width: 100%;
+}
+
+.sub-input {
+    flex: 1;
+    min-width: 0;
 }
 
 .domain {
     font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    white-space: nowrap;
 }
 
 .published {
@@ -257,7 +268,22 @@ input {
 }
 
 .star {
-    color: gold;
+    fill: gold;
+    stroke: gold;
+    width: 22px;
+    height: 22px;
+}
+
+.published-text {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    line-height: 1;
+}
+
+.check {
+    stroke: rgb(0, 200, 0);
+    display: block;
 }
 
 .actions {
