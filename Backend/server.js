@@ -3,6 +3,7 @@ import session from "express-session";
 import SQLiteStoreFactory from "connect-sqlite3";
 import cors from "cors";
 import dotenv from "dotenv";
+import { existsSync } from "fs";
 
 import userRouter from "./routes/users.js";
 import editorRouter from "./routes/editor.js";
@@ -10,8 +11,11 @@ import projectRouter from "./routes/projects.js";
 import restaurantRouter from "./routes/restaurants.js";
 
 import cleanup from "./middleware/cleanup.js";
+import setup from "./setup.js";
 
 dotenv.config();
+
+if (!existsSync("./database/database.sqlite")) await setup()
 
 const app = express();
 app.use(express.json());
