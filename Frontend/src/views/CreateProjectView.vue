@@ -1,6 +1,8 @@
 <script setup>
 import { ref } from 'vue';
 
+const projectName =ref("");
+
 const newTag = ref("");
 
 const tags = ref([
@@ -20,6 +22,13 @@ function addTag() {
 function deleteTag(deleteTagName) {
     tags.value = tags.value.filter(tag => tag.tagName !== deleteTagName)
 }
+
+function create() {
+    console.log(projectName.value);
+    for (let tag of tags.value) {
+        console.log(tag)
+    }
+}
 </script>
 
 <template>
@@ -29,6 +38,7 @@ function deleteTag(deleteTagName) {
             type="text" 
             placeholder="Enter project name ..."
             class="inputField"
+            v-model="projectName";
         >
         <h2 class="title">Tags</h2>
         <div class="tags">
@@ -54,7 +64,7 @@ function deleteTag(deleteTagName) {
         </div>
         
             <h2></h2>
-        <button class="createBtn">
+        <button class="createBtn" @click="create">
             Create
         </button>
     </div>
