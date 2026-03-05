@@ -1,14 +1,22 @@
 ﻿<script setup>
+import { ref } from "vue";
 import {
     ChevronLeft,
     Globe,
+    GlobeOff,
     Star,
     Pencil,
     Mail,
     User,
     Trash,
-    ExternalLink
+    Check
 } from "lucide-vue-next";
+
+const isPublished = ref(true);
+
+function togglePublish() {
+    isPublished.value = !isPublished.value;
+}
 </script>
 
 <template>
@@ -40,13 +48,19 @@ import {
 
                     <div class="subdomain">
                         <input value="bitesfood" />
-                        <span class="domain">.bitesite.com ✓</span>
+                        <span class="domain">
+                            .bitesite.com
+                            <Check class="icon check" />
+                        </span>
                     </div>
                 </div>
 
                 <div class="published">
-                    <Globe class="icon" />
-                    Published ✓
+                    <component :is="isPublished ? Globe : GlobeOff" class="icon" />
+                    <span class="published-text">
+                        {{ isPublished ? "Published" : "Unpublished" }}
+                        <Check v-if="isPublished" class="icon check" />
+                    </span>
                 </div>
 
                 <!-- STATS -->
@@ -85,7 +99,7 @@ import {
                                 <div class="stat-label">39 Reviews</div>
                                 <div class="rating-value">
                                     4.9
-                                    <Star class="star" />
+                                    <Star class="star" fill="gold" />
                                 </div>
                             </div>
                         </div>
@@ -104,9 +118,9 @@ import {
 
                     <button class="save">Save</button>
 
-                    <button class="outline">
-                        <ExternalLink class="icon" />
-                        Unpublish
+                    <button class="outline" @click="togglePublish">
+                        <component :is="isPublished ? GlobeOff : Globe" class="icon" />
+                        {{ isPublished ? "Unpublish" : "Publish" }}
                     </button>
 
                     <button class="outline">
