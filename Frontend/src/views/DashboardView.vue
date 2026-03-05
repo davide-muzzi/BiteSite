@@ -168,11 +168,12 @@ function togglePublish() {
 }
 
 .back {
-    display: flex;
+    display: inline-flex;
     align-items: center;
     gap: 6px;
     margin-bottom: 25px;
     cursor: pointer;
+    width: fit-content;
 }
 
 .layout {
