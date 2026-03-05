@@ -3,7 +3,12 @@ import { db } from "../database/db.js";
 import { checkReq, safeOperation, safeOperations } from "../error-handling.js";
 
 export async function userdata(req, res) {
+  const user = await safeOperation(
+    () => db.get("select user_id, username, email, subscription from users where user_id = ?", [req.session.user.id]),
+    "Error while fetching userdata from database"
+  )
 
+  res.status(200).json({ success: true, message: "Successfully retrieved user from database", user })
 }
 
 export async function register(req, res) {
