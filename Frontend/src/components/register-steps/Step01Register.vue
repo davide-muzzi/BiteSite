@@ -1,13 +1,21 @@
 <script setup>
-    import { ref } from 'vue';
+    import { ref, computed } from 'vue';
+    import { useRouter } from 'vue-router';
+
+    const router = useRouter();
+
 
     const username = ref('');
     const email = ref('');
     const password = ref('');
-
+    // Sample validation 
     const handleregister = async () => {
+        if (!username.value.trim()) return;
+        if (!email.value.includes("@")) return;
+        if (password.value.length < 3) return;
+  console.log("register with:", email.value, password.value);
 
-      console.log("register with:", email.value, password.value);
+  router.push("/register/step-2");
     };
 
 </script>
@@ -67,7 +75,7 @@ body {
     background-color: #ffeede;
     width: 517px; 
     height: 580px; 
-    border-radius: 46px;
+    border-radius: 66px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -87,7 +95,7 @@ body {
 .form-group input {
     width: 445px;
     height: 63px;
-    border-radius: 46px;
+    border-radius: 66px;
     border: none;
     font-size: 22px;
     font-family: var(--font);
@@ -100,7 +108,7 @@ body {
 .register-button {
     width: 445px;
     height: 63px;
-    border-radius: 46px;
+    border-radius: 66px;
     border: none;
     margin-top: 45px;
     background-color: var(--accent);
@@ -109,6 +117,7 @@ body {
     cursor: pointer;
     font-weight: 600;
     box-sizing: border-box;
+
 }
 
 .register-button:hover {
