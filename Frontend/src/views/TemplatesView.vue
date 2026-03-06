@@ -38,12 +38,19 @@ function handleUseClick(template) {
                 <article v-for="template in templates" :key="template.id" class="template-card"
                     @click="handleTemplateClick(template)">
                     <div class="template-thumbnail">
-                        <div class="template-placeholder">Template</div>
+
+                        <div class="template-placeholder">
+                            Template
+                        </div>
+
+                        <span class="category">
+                            {{ template.category }}
+                        </span>
 
                         <div class="thumbnail-overlay">
-                            <span class="category">{{ template.category }}</span>
                             <h2>{{ template.name }}</h2>
                         </div>
+
                     </div>
 
                     <div class="template-card-footer">
@@ -135,17 +142,19 @@ function handleUseClick(template) {
     left: 16px;
     right: 16px;
     bottom: 14px;
-    display: flex;
-    flex-direction: column;
-    gap: 3px;
 }
 
 .category {
-    width: fit-content;
+    position: absolute;
+    top: 14px;
+    left: 14px;
+
     padding: 5px 10px;
     border-radius: 999px;
-    background: rgba(255, 245, 236, 0.9);
+
+    background: rgba(255, 245, 236, 0.95);
     color: var(--font-color-dark-blue);
+
     font-size: 11px;
     font-weight: 700;
 }
