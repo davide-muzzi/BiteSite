@@ -50,3 +50,26 @@ export async function login(req, res) {
   req.session.user = { id: dbUser.user_id };
   res.status(200).json({success: true, message: "User successfully logged in"});
 }
+
+export async function edit(req, res) {
+  const {username, email} = req.body;
+  checkReq(!username && !email);
+
+  const [dbUsername, dbEmail] = await safeOperations([
+    () => db.get("select * from users where username = ? and user_id != ?", [username, req.session.user.id]),
+    () => db.get("select * from users where email = ? and user_id != ?", [email, req.session.user.id])
+  ], "Error while fetching username");
+
+  if (dbUsername) return res.status(400).json({success: false, message: "Username is taken"});
+  if (dbEmail) return res.status(400).json({success: false, message: "E-Mail is taken"});
+
+  await safeOperation(
+    async () => {
+      if (username) await db.run("update users set username = ? where user_id = ?", [username, req.session.user.id])
+      if (email) await db.run("update users set email = ? where user_id = ?", [email, req.session.user.id])
+    },
+    "Error while updating userdata"
+  );
+
+  res.status(200).json({ success: true, message: "Successfully updated user" });
+}
