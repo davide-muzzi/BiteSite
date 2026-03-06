@@ -239,18 +239,18 @@ function logout() {
 }
 
 .shape-top-right {
-    top: 0;
+    top: -120px;
     right: 0;
     width: 210px;
-    height: 380px;
+    height: 420px;
     border-bottom-left-radius: 160px;
 }
 
 .shape-bottom-left {
     left: 0;
-    bottom: 0;
+    bottom: -100px;
     width: 320px;
-    height: 190px;
+    height: 320px;
     border-top-right-radius: 170px;
 }
 </style>
