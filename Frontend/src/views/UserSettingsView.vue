@@ -146,7 +146,7 @@ function logout() {
     border: none;
     outline: none;
     border-radius: 999px;
-    background: #f2f2f2;
+    background: white;
     padding: 0 28px;
     box-sizing: border-box;
     font-family: var(--font);
