@@ -81,3 +81,12 @@ export async function checkLogin(req, res) {
     res.status(200).json({ success: true, message: "Not logged in", loggedIn: false });
   }
 }
+
+export async function deleteUser(req, res) {
+  await safeOperation(
+    () => db.run("delete from users where user_id = ?", [req.session.user.id]),
+    "Error while deleting user"
+  );
+
+  res.status(200).json({ success: true, message: "Successfully deleted user" });
+}
