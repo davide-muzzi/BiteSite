@@ -3,6 +3,7 @@ import HomeView from '../views/HomeView.vue'
 import LoginView from '../views/LoginView.vue'
 import DashboardView from '../views/DashboardView.vue'
 import UserSettingsView from '../views/UserSettingsView.vue'
+import ProjectsOverviewView from '../views/ProjectsOverviewView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -26,6 +27,11 @@ const router = createRouter({
       path: '/user-settings',
       name: 'user-settings',
       component: UserSettingsView,
+    },
+    {
+      path: '/projects-overview',
+      name: 'projects-overview',
+      component: ProjectsOverviewView,
     },
   ],
 })
