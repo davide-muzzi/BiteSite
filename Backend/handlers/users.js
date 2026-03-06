@@ -73,3 +73,11 @@ export async function edit(req, res) {
 
   res.status(200).json({ success: true, message: "Successfully updated user" });
 }
+
+export async function checkLogin(req, res) {
+  if (req.session.user) {
+    res.status(200).json({ success: true, message: "Logged in", loggedIn: true });
+  } else {
+    res.status(200).json({ success: true, message: "Not logged in", loggedIn: false });
+  }
+}

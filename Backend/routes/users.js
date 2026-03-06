@@ -8,6 +8,7 @@ const userRouter = express.Router();
 userRouter.get("/", checkAuth, routeWrapper(userHandlers.userdata));
 userRouter.post("/register", routeWrapper(userHandlers.register));
 userRouter.post("/login", routeWrapper(userHandlers.login));
-userRouter.patch("/edit", routeWrapper(userHandlers.edit));
+userRouter.patch("/edit", checkAuth, routeWrapper(userHandlers.edit));
+userRouter.get("/check-login", routeWrapper(userHandlers.checkLogin));
 
 export default userRouter;
