@@ -397,7 +397,7 @@ onUnmounted(() => {
     gap: 6px;
     color: #111;
     font-size: 0.95rem;
-    font-weight: 500;
+    font-weight: 600;
     white-space: nowrap;
 }
 
