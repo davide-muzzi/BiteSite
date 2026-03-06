@@ -10,6 +10,7 @@ userRouter.post("/register", routeWrapper(userHandlers.register));
 userRouter.post("/login", routeWrapper(userHandlers.login));
 userRouter.patch("/edit", checkAuth, routeWrapper(userHandlers.edit));
 userRouter.get("/check-login", routeWrapper(userHandlers.checkLogin));
-userRouter.delete("/delete", routeWrapper(userHandlers.deleteUser))
+userRouter.delete("/delete", routeWrapper(userHandlers.deleteUser));
+userRouter.post("/logout", routeWrapper(userHandlers.logout));
 
 export default userRouter;
