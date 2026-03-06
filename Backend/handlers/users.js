@@ -32,3 +32,21 @@ export async function register(req, res) {
 
   res.status(200).json({success: true, message: "Registered successfully"});
 }
+
+export async function login(req, res) {
+  const {email, password} = req.body;
+  checkReq(!email || !password);
+
+  const dbUser = await safeOperation(
+    () => db.get("select * from users where email = ?", [email]), 
+    "Error while fetching user from the database"
+  );
+
+  if (!dbUser) return res.status(404).json({success: false, message: "User not found"});
+
+  const isPasswordValid = await bcrypt.compare(password, dbUser.password_hash);
+  if (!isPasswordValid) return res.status(401).json({success: false, message: "Wrong password"});
+
+  req.session.user = { id: dbUser.user_id };
+  res.status(200).json({success: true, message: "User successfully logged in"});
+}
