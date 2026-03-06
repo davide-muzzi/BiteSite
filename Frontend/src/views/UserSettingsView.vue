@@ -80,7 +80,7 @@ function logout() {
     min-height: calc(100vh - 160px);
     width: 100%;
     overflow: hidden;
-    padding: 28px 56px 120px;
+    padding: 28px 56px 64px;
     box-sizing: border-box;
 }
 
