@@ -90,3 +90,9 @@ export async function deleteUser(req, res) {
 
   res.status(200).json({ success: true, message: "Successfully deleted user" });
 }
+
+export async function logout(req, res) {
+  req.session.destroy();
+  res.clearCookie("SessionId");
+  res.status(200).json({success: true, message: "Logged out successfully" });
+}
