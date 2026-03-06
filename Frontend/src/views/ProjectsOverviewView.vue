@@ -1,6 +1,11 @@
 <script setup>
 import { computed, onMounted, onUnmounted, ref } from "vue";
-import { Plus, ArrowRight } from "lucide-vue-next";
+import {
+    Plus,
+    ArrowRight,
+    ChevronLeft,
+    ChevronRight
+} from "lucide-vue-next";
 
 const templates = [
     { id: 1, title: "Template 1" },
@@ -16,7 +21,20 @@ const projects = Array.from({ length: 12 }, (_, index) => ({
 }));
 
 const scrollContainer = ref(null);
-const scrollProgress = ref(0);
+const trackRef = ref(null);
+
+const scrollLeft = ref(0);
+const maxScroll = ref(0);
+const clientWidth = ref(0);
+const scrollWidth = ref(0);
+
+const isDraggingProjects = ref(false);
+const dragStartX = ref(0);
+const dragStartScrollLeft = ref(0);
+
+const isDraggingThumb = ref(false);
+const thumbDragStartX = ref(0);
+const thumbDragStartScrollLeft = ref(0);
 
 function handleTemplateClick(template) {
     console.log("Template clicked:", template.title);
@@ -31,42 +49,142 @@ function handleProjectClick(project) {
     console.log("Project clicked:", project.title);
 }
 
-function updateScrollProgress() {
+function updateScrollMetrics() {
     if (!scrollContainer.value) return;
 
     const el = scrollContainer.value;
-    const maxScroll = el.scrollWidth - el.clientWidth;
-
-    if (maxScroll <= 0) {
-        scrollProgress.value = 0;
-        return;
-    }
-
-    scrollProgress.value = (el.scrollLeft / maxScroll) * 100;
+    scrollLeft.value = el.scrollLeft;
+    clientWidth.value = el.clientWidth;
+    scrollWidth.value = el.scrollWidth;
+    maxScroll.value = Math.max(el.scrollWidth - el.clientWidth, 0);
 }
 
 function scrollProjects(direction) {
     if (!scrollContainer.value) return;
 
-    const amount = 320;
+    const amount = 420;
+
     scrollContainer.value.scrollBy({
         left: direction === "right" ? amount : -amount,
         behavior: "smooth"
     });
 }
 
+const thumbWidthPercent = computed(() => {
+    if (!scrollWidth.value || !clientWidth.value) return 0;
+
+    const percent = (clientWidth.value / scrollWidth.value) * 100;
+    return Math.max(percent, 8);
+});
+
+const thumbLeftPercent = computed(() => {
+    if (maxScroll.value <= 0) return 0;
+
+    const movableArea = 100 - thumbWidthPercent.value;
+    return (scrollLeft.value / maxScroll.value) * movableArea;
+});
+
 const progressStyle = computed(() => ({
-    width: `${Math.max(scrollProgress.value * 0.22 + 6, 6)}%`,
-    transform: `translateX(${scrollProgress.value * 0.78}%)`
+    width: `${thumbWidthPercent.value}%`,
+    left: `${thumbLeftPercent.value}%`
 }));
 
+function onProjectsMouseDown(event) {
+    if (!scrollContainer.value) return;
+
+    isDraggingProjects.value = true;
+    dragStartX.value = event.pageX;
+    dragStartScrollLeft.value = scrollContainer.value.scrollLeft;
+}
+
+function onGlobalMouseMove(event) {
+    if (isDraggingProjects.value && scrollContainer.value) {
+        const delta = event.pageX - dragStartX.value;
+        scrollContainer.value.scrollLeft = dragStartScrollLeft.value - delta;
+    }
+
+    if (isDraggingThumb.value && scrollContainer.value && trackRef.value) {
+        const trackRect = trackRef.value.getBoundingClientRect();
+        const deltaX = event.clientX - thumbDragStartX.value;
+        const trackWidth = trackRect.width;
+
+        if (trackWidth <= 0 || maxScroll.value <= 0) return;
+
+        const movableTrackWidth =
+            trackWidth * (1 - thumbWidthPercent.value / 100);
+
+        if (movableTrackWidth <= 0) return;
+
+        const scrollDelta =
+            (deltaX / movableTrackWidth) * maxScroll.value;
+
+        scrollContainer.value.scrollLeft =
+            thumbDragStartScrollLeft.value + scrollDelta;
+    }
+}
+
+function stopDragging() {
+    isDraggingProjects.value = false;
+    isDraggingThumb.value = false;
+}
+
+function onThumbMouseDown(event) {
+    event.stopPropagation();
+    event.preventDefault();
+
+    if (!scrollContainer.value) return;
+
+    isDraggingThumb.value = true;
+    thumbDragStartX.value = event.clientX;
+    thumbDragStartScrollLeft.value = scrollContainer.value.scrollLeft;
+}
+
+function onTrackClick(event) {
+    if (!scrollContainer.value || !trackRef.value) return;
+    if (event.target !== trackRef.value) return;
+
+    const trackRect = trackRef.value.getBoundingClientRect();
+    const clickX = event.clientX - trackRect.left;
+    const trackWidth = trackRect.width;
+
+    if (trackWidth <= 0 || maxScroll.value <= 0) return;
+
+    const thumbWidthPx = trackWidth * (thumbWidthPercent.value / 100);
+    const targetThumbLeft = clickX - thumbWidthPx / 2;
+    const maxThumbLeft = trackWidth - thumbWidthPx;
+    const clampedThumbLeft = Math.max(0, Math.min(targetThumbLeft, maxThumbLeft));
+
+    const targetScrollLeft =
+        maxThumbLeft > 0
+            ? (clampedThumbLeft / maxThumbLeft) * maxScroll.value
+            : 0;
+
+    scrollContainer.value.scrollTo({
+        left: targetScrollLeft,
+        behavior: "smooth"
+    });
+}
+
 onMounted(() => {
-    updateScrollProgress();
-    window.addEventListener("resize", updateScrollProgress);
+    updateScrollMetrics();
+
+    if (scrollContainer.value) {
+        scrollContainer.value.addEventListener("scroll", updateScrollMetrics);
+    }
+
+    window.addEventListener("resize", updateScrollMetrics);
+    window.addEventListener("mousemove", onGlobalMouseMove);
+    window.addEventListener("mouseup", stopDragging);
 });
 
 onUnmounted(() => {
-    window.removeEventListener("resize", updateScrollProgress);
+    if (scrollContainer.value) {
+        scrollContainer.value.removeEventListener("scroll", updateScrollMetrics);
+    }
+
+    window.removeEventListener("resize", updateScrollMetrics);
+    window.removeEventListener("mousemove", onGlobalMouseMove);
+    window.removeEventListener("mouseup", stopDragging);
 });
 </script>
 
@@ -102,9 +220,21 @@ onUnmounted(() => {
 
         <section class="projects-section">
             <div class="content-width">
-                <h2 class="section-title">My projects</h2>
+                <div class="projects-header">
+                    <h2 class="section-title">My projects</h2>
 
-                <div ref="scrollContainer" class="projects-slider" @scroll="updateScrollProgress">
+                    <div class="slider-buttons">
+                        <button class="slider-arrow" type="button" @click="scrollProjects('left')">
+                            <ChevronLeft />
+                        </button>
+
+                        <button class="slider-arrow" type="button" @click="scrollProjects('right')">
+                            <ChevronRight />
+                        </button>
+                    </div>
+                </div>
+
+                <div ref="scrollContainer" class="projects-slider" @mousedown="onProjectsMouseDown">
                     <button v-for="project in projects" :key="project.id" class="project-card"
                         :class="{ 'create-card': project.isCreateCard }" type="button"
                         @click="handleProjectClick(project)">
@@ -125,8 +255,8 @@ onUnmounted(() => {
                     </button>
                 </div>
 
-                <div class="slider-progress-track">
-                    <div class="slider-progress-fill" :style="progressStyle"></div>
+                <div ref="trackRef" class="slider-progress-track" @click="onTrackClick">
+                    <div class="slider-progress-fill" :style="progressStyle" @mousedown="onThumbMouseDown"></div>
                 </div>
             </div>
         </section>
@@ -154,8 +284,11 @@ onUnmounted(() => {
     background-color: #f4e7d8;
     border-bottom-left-radius: 42px;
     border-bottom-right-radius: 42px;
-    padding-top: 48px;
+    margin-top: -80px;
+    padding-top: 128px;
     padding-bottom: 54px;
+    position: relative;
+    z-index: 0;
 }
 
 .projects-section {
@@ -209,8 +342,7 @@ onUnmounted(() => {
     display: flex;
     align-items: center;
     justify-content: center;
-    background:
-        linear-gradient(135deg,
+    background: linear-gradient(135deg,
             #dbdbdb 0%,
             #efefef 50%,
             #d9d9d9 100%);
@@ -278,6 +410,46 @@ onUnmounted(() => {
     height: 16px;
 }
 
+.projects-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 28px;
+}
+
+.projects-header .section-title {
+    margin: 0;
+}
+
+.slider-buttons {
+    display: flex;
+    gap: 12px;
+}
+
+.slider-arrow {
+    width: 44px;
+    height: 44px;
+    border-radius: 999px;
+    border: 2px solid var(--font-color-dark-blue);
+    background: transparent;
+    color: var(--font-color-dark-blue);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background 0.18s ease, transform 0.18s ease;
+}
+
+.slider-arrow:hover {
+    background: rgba(49, 38, 110, 0.08);
+    transform: translateY(-1px);
+}
+
+.slider-arrow svg {
+    width: 20px;
+    height: 20px;
+}
+
 .projects-slider {
     display: flex;
     gap: 28px;
@@ -286,6 +458,12 @@ onUnmounted(() => {
     scroll-behavior: smooth;
     padding-bottom: 10px;
     scrollbar-width: none;
+    cursor: grab;
+    user-select: none;
+}
+
+.projects-slider:active {
+    cursor: grabbing;
 }
 
 .projects-slider::-webkit-scrollbar {
@@ -317,8 +495,7 @@ onUnmounted(() => {
     width: 100%;
     height: 165px;
     border-radius: 18px;
-    background:
-        linear-gradient(135deg,
+    background: linear-gradient(135deg,
             #d8d8d8 0%,
             #ececec 50%,
             #d4d4d4 100%);
@@ -344,10 +521,6 @@ onUnmounted(() => {
     justify-content: center;
 }
 
-.create-card .project-title {
-    color: #111;
-}
-
 .create-icon-wrapper {
     width: 100%;
     height: 165px;
@@ -371,21 +544,26 @@ onUnmounted(() => {
 
 .slider-progress-track {
     width: 100%;
-    height: 10px;
+    height: 14px;
     background: #f2dfcf;
     border-radius: 999px;
     margin-top: 8px;
     position: relative;
     overflow: hidden;
+    cursor: pointer;
 }
 
 .slider-progress-fill {
     position: absolute;
     top: 0;
-    left: 0;
-    height: 100%;
+    bottom: 0;
     border-radius: 999px;
     background: var(--accent);
-    transition: transform 0.15s linear, width 0.15s linear;
+    cursor: grab;
+    transition: left 0.05s linear;
+}
+
+.slider-progress-fill:active {
+    cursor: grabbing;
 }
 </style>
