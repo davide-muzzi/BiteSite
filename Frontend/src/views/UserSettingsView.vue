@@ -96,6 +96,7 @@ function logout() {
 
 .back-button {
     position: relative;
+    margin-left: 0;
     z-index: 2;
     display: inline-flex;
     align-items: center;
