@@ -1,5 +1,7 @@
 <script setup>
+import { useRouter } from 'vue-router'
 
+const router = useRouter()
 </script>
 
 <template>
@@ -11,7 +13,8 @@
     </div>
   <div class="buttons">
     <button class="button">Get Started</button>
-    <button class="button"><div class="top-text">Find Restaurants</div><div class="bottom-text">Hosted by us</div></button>
+    <button class="button" @click="router.push('/top-restaurants')"><div class="top-text">Find Restaurants</div><div class="bottom-text">Hosted by us</div></button>
+    
   </div>
   <div class="right-bar"></div>
 </div>
