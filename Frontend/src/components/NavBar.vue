@@ -1,11 +1,13 @@
 <script setup>
 import { ref } from 'vue';
-const loggedIn = ref(true)
+const loggedIn = ref(false)
 </script>
 
 <template>
 <div class="top">
-    <h1 class="title">BiteSite</h1>
+    <h1 class="title">
+      <RouterLink to="/" class="title">BiteSite</RouterLink>
+    </h1>
     <div v-if="loggedIn">
       <div class="navbar-items">
         <h2>Overview</h2>
@@ -35,6 +37,7 @@ text-decoration: none;
 .title {
     color: var(--accent);
     cursor: pointer;
+    text-decoration: none;
 }
 
 .top {
