@@ -11,14 +11,18 @@ const loggedIn = ref(false)
     <div v-if="loggedIn">
       <div class="navbar-items">
         <h2>Overview</h2>
-        <h2>Restaurants</h2>
+        <h2>
+          <RouterLink to="/login" class="routerlink-navbar">Restaurants</RouterLink>
+        </h2>        
         <h2>Benutzer</h2>
       </div>
     </div>
     <div v-else>
       <div class="navbar-items">
         <h2>What BiteSite offers</h2>
-        <h2>Restaurants</h2>
+        <h2>
+          <RouterLink to="/login" class="routerlink-navbar">Restaurants</RouterLink>
+        </h2>
         <h2>
           <RouterLink to="/login" class="routerlink-navbar">Login</RouterLink>
         </h2>      
