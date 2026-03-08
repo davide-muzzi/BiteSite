@@ -19,8 +19,6 @@ const router = useRouter()
   <div class="right-bar"></div>
 </div>
 
-
-
 </template>
 
 <style>
