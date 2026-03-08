@@ -97,7 +97,7 @@ export async function deleteUser(req, res) {
 export async function logout(req, res) {
   req.session.destroy();
   res.clearCookie("SessionId");
-  res.status(200).json({success: true, message: "Logged out successfully" });
+  res.status(200).json({ success: true, message: "Logged out successfully" });
 }
 
 export async function payment(req, res) {
@@ -106,5 +106,14 @@ export async function payment(req, res) {
     "Error while updating subscription status"
   );
 
-  res.status(200).json({success: true, message: "Successfully activated subscription"});
+  res.status(200).json({ success: true, message: "Successfully activated subscription" });
+}
+
+export async function cancelSubscription(req, res) {
+  await safeOperation(
+    () => db.run("update users set cancel_at_period_end = ? where user_id = ?", [true, req.session.user.id]),
+    "Error while cancelling subscriptions"
+  );
+
+  res.status(200).json({ success: true, message: "Successfully cancelled subscription. It will end at period end" });
 }
