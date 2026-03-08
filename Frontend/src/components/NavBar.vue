@@ -1,32 +1,62 @@
 <script setup>
+import { ref } from 'vue';
+const loggedIn = ref(false);
 </script>
 
 <template>
 <div class="top">
-    <h1 class="title">BiteSite</h1>
-    <div class="navbar-items">
-        <h2>Restaurants</h2>
+    <h1 class="bitesite-logo">
+      <RouterLink to="/" class="bitesite-logo">BiteSite</RouterLink>
+    </h1>
+    <div v-if="loggedIn">
+      <div class="navbar-items">
+        <h2>Overview</h2>
+        <h2>
+          <RouterLink to="/login" class="routerlink-navbar">Restaurants</RouterLink>
+        </h2>        
+        <h2>Benutzer</h2>
+      </div>
+    </div>
+    <div v-else>
+      <div class="navbar-items">
         <h2>What BiteSite offers</h2>
-        <h2>Login</h2>
+        <h2>
+          <RouterLink to="/login" class="routerlink-navbar">Restaurants</RouterLink>
+        </h2>
+        <h2>
+          <RouterLink to="/login" class="routerlink-navbar">Login</RouterLink>
+        </h2>      
+      </div>
     </div>
 </div>
 </template>
 
 <style>
-.title{
+
+.routerlink-navbar {
+      color: var(--font-color-dark-blue);
+text-decoration: none;
+}
+
+.bitesite-logo {
     color: var(--accent);
     cursor: pointer;
+    text-decoration: none;
 }
-.top{
+
+.top {
     padding-left: 50px;
     display: flex;
     gap: 30px;
     align-items: baseline;
     font-family: var(--font);
     cursor: pointer;
+
+    position: relative;
+    z-index: 10;
 }
 
-.navbar-items{
+.navbar-items {
     display: flex;
     gap: 30px;
     color: var(--font-color-dark-blue);

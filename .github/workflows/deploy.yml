@@ -1,0 +1,102 @@
+name: Deploy BiteSite
+
+on:
+  push:
+    branches: ["main"]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: |
+            Frontend/package-lock.json
+            Backend/package-lock.json
+
+      # -------------------------
+      # Frontend
+      # -------------------------
+      - name: Install frontend deps
+        working-directory: Frontend
+        run: npm ci
+
+      - name: Build frontend
+        working-directory: Frontend
+        env:
+          VITE_API_URL: ${{ secrets.VITE_API_URL }}
+        run: npm run build
+
+      # -------------------------
+      # Backend
+      # -------------------------
+      - name: Install backend deps
+        working-directory: Backend
+        run: npm install
+
+      # -------------------------
+      # Copy files to server
+      # -------------------------
+      - name: Prepare deploy bundle
+        run: |
+          rm -rf .deploy
+          mkdir -p .deploy/frontend
+          mkdir -p .deploy/backend
+
+          # Frontend output (Vite -> dist)
+          if [ -d "Frontend/dist" ]; then
+            cp -R Frontend/dist/* .deploy/frontend/
+          else
+            echo "Frontend/dist not found"
+            ls -la Frontend
+            exit 1
+          fi
+
+          # Backend (copy everything except node_modules and .env)
+          rsync -a Backend/ .deploy/backend/ --exclude node_modules  --exclude .env
+
+          echo "Deploy bundle contents:"
+          find .deploy -maxdepth 3 -type f | head -n 50
+
+      - name: Deploy via SCP
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: ${{ secrets.SSH_PORT }}
+          source: ".deploy/*"
+          target: ${{ secrets.DEPLOY_PATH }}
+          strip_components: 1
+
+      # -------------------------
+      # Run remote commands
+      # -------------------------
+      - name: Run remote setup
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: ${{ secrets.SSH_PORT }}
+          script: |
+            set -e
+            cd ${{ secrets.DEPLOY_PATH }}/backend
+
+            # install production deps
+            if [ -f package-lock.json ]; then
+              npm ci --omit=dev
+            else
+              npm install --omit=dev
+            fi
+
+            # restart backend (PM2) DISABLED FOR NOW
+            # pm2 restart bitesite-backend || pm2 start server.js --name bitesite-backend
