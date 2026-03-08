@@ -8,10 +8,9 @@ CREATE TABLE IF NOT EXISTS users(
   subscription TEXT check(subscription IN ('beginner', 'masterchef', 'enterprise')),
   stripe_customer_id TEXT,
   stripe_subscription_id TEXT,
-  subscription_status TEXT,
-  subscription_period_end TEXT,
+  period_end INTEGER,
   cancel_at_period_end INTEGER,
-  subscription_canceled INTEGER
+  subscription_active INTEGER
 );
 
 CREATE TABLE IF NOT EXISTS projects(
