@@ -6,6 +6,7 @@ import UserSettingsView from '../views/UserSettingsView.vue'
 import ProjectsOverviewView from '../views/ProjectsOverviewView.vue'
 import TemplatesView from '../views/TemplatesView.vue'
 import TopRestaurantsView from '@/views/TopRestaurantsView.vue'
+import CreateProjectView from '@/views/CreateProjectView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -44,6 +45,11 @@ const router = createRouter({
       path: '/top-restaurants',
       name: 'top-restaurants',
       component: TopRestaurantsView,
+    },
+    {
+      path: '/create-project',
+      name: 'create-project',
+      component: CreateProjectView,
     },
   ],
 })
