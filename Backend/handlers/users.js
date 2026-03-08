@@ -26,7 +26,10 @@ export async function register(req, res) {
   const hashedPassword = await bcrypt.hash(password, 10);
 
   await safeOperation(
-    () => db.run("insert into users (username, email, password_hash, subscription) values (?,?,?,?)", [username, email, hashedPassword, subscription]),
+    () => db.run(
+      "insert into users (username, email, password_hash, subscription, subscription_active, period_end) values (?,?,?,?,?,?)", 
+      [username, email, hashedPassword, subscription, false, new Date().getDate()]
+    ),
     "Error while registering"
   );
 
@@ -95,4 +98,13 @@ export async function logout(req, res) {
   req.session.destroy();
   res.clearCookie("SessionId");
   res.status(200).json({success: true, message: "Logged out successfully" });
+}
+
+export async function payment(req, res) {
+  await safeOperation(
+    () => db.run("update users set subscription_active = ? where user_id = ?", [true, req.session.user.id]),
+    "Error while updating subscription status"
+  );
+
+  res.status(200).json({success: true, message: "Successfully activated subscription"});
 }
