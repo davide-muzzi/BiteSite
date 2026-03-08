@@ -13,6 +13,7 @@ userRouter.get("/check-login", routeWrapper(userHandlers.checkLogin));
 userRouter.delete("/delete", checkAuth, routeWrapper(userHandlers.deleteUser));
 userRouter.post("/logout", routeWrapper(userHandlers.logout));
 userRouter.post("/payment", checkAuth, routeWrapper(userHandlers.payment));
-userRouter.post("/cancel-subscription", checkAuth, routeWrapper(userHandlers.cancelSubscription));
+userRouter.patch("/cancel-subscription", checkAuth, routeWrapper(userHandlers.cancelSubscription));
+userRouter.patch("/edit-subscription", checkAuth, routeWrapper(userHandlers.editSubscription));
 
 export default userRouter;
