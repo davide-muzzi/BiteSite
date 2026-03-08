@@ -58,7 +58,7 @@ const handleLogin = async () => {
     </div>
 </template>
 
-<style>
+<style scoped>
 body {
   background: var(--background);
   font-family: var(--font);
@@ -76,9 +76,9 @@ body {
 
 .login-card {
   background-color: #ffeede;
-  width: 738px; 
-  height: 614px; 
-  border-radius: 66px;
+  width: 517px; 
+  height: 580px; 
+  border-radius: 46px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -87,39 +87,38 @@ body {
 
 .form-group label {
   display: block;
-  font-size: 32px;
+  font-size: 22px;
   display: flex;
   justify-content: center;
-  margin-top: 20px;
+  margin-top: 14px;
   font-weight: 600;
 }
 
 .form-group input {
-    width: 635px;
-    height: 90px;
-    border-radius: 66px;
-    border: none;
-    font-size: 32px;
-    font-family: var(--font);
-    margin-top: 17px;
-    padding-left: 42px;
-    padding-right: 42px;
-    box-sizing: border-box;
+  width: 445px;
+  height: 63px;
+  border-radius: 46px;
+  border: none;
+  font-size: 22px;
+  font-family: var(--font);
+  margin-top: 12px;
+  padding-left: 29px;
+  padding-right: 29px;
+  box-sizing: border-box;
 }
 
 .login-button {
-    width: 635px;
-    height: 90px;
-    border-radius: 66px;
-    border: none;
-    margin-top: 64px;
-    background-color: var(--accent);
-    color: white;
-    font-size: 32px;
-    cursor: pointer;
-    font-weight: 600;
-    box-sizing: border-box;
-    margin-bottom: 0;
+  width: 445px;
+  height: 63px;
+  border-radius: 46px;
+  border: none;
+  margin-top: 45px;
+  background-color: var(--accent);
+  color: white;
+  font-size: 22px;
+  cursor: pointer;
+  font-weight: 600;
+  box-sizing: border-box;
 }
 
 .login-button:hover {
@@ -127,7 +126,7 @@ body {
 }
 
 .register-text {
-    font-size: 26px;
+    font-size: 18px;
     font-weight: 600;
 }
 
