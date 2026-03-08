@@ -117,3 +117,17 @@ export async function cancelSubscription(req, res) {
 
   res.status(200).json({ success: true, message: "Successfully cancelled subscription. It will end at period end" });
 }
+
+export async function editSubscription(req, res) {
+  const {subscription} = req.body;
+
+  await safeOperation(
+    () => db.run(
+      "update users set subscription = ?, period_end = ?, subscription_active = ? where user_id = ?", 
+      [subscription, new Date().getDate(), false, req.session.user.id]
+    ),
+    "Error while updating subscription"
+  );
+
+  res.status(200).json({ success: true, message: "Successfully updated subscription" })
+}
