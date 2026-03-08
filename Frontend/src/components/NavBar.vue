@@ -17,13 +17,21 @@ const loggedIn = ref(true)
       <div class="navbar-items">
         <h2>What BiteSite offers</h2>
         <h2>Restaurants</h2>
-        <h2>Login</h2>
+        <h2>
+          <RouterLink to="/login" class="routerlink-navbar">Login</RouterLink>
+        </h2>      
       </div>
     </div>
 </div>
 </template>
 
 <style>
+
+.routerlink-navbar {
+      color: var(--font-color-dark-blue);
+text-decoration: none;
+}
+
 .title {
     color: var(--accent);
     cursor: pointer;
