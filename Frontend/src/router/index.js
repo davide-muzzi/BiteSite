@@ -51,6 +51,17 @@ const router = createRouter({
       name: 'create-project',
       component: CreateProjectView,
     },
+    {
+      path: '/register',
+      name: 'register',
+      component: RegisterView,
+      children: [
+        { path: "", redirect: "/register/step-1" }, // default and tought by ChatGPT
+        { path: "step-1", name: "register-step1", component: Step01Register },
+        { path: "step-2", name: "register-step2", component: Step02Register },
+        { path: "step-3", name: "register-step3", component: Step03Register },
+      ]
+    },
   ],
 })
 
