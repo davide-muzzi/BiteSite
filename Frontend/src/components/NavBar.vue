@@ -5,8 +5,8 @@ const loggedIn = ref(false);
 
 <template>
 <div class="top">
-    <h1 class="title">
-      <RouterLink to="/" class="title">BiteSite</RouterLink>
+    <h1 class="bitesite-logo">
+      <RouterLink to="/" class="bitesite-logo">BiteSite</RouterLink>
     </h1>
     <div v-if="loggedIn">
       <div class="navbar-items">
@@ -38,7 +38,7 @@ const loggedIn = ref(false);
 text-decoration: none;
 }
 
-.title {
+.bitesite-logo {
     color: var(--accent);
     cursor: pointer;
     text-decoration: none;
