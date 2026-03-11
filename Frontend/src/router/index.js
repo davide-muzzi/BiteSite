@@ -1,10 +1,10 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import HomeView from '../views/HomeView.vue'
-import LoginView from '../views/LoginView.vue'
-import DashboardView from '../views/DashboardView.vue'
-import UserSettingsView from '../views/UserSettingsView.vue'
-import ProjectsOverviewView from '../views/ProjectsOverviewView.vue'
-import TemplatesView from '../views/TemplatesView.vue'
+import HomeView from '@/views/HomeView.vue'
+import LoginView from '@/views/LoginView.vue'
+import DashboardView from '@/views/DashboardView.vue'
+import UserSettingsView from '@/views/UserSettingsView.vue'
+import ProjectsOverviewView from '@/views/ProjectsOverviewView.vue'
+import TemplatesView from '@/views/TemplatesView.vue'
 import TopRestaurantsView from '@/views/TopRestaurantsView.vue'
 import CreateProjectView from '@/views/CreateProjectView.vue'
 import RegisterView from '@/views/RegisterView.vue'
@@ -60,11 +60,11 @@ const router = createRouter({
       name: 'register',
       component: RegisterView,
       children: [
-        { path: "", redirect: "/register/step-1" }, // default and tought by ChatGPT
-        { path: "step-1", name: "register-step1", component: Step01Register },
-        { path: "step-2", name: "register-step2", component: Step02Register },
-        { path: "step-3", name: "register-step3", component: Step03Register },
-      ]
+        { path: '', redirect: '/register/step-1' }, // default and tought by ChatGPT
+        { path: 'step-1', name: 'register-step1', component: Step01Register },
+        { path: 'step-2', name: 'register-step2', component: Step02Register },
+        { path: 'step-3', name: 'register-step3', component: Step03Register },
+      ],
     },
   ],
 })
