@@ -7,6 +7,10 @@ import ProjectsOverviewView from '../views/ProjectsOverviewView.vue'
 import TemplatesView from '../views/TemplatesView.vue'
 import TopRestaurantsView from '@/views/TopRestaurantsView.vue'
 import CreateProjectView from '@/views/CreateProjectView.vue'
+import RegisterView from '@/views/RegisterView.vue'
+import Step01Register from '@/components/register-steps/Step01Register.vue'
+import Step02Register from '@/components/register-steps/Step02Register.vue'
+import Step03Register from '@/components/register-steps/Step03Register.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
