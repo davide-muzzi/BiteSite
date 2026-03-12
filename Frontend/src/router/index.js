@@ -11,6 +11,7 @@ import RegisterView from '@/views/RegisterView.vue'
 import Step01Register from '@/components/register-steps/Step01Register.vue'
 import Step02Register from '@/components/register-steps/Step02Register.vue'
 import Step03Register from '@/components/register-steps/Step03Register.vue'
+import Editor from '@/views/Editor.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -65,6 +66,11 @@ const router = createRouter({
         { path: 'step-2', name: 'register-step2', component: Step02Register },
         { path: 'step-3', name: 'register-step3', component: Step03Register },
       ],
+    },
+    {
+      path: '/editor',
+      name: 'editor',
+      component: Editor,
     },
   ],
 })

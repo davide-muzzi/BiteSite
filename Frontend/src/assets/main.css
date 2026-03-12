@@ -16,6 +16,7 @@ body, html, #app {
   --font: outfit;
   --font-color-dark-blue:#31266e;
   --button-hover-color: #e11b47;
+  --card-color: #ffeede;
 }
 
 button {
