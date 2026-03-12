@@ -94,10 +94,7 @@ function sendNewsletter() {
                         <input type="file" accept="image/*" multiple @change="handleUpload" />
                         <span>Upload Files</span>
                     </label>
-                    <div v-if="!uploads.length" class="empty-upload">
-                        Add visuals to keep your message tasty.
-                    </div>
-                    <div v-else class="upload-grid">
+                    <div class="upload-grid">
                         <div v-for="upload in uploads" :key="upload.id" class="upload-item">
                             <img :src="upload.preview" :alt="upload.name" />
                             <button class="upload-remove" type="button" aria-label="Remove file"
@@ -281,12 +278,6 @@ function sendNewsletter() {
 
 .upload-box input {
     display: none;
-}
-
-.empty-upload {
-    margin-top: 20px;
-    font-size: 15px;
-    color: rgba(49, 38, 110, 0.7);
 }
 
 .upload-grid {
