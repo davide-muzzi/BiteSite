@@ -11,13 +11,16 @@ const router = useRouter()
       <h1>Restaurant Online in</h1>
       <h1>Minutes</h1>
     </div>
-  <div class="buttons">
-    <button class="button">Get Started</button>
-    <button class="button" @click="router.push('/top-restaurants')"><div class="top-text">Find Restaurants</div><div class="bottom-text">Hosted by us</div></button>
-    
+    <div class="buttons">
+      <button class="button" @click="router.push('/login')">Get Started</button>
+      <button class="button" @click="router.push('/top-restaurants')">
+        <div class="top-text">Find Restaurants</div>
+        <div class="bottom-text">Hosted by us</div>
+      </button>
+
+    </div>
+    <div class="right-bar"></div>
   </div>
-  <div class="right-bar"></div>
-</div>
 
 </template>
 
@@ -26,38 +29,39 @@ body {
   background: var(--background);
 }
 
-.main-content{
+.main-content {
   padding-left: 50px;
 }
-.description{
+
+.description {
   padding-top: 50px;
-    font-family: var(--font);
-    color: var(--font-color-dark-blue);
-    line-height: 15px;
+  font-family: var(--font);
+  color: var(--font-color-dark-blue);
+  line-height: 15px;
 }
 
-.button{
+.button {
   background-color: var(--accent);
   border-radius: 90px;
   height: 70px;
   width: 210px;
-  border:none;
+  border: none;
   color: white;
   font-size: 20px;
   cursor: pointer;
   font-weight: 700;
 }
 
-.top-text{
+.top-text {
   font-size: 18px;
 }
 
-.bottom-text{
+.bottom-text {
   font-size: 14px;
   font-weight: 300;
 }
 
-.buttons{
+.buttons {
   padding-top: 50px;
   padding-left: 50px;
   display: flex;
@@ -65,7 +69,7 @@ body {
   gap: 20px;
 }
 
-.buttons :hover{
+.buttons :hover {
   background-color: var(--button-hover-color);
 }
 
