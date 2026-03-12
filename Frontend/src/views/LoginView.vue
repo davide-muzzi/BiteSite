@@ -14,11 +14,12 @@ const handleLogin = async () => {
 
 <template>
 
-    <BackButton to="/" />
+    <div class="login-page">
+        <BackButton to="/" />
 
-    <div class="account-page">
-        <div class="login-card">
-            <form class="login-form" @submit.prevent="handleLogin">
+        <div class="account-page">
+            <div class="login-card">
+                <form class="login-form" @submit.prevent="handleLogin">
                 
                 <div class="form-group">
                     <label for="email">E-Mail</label>
@@ -53,6 +54,7 @@ const handleLogin = async () => {
                 Don't have an account? <RouterLink to="/register">Register</RouterLink>
              </p>
 
+            </div>
         </div>
     </div>
 </template>
@@ -64,11 +66,17 @@ body {
   color: var(--font-color-dark-blue);
 }
 
+.login-page {
+  padding: 40px 80px;
+  min-height: 100vh;
+  box-sizing: border-box;
+}
+
 .account-page {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
+  min-height: calc(100vh - 80px);
   flex-direction: column;
 }
 
