@@ -14,7 +14,7 @@ const handleLogin = async () => {
 
 <template>
     <section class="login-view">
-        <BackButton to="/" />
+        <BackButton />
 
         <div class="page-header">
             <h1>Welcome back</h1>

@@ -1,21 +1,19 @@
 <script setup>
-import { RouterLink } from "vue-router";
 import { ChevronLeft } from "lucide-vue-next";
 
-const props = defineProps({
-    to: {
-        type: [String, Object],
-        default: null,
-    },
-});
+const emit = defineEmits(["click"]);
+
+function handleClick(event) {
+    emit("click", event);
+
+    if (!event.defaultPrevented) {
+        window.history.back();
+    }
+}
 </script>
 
 <template>
-    <RouterLink v-if="props.to" class="back" :to="props.to" v-bind="$attrs">
-        <ChevronLeft class="icon" />
-        <span><slot>Back</slot></span>
-    </RouterLink>
-    <button v-else class="back" type="button" v-bind="$attrs">
+    <button class="back" type="button" v-bind="$attrs" @click="handleClick">
         <ChevronLeft class="icon" />
         <span><slot>Back</slot></span>
     </button>

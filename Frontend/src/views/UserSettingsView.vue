@@ -5,11 +5,6 @@ import BackButton from "@/components/common/BackButton.vue";
 const username = ref("Julian");
 const email = ref("E@Mail.com");
 
-function goBack() {
-    console.log("Back clicked");
-    window.history.back();
-}
-
 function changePlan() {
     console.log("Change Plan clicked");
 }
@@ -35,7 +30,7 @@ function logout() {
         <div class="shape shape-top-right"></div>
         <div class="shape shape-bottom-left"></div>
 
-        <BackButton class="user-settings-back" @click="goBack" />
+        <BackButton class="user-settings-back" />
 
         <div class="settings-content">
             <div class="form-area">

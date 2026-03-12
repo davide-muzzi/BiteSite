@@ -1,5 +1,6 @@
 <script setup>
 import { ref } from 'vue';
+import BackButton from '@/components/common/BackButton.vue';
 
 const projectName = ref("");
 
@@ -33,6 +34,8 @@ function create() {
 
 <template>
     <section class="create-project-view">
+        <BackButton class="create-project-back" />
+
         <div class="page-header">
             <h1>Create Project</h1>
             <p>Define your concept and tags to kick off a new project with the right focus.</p>
@@ -84,6 +87,11 @@ function create() {
     max-width: 640px;
     margin: 0 auto 28px;
     text-align: center;
+}
+
+.create-project-back {
+    display: inline-flex;
+    margin-bottom: 22px;
 }
 
 .page-header h1 {

@@ -29,7 +29,7 @@ const steps = [
 
 <template>
 
-    <BackButton to="/login" />
+    <BackButton />
 
     <div class="progress-bar">
         <!-- Progressbar 80% ChatGPT -->
