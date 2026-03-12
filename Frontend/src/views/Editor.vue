@@ -20,16 +20,17 @@ body {
     color: var(--font-color-dark-blue);
 }
 
-.editor-page {
-    display: flex;
-}
-
 .side-bar {
     width: 302px;
     background-color: var(--card-color);
     border-top-right-radius: 22px;
     padding: 25px;
-    
 }
+
+.editor-page {
+    display: flex;
+}
+
+
 
 </style>
