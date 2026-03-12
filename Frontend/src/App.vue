@@ -1,7 +1,11 @@
 <script setup>
-import { RouterLink, RouterView } from 'vue-router'
+import { computed } from 'vue';
+import { RouterView, useRoute } from 'vue-router';
 import NavBar from './components/NavBar.vue';
-import Footer from './components/Footer.vue'
+import Footer from './components/Footer.vue';
+
+const route = useRoute();
+const footerVariant = computed(() => (route.name === 'home' ? 'simple' : 'default'));
 </script>
 
 <template>
@@ -10,7 +14,7 @@ import Footer from './components/Footer.vue'
         <div class="router-wrapper">
             <RouterView />
         </div>
-        <Footer />
+        <Footer :variant="footerVariant" />
     </div>
 </template>
 

@@ -1,14 +1,15 @@
 <script setup>
 import { ref } from 'vue';
+import BackButton from '@/components/common/BackButton.vue';
 
-const projectName =ref("");
+const projectName = ref("");
 
 const newTag = ref("");
 
 const tags = ref([
-  { tagName: "#Italian" },
-  { tagName: "#Pasta" },
-  { tagName: "#Pizza" },
+    { tagName: "#Italian" },
+    { tagName: "#Pasta" },
+    { tagName: "#Pizza" },
 ])
 
 function addTag() {
@@ -32,126 +33,187 @@ function create() {
 </script>
 
 <template>
-    <div class="mainContent">
-        <h2 class="title">Name</h2>
-        <input 
-            type="text" 
-            placeholder="Enter project name ..."
-            class="inputField"
-            v-model="projectName";
-        >
-        <h2 class="title">Tags</h2>
-        <div class="tags">
-            <div class="tag" v-for="tag in tags" :key="tag.tagName">
-                {{tag.tagName}}  
-                <button @click="deleteTag(tag.tagName)" class="deleteTagBtn">x</button>
-            </div>
+    <section class="create-project-view">
+        <BackButton class="create-project-back" />
+
+        <div class="page-header">
+            <h1>Create Project</h1>
+            <p>Define your concept and tags to kick off a new project with the right focus.</p>
         </div>
-        <div class="newTagLabel">
-            <input 
-            class="tagInputField"
-            v-model="newTag"
-            type="text" 
-            placeholder="Pizza"
-            @keydown.enter.prevent="addTag()"
-            >
-            <button 
-                @click="addTag"
-                class="addTagBtn"
-                >
-                +
+
+        <div class="form-card">
+            <div class="field-group">
+                <label>Name</label>
+                <input v-model="projectName" type="text" placeholder="Enter project name ..." />
+            </div>
+
+            <div class="field-group">
+                <label>Tags</label>
+
+                <div class="tag-list" v-if="tags.length">
+                    <span class="tag-pill" v-for="tag in tags" :key="tag.tagName">
+                        {{ tag.tagName }}
+                        <button class="tag-remove" @click="deleteTag(tag.tagName)">×</button>
+                    </span>
+                </div>
+
+                <div class="tag-input-row">
+                    <input class="tag-input" v-model="newTag" type="text" placeholder="Pizza"
+                        @keydown.enter.prevent="addTag()" />
+                    <button class="add-tag-btn" type="button" @click="addTag">
+                        +
+                    </button>
+                </div>
+            </div>
+
+            <button class="create-btn" type="button" @click="create">
+                Create
             </button>
         </div>
-        
-            <h2></h2>
-        <button class="createBtn" @click="create">
-            Create
-        </button>
-    </div>
+    </section>
 </template>
 
-<style>
+<style scoped>
+.create-project-view {
+    min-height: calc(100vh - 160px);
+    padding: 42px 78px 80px;
+    background: var(--background);
+    font-family: var(--font);
+    color: var(--font-color-dark-blue);
+    box-sizing: border-box;
+}
 
-.mainContent{
-    display: flex;
+.page-header {
+    max-width: 640px;
+    margin: 0 auto 28px;
+    text-align: center;
+}
+
+.create-project-back {
+    display: inline-flex;
+    margin-bottom: 22px;
+}
+
+.page-header h1 {
+    margin: 0 0 6px;
+    font-size: 48px;
+    font-weight: 800;
+}
+
+.page-header p {
+    margin: 0;
+    font-size: 18px;
+    color: rgba(32, 32, 32, 0.65);
+    font-weight: 600;
+}
+
+.form-card {
     width: 100%;
+    max-width: 720px;
+    margin: 0 auto;
+    background: white;
+    border-radius: 28px;
+    padding: 40px 48px 48px;
+    box-shadow: 0 28px 60px rgba(49, 38, 110, 0.12);
+    display: flex;
     flex-direction: column;
-    justify-content: center;
+    gap: 32px;
+}
+
+.field-group {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.field-group label {
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.field-group input {
+    width: 100%;
+    height: 64px;
+    border-radius: 999px;
+    border: none;
+    padding: 0 28px;
+    background: #f9f6f1;
+    font-family: var(--font);
+    font-size: 18px;
+    font-weight: 600;
+    color: #2b2b2b;
+    box-sizing: border-box;
+}
+
+.tag-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.tag-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 16px;
+    border-radius: 999px;
+    background: var(--font-color-dark-blue);
+    color: white;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.tag-remove {
+    border: none;
+    background: transparent;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    padding: 0;
+}
+
+.tag-input-row {
+    display: flex;
+    gap: 12px;
     align-items: center;
 }
 
-.title{
-    color: var(--font-color-dark-blue);
-    font-family: var(--font);
+.tag-input {
+    flex: 1;
 }
 
-.tags{
-    display: flex;
-    flex-direction: row;
-    gap: 10px;
-    padding-bottom: 20px;
-    flex-wrap: wrap;
-    max-width: 300px;
-    min-width: 300px;
-    background-color: white;
-    padding: 10px;
-    box-sizing: border-box;
-    border-radius: 10px;
-    margin-bottom: 10px;
-}
-.tag{
-    background-color: var(--font-color-dark-blue);
-    color: white;
-    font-family: var(--font);
-    padding: 6px;
-    border-radius: 5px;
-}
-
-.deleteTagBtn{
-    background-color: var(--font-color-dark-blue);
-    color: white;
-}
-
-.addTagBtn{
-    background-color: var(--accent);
-    border-radius: 66px;
-    height: 30px;
-    width: 30px;
-    color: white;
-}
-
-.inputField{
-    width: 280px;
+.add-tag-btn {
+    width: 64px;
+    height: 64px;
+    border-radius: 999px;
     border: none;
-    padding: 10px;
-    border-radius: 22px;
-}
-
-.tagInputField{
-    width: 240px;
-    border: none;
-    padding: 10px;
-    border-radius: 22px;
-}
-
-.createBtn{
-    height: 50px;
-    border-radius: 66px;
-    border: none;
-    margin-top: 32px;
-    background-color: var(--accent);
+    background: var(--accent);
     color: white;
-    font-size: 26px;
+    font-size: 28px;
+    font-weight: 700;
     cursor: pointer;
-    box-sizing: border-box;
-    margin-bottom: 0;
-    width: 300px;
+    transition: background 0.2s ease, transform 0.2s ease;
 }
 
-.newTagLabel{
-    display: flex; 
-    flex-direction: row;
-    gap: 10px;
-    align-items: baseline;
+.add-tag-btn:hover {
+    background: var(--button-hover-color);
+    transform: translateY(-1px);
+}
+
+.create-btn {
+    height: 66px;
+    border-radius: 999px;
+    border: none;
+    background: var(--accent);
+    color: white;
+    font-size: 20px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.create-btn:hover {
+    background: var(--button-hover-color);
+    transform: translateY(-2px);
 }
 </style>
