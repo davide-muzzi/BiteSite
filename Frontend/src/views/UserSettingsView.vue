@@ -26,14 +26,16 @@ function logout() {
 </script>
 
 <template>
-    <section class="user-settings-page">
-        <div class="shape shape-top-right"></div>
-        <div class="shape shape-bottom-left"></div>
-
+    <section class="user-settings-view">
         <BackButton class="user-settings-back" />
 
-        <div class="settings-content">
-            <div class="form-area">
+        <div class="page-header">
+            <h1>User Settings</h1>
+            <p>Update your personal details and manage your BiteSite access.</p>
+        </div>
+
+        <div class="settings-card">
+            <form class="form-area" @submit.prevent="saveSettings">
                 <div class="field-group">
                     <label for="username">Username</label>
                     <input id="username" v-model="username" type="text" />
@@ -44,143 +46,149 @@ function logout() {
                     <input id="email" v-model="email" type="email" />
                 </div>
 
-                <div class="action-block">
-                    <p class="action-label">Plan</p>
-                    <button class="text-action" @click="changePlan">Change Plan</button>
+                <div class="action-row">
+                    <div>
+                        <p class="action-label">Plan</p>
+                        <button class="link-btn" type="button" @click="changePlan">
+                            Change Plan
+                        </button>
+                    </div>
+
+                    <div>
+                        <p class="action-label">Password</p>
+                        <button class="link-btn" type="button" @click="changePassword">
+                            Change Password
+                        </button>
+                    </div>
                 </div>
 
-                <div class="action-block">
-                    <p class="action-label">Password</p>
-                    <button class="text-action" @click="changePassword">
-                        Change Password
+                <div class="button-row">
+                    <button class="save-button" type="submit">Save Changes</button>
+                    <button class="logout-button" type="button" @click="logout">
+                        Logout
                     </button>
                 </div>
-
-                <button class="save-button" @click="saveSettings">Save</button>
-            </div>
-
-            <div class="logout-area">
-                <button class="logout-button" @click="logout">Logout</button>
-            </div>
+            </form>
         </div>
     </section>
 </template>
 
 <style scoped>
-.user-settings-page {
-    position: relative;
+.user-settings-view {
     min-height: calc(100vh - 160px);
-    width: 100%;
-    overflow: hidden;
-    padding: 28px 56px 64px;
+    padding: 42px 78px 80px;
+    background: var(--background);
+    font-family: var(--font);
+    color: var(--font-color-dark-blue);
     box-sizing: border-box;
 }
 
-.settings-content {
-    position: relative;
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    min-height: 620px;
-    padding-top: 70px;
-    z-index: 2;
-}
-
 .user-settings-back {
-    position: relative;
-    margin-left: 0;
-    z-index: 2;
-    transition: opacity 0.2s ease, transform 0.2s ease;
+    margin-bottom: 18px;
 }
 
-.user-settings-back:hover {
-    opacity: 0.75;
-    transform: translateX(-2px);
+.page-header {
+    text-align: center;
+    max-width: 600px;
+    margin: 0 auto 30px;
+}
+
+.page-header h1 {
+    margin: 0 0 6px;
+    font-size: 48px;
+    font-weight: 800;
+}
+
+.page-header p {
+    margin: 0;
+    font-size: 18px;
+    color: rgba(32, 32, 32, 0.65);
+    font-weight: 600;
+}
+
+.settings-card {
+    width: 100%;
+    max-width: 720px;
+    margin: 0 auto;
+    background: white;
+    border-radius: 28px;
+    box-shadow: 0 24px 60px rgba(49, 38, 110, 0.08);
+    padding: 40px 48px;
 }
 
 .form-area {
-    width: 100%;
-    max-width: 560px;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    text-align: center;
-}
-
-.field-group {
-    width: 100%;
-    max-width: 520px;
-    margin-bottom: 28px;
+    gap: 28px;
 }
 
 .field-group label {
     display: block;
-    margin-bottom: 10px;
-    color: var(--font-color-dark-blue);
-    font-family: var(--font);
-    font-size: 20px;
+    margin-bottom: 12px;
     font-weight: 700;
+    font-size: 18px;
 }
 
 .field-group input {
     width: 100%;
     height: 64px;
-    border: none;
-    outline: none;
     border-radius: 999px;
-    background: white;
+    border: none;
+    background: #f9f6f1;
     padding: 0 28px;
+    font-size: 18px;
+    font-weight: 600;
     box-sizing: border-box;
-    font-family: var(--font);
-    font-size: 20px;
-    font-weight: 700;
-    color: #111;
 }
 
-.action-block {
-    margin-top: 8px;
-    margin-bottom: 16px;
+.action-row {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px;
 }
 
 .action-label {
-    margin: 0 0 6px;
-    color: var(--font-color-dark-blue);
-    font-family: var(--font);
-    font-size: 20px;
+    margin: 0 0 8px;
+    font-size: 16px;
     font-weight: 700;
+    color: rgba(32, 32, 32, 0.7);
 }
 
-.text-action {
+.link-btn {
     border: none;
     background: transparent;
-    padding: 0;
-    font-family: var(--font);
-    font-size: 20px;
+    color: var(--font-color-dark-blue);
+    font-size: 16px;
     font-weight: 700;
-    color: #111;
     cursor: pointer;
-    transition: opacity 0.2s ease, transform 0.2s ease;
+    padding: 0;
+    transition: opacity 0.2s ease;
 }
 
-.text-action:hover {
+.link-btn:hover {
     opacity: 0.7;
-    transform: scale(1.02);
 }
 
-.save-button {
-    margin-top: 26px;
-    width: 100%;
-    max-width: 520px;
-    height: 64px;
-    border: none;
+.button-row {
+    display: flex;
+    gap: 12px;
+}
+
+.save-button,
+.logout-button {
+    flex: 1;
+    height: 60px;
     border-radius: 999px;
-    background: var(--accent);
-    color: white;
-    font-family: var(--font);
-    font-size: 22px;
+    border: none;
+    font-size: 18px;
     font-weight: 700;
     cursor: pointer;
     transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.save-button {
+    background: var(--accent);
+    color: white;
 }
 
 .save-button:hover {
@@ -188,51 +196,13 @@ function logout() {
     transform: translateY(-1px);
 }
 
-.logout-area {
-    position: absolute;
-    right: 70px;
-    bottom: 120px;
-}
-
 .logout-button {
-    min-width: 150px;
-    height: 58px;
-    border: none;
-    border-radius: 999px;
-    background: var(--accent);
-    color: white;
-    font-family: var(--font);
-    font-size: 20px;
-    font-weight: 700;
-    cursor: pointer;
-    transition: background 0.2s ease, transform 0.2s ease;
+    background: rgba(49, 38, 110, 0.08);
+    color: var(--font-color-dark-blue);
 }
 
 .logout-button:hover {
-    background: var(--button-hover-color);
+    background: rgba(49, 38, 110, 0.15);
     transform: translateY(-1px);
-}
-
-.shape {
-    position: absolute;
-    background: var(--accent);
-    z-index: 1;
-    pointer-events: none;
-}
-
-.shape-top-right {
-    top: -120px;
-    right: 0;
-    width: 210px;
-    height: 420px;
-    border-bottom-left-radius: 160px;
-}
-
-.shape-bottom-left {
-    left: 0;
-    bottom: -100px;
-    width: 320px;
-    height: 320px;
-    border-top-right-radius: 170px;
 }
 </style>
