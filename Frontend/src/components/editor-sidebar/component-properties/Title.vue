@@ -1,3 +1,5 @@
+AI Placeholder!
+
 <script setup>
 import { reactive } from 'vue'
 
@@ -37,6 +39,7 @@ const titleSettings = reactive({
     display: flex;
     flex-direction: column;
     gap: 8px;
+    margin-top: 16px;
 }
 
 input,

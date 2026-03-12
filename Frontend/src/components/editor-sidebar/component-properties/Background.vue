@@ -1,3 +1,5 @@
+AI Placeholder!
+
 <script setup>
 import { ref } from 'vue'
 
@@ -16,6 +18,7 @@ const backgroundImage = ref('')
     display: flex;
     flex-direction: column;
     gap: 8px;
+    margin-top: 16px;
 }
 
 input {

@@ -18,10 +18,11 @@ const isOpen = ref(props.startOpen);
 </script>
 
 <template>
+<!-- 20% ChatGPT -->
     <div class="editor-dropdown">
         <button class="dropdown-header" @click="isOpen = !isOpen">
+            <span class="icon">{{ isOpen ? '∨ ' : '> ' }}</span>
             <span class="title">{{ title }}</span>
-            <span class="icon">{{ isOpen ? '⌃' : '⌄' }}</span>
         </button>
 
         <div v-if="isOpen" class="dropdown-content">
@@ -34,28 +35,22 @@ const isOpen = ref(props.startOpen);
 .editor-dropdown {
     margin-bottom: 20px;
 }
-.dropdowm-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
-    padding: 10px 15px;
-    background-color: var(--dropdown-color);
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-}
 
-.button {
-    width: 100%;
-    height: 64px;
-    border-radius: 999px;
+
+.dropdown-header {
+    width: 266px;
+    height: 48px;
+    border-radius: 66px;
     border: none;
     background-color: var(--accent);
     color: white;
-    font-size: 18px;
-    font-weight: 700;
-    cursor: pointer;
-    transition: background 0.2s ease, transform 0.2s ease;
+    font-family: var(--font);
+    font-weight: 600;
+    font-size: 22 px;
 }
+
+
+
+
+
 </style>

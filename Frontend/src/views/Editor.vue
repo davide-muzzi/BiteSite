@@ -25,10 +25,13 @@ body {
     background-color: var(--card-color);
     border-top-right-radius: 22px;
     padding: 25px;
+    height: 100%;
 }
 
 .editor-page {
     display: flex;
+    margin-top: 80px;
+    height: 100%;
 }
 
 
