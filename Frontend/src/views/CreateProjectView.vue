@@ -1,6 +1,6 @@
 <script setup>
 import { ref } from 'vue';
-import BackButton from '@/components/common/BackButton.vue';
+import BackButton from '@/components/BackButton.vue';
 
 const projectName = ref("");
 

@@ -11,7 +11,7 @@ import {
     Check,
     Save
 } from "lucide-vue-next";
-import BackButton from "@/components/common/BackButton.vue";
+import BackButton from "@/components/BackButton.vue";
 
 const isPublished = ref(true);
 

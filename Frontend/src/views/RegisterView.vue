@@ -2,7 +2,7 @@
 // Progressbar 80% ChatGPT
 import { useRoute } from 'vue-router';
 import { computed } from 'vue';
-import BackButton from '@/components/common/BackButton.vue';
+import BackButton from '@/components/BackButton.vue';
 
 const route = useRoute();
 
