@@ -18,7 +18,7 @@ CREATE TABLE IF NOT EXISTS projects(
   "name" TEXT,
   website TEXT,
   website_title TEXT,
-  website_route TEXT,
+  website_route TEXT UNIQUE,
   published INTEGER DEFAULT 0,
   fk_user_id INTEGER,
   FOREIGN KEY (fk_user_id) REFERENCES users(user_id) ON DELETE CASCADE
