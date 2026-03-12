@@ -47,3 +47,16 @@ CREATE TABLE IF NOT EXISTS reservations(
   fk_project_id INTEGER,
   FOREIGN KEY (fk_project_id) REFERENCES projects(project_id) ON DELETE CASCADE
 );
+
+CREATE TABLE IF NOT EXISTS tags(
+  tag_id INTEGER PRIMARY KEY AUTOINCREMENT,
+  "name" TEXT UNIQUE
+);
+
+CREATE TABLE IF NOT EXISTS project_tags(
+  project_tag_id INTEGER PRIMARY KEY AUTOINCREMENT,
+  fk_project_id INTEGER,
+  fk_tag_id INTEGER,
+  FOREIGN KEY (fk_project_id) REFERENCES projects(project_id) ON DELETE CASCADE,
+  FOREIGN KEY (fk_tag_id) REFERENCES tags(tag_id) ON DELETE CASCADE
+);
