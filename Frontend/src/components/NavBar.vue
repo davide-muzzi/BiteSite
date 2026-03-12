@@ -1,66 +1,42 @@
-<script setup>
-import { ref } from 'vue';
-const loggedIn = ref(false);
-</script>
-
 <template>
-<div class="top">
-    <h1 class="bitesite-logo">
-      <RouterLink to="/" class="bitesite-logo">BiteSite</RouterLink>
-    </h1>
-    <div v-if="loggedIn">
-      <div class="navbar-items">
-        <h2>Overview</h2>
-        <h2>
-          <RouterLink to="/login" class="routerlink-navbar">Restaurants</RouterLink>
-        </h2>        
-        <h2>Benutzer</h2>
-      </div>
+  <nav class="nav">
+    <RouterLink to="/" class="logo">BiteSite</RouterLink>
+
+    <div class="nav-links">
+      <RouterLink to="/top-restaurants" class="nav-link">Restaurants</RouterLink>
+      <RouterLink :to="{ path: '/', hash: '#about' }" class="nav-link">About Us</RouterLink>
+      <RouterLink to="/login" class="nav-link">Login</RouterLink>
     </div>
-    <div v-else>
-      <div class="navbar-items">
-        <h2>What BiteSite offers</h2>
-        <h2>
-          <RouterLink to="/login" class="routerlink-navbar">Restaurants</RouterLink>
-        </h2>
-        <h2>
-          <RouterLink to="/login" class="routerlink-navbar">Login</RouterLink>
-        </h2>      
-      </div>
-    </div>
-</div>
+  </nav>
 </template>
 
-<style>
-
-.routerlink-navbar {
-      color: var(--font-color-dark-blue);
-text-decoration: none;
+<style scoped>
+.nav {
+  padding: 32px 50px 0;
+  display: flex;
+  gap: 36px;
+  align-items: center;
+  font-family: var(--font);
+  position: relative;
+  z-index: 10;
 }
 
-.bitesite-logo {
-    color: var(--accent);
-    cursor: pointer;
-    text-decoration: none;
+.logo {
+  font-size: 36px;
+  font-weight: 900;
+  color: var(--accent);
+  text-decoration: none;
 }
 
-.top {
-    padding-left: 50px;
-    display: flex;
-    gap: 30px;
-    align-items: baseline;
-    font-family: var(--font);
-    cursor: pointer;
-
-    position: relative;
-    z-index: 10;
+.nav-links {
+  display: flex;
+  gap: 26px;
 }
 
-.navbar-items {
-    display: flex;
-    gap: 30px;
-    color: var(--font-color-dark-blue);
-    cursor: pointer;
-    font-size: 13px;
+.nav-link {
+  color: var(--font-color-dark-blue);
+  text-decoration: none;
+  font-size: 18px;
+  font-weight: 700;
 }
 </style>
