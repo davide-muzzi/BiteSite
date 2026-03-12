@@ -1,7 +1,6 @@
 ﻿<script setup>
 import { ref } from "vue";
 import {
-    ChevronLeft,
     Globe,
     GlobeOff,
     Star,
@@ -12,6 +11,7 @@ import {
     Check,
     Save
 } from "lucide-vue-next";
+import BackButton from "@/components/common/BackButton.vue";
 
 const isPublished = ref(true);
 
@@ -24,10 +24,7 @@ function togglePublish() {
     <div class="dashboard">
 
         <!-- Back -->
-        <div class="back">
-            <ChevronLeft class="icon" />
-            Back
-        </div>
+        <BackButton />
 
         <div class="layout">
 
@@ -169,15 +166,6 @@ function togglePublish() {
 .dashboard {
     padding: 40px 80px;
     font-family: var(--font);
-}
-
-.back {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    margin-bottom: 25px;
-    cursor: pointer;
-    width: fit-content;
 }
 
 .layout {

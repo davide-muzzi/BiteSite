@@ -1,5 +1,6 @@
 <script setup>
 import { ref } from 'vue';
+import BackButton from '@/components/common/BackButton.vue';
 
 const email = ref('');
 const password = ref('');
@@ -13,9 +14,7 @@ const handleLogin = async () => {
 
 <template>
 
-    <button class="back-button">
-        <RouterLink to="/">< Back</RouterLink>
-    </button>
+    <BackButton to="/" />
 
     <div class="account-page">
         <div class="login-card">
@@ -130,18 +129,4 @@ body {
     font-weight: 600;
 }
 
-.back-button {
-    background: none;
-    border: none;
-    font-size: 20px;
-    cursor: pointer;
-    color: var(--font-color-dark-blue);
-    font-weight: 600;
-    margin-left: 70px;
-    font-family: var(--font);
-}
-
-.back-button > a {
-    text-decoration: none;
-}
 </style>

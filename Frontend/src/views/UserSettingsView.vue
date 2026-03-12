@@ -1,6 +1,6 @@
 <script setup>
 import { ref } from "vue";
-import { ChevronLeft } from "lucide-vue-next";
+import BackButton from "@/components/common/BackButton.vue";
 
 const username = ref("Julian");
 const email = ref("E@Mail.com");
@@ -35,10 +35,7 @@ function logout() {
         <div class="shape shape-top-right"></div>
         <div class="shape shape-bottom-left"></div>
 
-        <button class="back-button" @click="goBack">
-            <ChevronLeft :size="18" />
-            <span>Back</span>
-        </button>
+        <BackButton class="user-settings-back" @click="goBack" />
 
         <div class="settings-content">
             <div class="form-area">
@@ -94,25 +91,14 @@ function logout() {
     z-index: 2;
 }
 
-.back-button {
+.user-settings-back {
     position: relative;
     margin-left: 0;
     z-index: 2;
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    border: none;
-    background: transparent;
-    color: var(--font-color-dark-blue);
-    font-family: var(--font);
-    font-size: 18px;
-    font-weight: 600;
-    cursor: pointer;
-    padding: 0;
     transition: opacity 0.2s ease, transform 0.2s ease;
 }
 
-.back-button:hover {
+.user-settings-back:hover {
     opacity: 0.75;
     transform: translateX(-2px);
 }
