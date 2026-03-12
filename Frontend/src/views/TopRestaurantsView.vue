@@ -1,193 +1,242 @@
 <script setup>
-const restaurants = {
-  pizza_palace: {
-    logo: '🍕',
-    name: 'Pizza Place',
-    tags: ['Italian', 'Pizza'],
+const restaurants = [
+  {
+    id: "pizza-palace",
+    icon: "🍕",
+    name: "Pizza Place",
+    tags: ["Italian", "Pizza"],
     rating: 5,
   },
-  sushi_star: {
-    logo: '🍣',
-    name: 'Sushi Star',
-    tags: ['Sushi', 'Asian', 'Fresh'],
+  {
+    id: "sushi-star",
+    icon: "🍣",
+    name: "Sushi Star",
+    tags: ["Sushi", "Asian", "Fresh"],
     rating: 4,
   },
-}
+];
 </script>
 
 <template>
-    <div class="top">
+  <section class="restaurants-view">
+    <div class="header">
+      <div>
         <h1>Top Restaurants</h1>
-        <div class="search-container">
-            <input type="text" placeholder="Search ..." class="search-input" />
-            <button class="search-button">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search-icon lucide-search"><path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/></svg>
-            </button>
-        </div>
-    </div>
-
-  <div class="content">
-    <div class="restaurant-box" v-for="restaurant in restaurants" :key="restaurant.name" v-order>
-      <div class="restaurant-logo">
-        <div>{{ restaurant.logo }}</div>
+        <p>Browse standout restaurant sites created by BiteSite clients and rated top-notch.</p>
       </div>
-
-      <div class="name">
-        <span class="restaurant-name">{{ restaurant.name }}</span>
-      </div>
-
-      <div class="restaurant-tags">
-        <div class="tags-container">
-          <span v-for="tag in restaurant.tags" :key="tag" class="tag"> #{{ tag }} </span>
-        </div>
-        <div class="restaurant-rating">
-          <span class="rating-value">{{ restaurant.rating }}</span>
-          <div>⭐</div>
-        </div>
+      <div class="search">
+        <input type="search" placeholder="Search restaurants..." />
+        <button type="button" aria-label="Search">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="18"
+            height="18"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <circle cx="11" cy="11" r="8" />
+            <path d="m21 21-4.35-4.35" />
+          </svg>
+        </button>
       </div>
     </div>
-  </div>
+
+    <div class="restaurant-list">
+      <article
+        v-for="restaurant in restaurants"
+        :key="restaurant.id"
+        class="restaurant-card"
+      >
+        <div class="identity">
+          <span class="icon">{{ restaurant.icon }}</span>
+          <div class="title-block">
+            <h2>{{ restaurant.name }}</h2>
+            <div class="tags">
+              <span
+                v-for="tag in restaurant.tags"
+                :key="tag"
+                class="tag"
+              >
+                #{{ tag }}
+              </span>
+            </div>
+          </div>
+        </div>
+        <div class="rating">
+          <span>{{ restaurant.rating.toFixed(1) }}</span>
+          <span class="star">★</span>
+        </div>
+      </article>
+    </div>
+  </section>
 </template>
 
 <style scoped>
-.top {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    gap: 200px;
+.restaurants-view {
+  min-height: calc(100vh - 160px);
+  padding: 42px 78px 80px;
+  background: var(--background);
+  font-family: var(--font);
+  color: var(--font-color-dark-blue);
+  box-sizing: border-box;
 }
 
-.content {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    background-color: #fff5ee;
-    padding: 20px;
-    font-family: 'Arial', sans-serif;
+.header {
+  display: flex;
+  justify-content: space-between;
+  gap: 24px;
+  align-items: flex-end;
+  margin-bottom: 36px;
 }
 
-.restaurant-box {
-    display: flex;
-    min-width: 900px;
-    align-items: center;
-    background-color: white;
-    border-radius: 8px;
-    overflow: hidden;
-    height: 80px;
-    margin-bottom: 20px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-    max-width: 800px;
+.header h1 {
+  margin: 0;
+  font-size: 48px;
+  font-weight: 800;
 }
 
-.restaurant-logo {
-    width: 100px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 2;
-}
-.logo-img {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
+.header p {
+  margin: 6px 0 0;
+  font-size: 18px;
+  color: rgba(32, 32, 32, 0.65);
+  font-weight: 600;
 }
 
-.name {
-    background-color: var(--accent);
-    color: white;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    padding: 0 40px 0 20px;
-    margin-left: -20px;
-    transform: skewX(-15deg);
-    flex-grow: 0.3;
+.search {
+  flex-shrink: 0;
+  width: 320px;
+  position: relative;
 }
 
-.restaurant-name {
-    transform: skewX(15deg);
-    font-weight: bold;
-    font-size: 1.2rem;
-    white-space: nowrap;
+.search input {
+  width: 100%;
+  height: 48px;
+  border-radius: 999px;
+  border: none;
+  padding: 0 64px 0 24px;
+  background: white;
+  font-size: 16px;
+  font-weight: 600;
+  box-shadow: 0 14px 40px rgba(49, 38, 110, 0.12);
 }
 
-.restaurant-tags {
-    background-color: var(--background);
-    height: 100%;
-    flex-grow: 1;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0 20px;
-    margin-left: -15px;
+.search button {
+  position: absolute;
+  top: 50%;
+  right: 6px;
+  transform: translateY(-50%);
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: none;
+  background: var(--accent);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
 }
 
-.tags-container {
-    display: flex;
-    gap: 8px;
+.restaurant-list {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.restaurant-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24px 32px;
+  border-radius: 28px;
+  background: white;
+  box-shadow: 0 24px 60px rgba(49, 38, 110, 0.08);
+  transition: background 0.2s ease, transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.restaurant-card:hover {
+  background: var(--accent);
+  transform: translateY(-4px);
+  box-shadow: 0 34px 70px rgba(229, 0, 43, 0.3);
+}
+
+.identity {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+
+.icon {
+  width: 70px;
+  height: 70px;
+  border-radius: 20px;
+  background: rgba(229, 0, 43, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32px;
+}
+
+.title-block h2 {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 800;
+}
+
+.restaurant-card:hover .title-block h2 {
+  color: white;
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 10px;
 }
 
 .tag {
-    background-color: var(--font-color-dark-blue);
-    color: white;
-    padding: 4px 10px;
-    border-radius: 4px;
-    font-size: 0.85rem;
-    font-weight: 500;
-}
-
-.restaurant-rating {
-    background-color: white;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    padding: 0 20px;
-    margin-right: -20px;
-    transform: skewX(-15deg);
-    margin-left: 20px;
-}
-
-.rating-value {
-    transform: skewX(15deg);
-    font-weight: bold;
-    color: var(--font-color-dark-blue);
-    margin-right: 5px;
-}
-
-.search-container {
-  position: relative;
-  display: flex;
-  align-items: center;
-  width: 100%;
-  max-width: 400px;
-  margin: 20px 0;
-}
-
-.search-input {
-  width: 100%;
-  padding: 12px 60px 12px 25px; 
-  border-radius: 50px; 
-  border: none;
-  background-color: white;
-  font-size: 1rem;
-  outline: none;
-
-}
-
-.search-button {
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: var(--font-color-dark-blue);
   color: white;
-    position: absolute;
-    right: 5px; 
-    background-color: var(--accent); 
-    border: none;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    cursor: pointer;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    transition: transform 0.2s;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.restaurant-card:hover .tag {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+.rating {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--font-color-dark-blue);
+}
+
+.restaurant-card:hover .rating {
+  color: white;
+}
+
+.rating span:first-child {
+  min-width: 36px;
+  text-align: right;
+}
+
+.star {
+  color: #ffb400;
+  font-size: 26px;
+}
+
+.restaurant-card:hover .star {
+  color: white;
 }
 
 </style>
