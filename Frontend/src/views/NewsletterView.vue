@@ -58,18 +58,17 @@ function sendNewsletter() {
     <section class="newsletter-view">
         <BackButton class="newsletter-back" />
 
-        <header class="page-header">
-            <div>
+        <div class="newsletter-grid">
+            <div class="hero">
                 <h1>Newsletter</h1>
                 <p>Craft the next update for your BiteSite community.</p>
             </div>
+
             <div class="stat-card">
                 <span>Subscribers</span>
                 <strong>{{ formattedSubscribers }}</strong>
             </div>
-        </header>
 
-        <div class="content-grid">
             <div class="editor-card">
                 <label class="field-label" for="newsletter-subject">Subject</label>
                 <input id="newsletter-subject" v-model="subject" type="text"
@@ -128,34 +127,41 @@ function sendNewsletter() {
     margin-bottom: 24px;
 }
 
-.page-header {
+.newsletter-grid {
     display: grid;
-    grid-template-columns: 1.3fr 0.7fr;
-    align-items: flex-end;
+    grid-template-columns: minmax(0, 1.3fr) minmax(0, 0.7fr);
     gap: 32px;
-    margin-bottom: 36px;
+    align-items: flex-start;
 }
 
-.page-header h1 {
+.hero h1 {
     margin: 0 0 6px;
     font-size: 48px;
     font-weight: 800;
 }
 
-.page-header p {
+.hero p {
     margin: 0;
     font-size: 18px;
     color: rgba(32, 32, 32, 0.65);
     font-weight: 600;
 }
 
+.hero {
+    grid-column: 1 / 2;
+}
+
 .stat-card {
     min-width: 210px;
+    width: 100%;
+    justify-self: stretch;
+    grid-column: 2 / 3;
     border-radius: 18px;
     background: white;
     padding: 22px 28px;
     text-align: right;
     box-shadow: 0 20px 50px rgba(49, 38, 110, 0.12);
+    box-sizing: border-box;
 }
 
 .stat-card span {
@@ -171,12 +177,6 @@ function sendNewsletter() {
     color: var(--accent);
 }
 
-.content-grid {
-    display: grid;
-    grid-template-columns: 1.3fr 0.7fr;
-    gap: 32px;
-}
-
 .editor-card,
 .upload-card {
     background: white;
@@ -189,6 +189,7 @@ function sendNewsletter() {
 
 .editor-card {
     gap: 18px;
+    grid-column: 1 / 2;
 }
 
 .field-label {
@@ -249,6 +250,8 @@ function sendNewsletter() {
 
 .sidebar {
     display: flex;
+    flex-direction: column;
+    grid-column: 2 / 3;
 }
 
 .upload-card header {
@@ -333,19 +336,5 @@ function sendNewsletter() {
     font-weight: 600;
     color: var(--font-color-dark-blue);
     background: white;
-}
-
-@media (max-width: 1200px) {
-    .content-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .page-header {
-        grid-template-columns: 1fr;
-    }
-
-    .sidebar {
-        width: 100%;
-    }
 }
 </style>
