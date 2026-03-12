@@ -4,7 +4,7 @@
 
     <div class="nav-links">
       <RouterLink to="/top-restaurants" class="nav-link">Restaurants</RouterLink>
-      <RouterLink :to="{ path: '/', hash: '#about' }" class="nav-link">About Us</RouterLink>
+      <span class="nav-link disabled">About Us</span>
       <RouterLink to="/login" class="nav-link">Login</RouterLink>
     </div>
   </nav>
@@ -38,5 +38,9 @@
   text-decoration: none;
   font-size: 18px;
   font-weight: 700;
+}
+
+.nav-link.disabled {
+  cursor: default;
 }
 </style>
