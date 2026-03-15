@@ -1,36 +1,46 @@
-<script setup>
-</script>
-
 <template>
-<div class="top">
-    <h1 class="title">BiteSite</h1>
-    <div class="navbar-items">
-        <h2>Restaurants</h2>
-        <h2>What BiteSite offers</h2>
-        <h2>Login</h2>
+  <nav class="nav">
+    <RouterLink to="/" class="logo">BiteSite</RouterLink>
+
+    <div class="nav-links">
+      <RouterLink to="/top-restaurants" class="nav-link">Restaurants</RouterLink>
+      <span class="nav-link disabled">About Us</span>
+      <RouterLink to="/login" class="nav-link">Login</RouterLink>
     </div>
-</div>
+  </nav>
 </template>
 
-<style>
-.title{
-    color: var(--accent);
-    cursor: pointer;
-}
-.top{
-    padding-left: 50px;
-    display: flex;
-    gap: 30px;
-    align-items: baseline;
-    font-family: var(--font);
-    cursor: pointer;
+<style scoped>
+.nav {
+  padding: 32px 50px 0;
+  display: flex;
+  gap: 36px;
+  align-items: center;
+  font-family: var(--font);
+  position: relative;
+  z-index: 10;
 }
 
-.navbar-items{
-    display: flex;
-    gap: 30px;
-    color: var(--font-color-dark-blue);
-    cursor: pointer;
-    font-size: 13px;
+.logo {
+  font-size: 36px;
+  font-weight: 900;
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.nav-links {
+  display: flex;
+  gap: 26px;
+}
+
+.nav-link {
+  color: var(--font-color-dark-blue);
+  text-decoration: none;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.nav-link.disabled {
+  cursor: default;
 }
 </style>

@@ -60,3 +60,11 @@ CREATE TABLE IF NOT EXISTS project_tags(
   FOREIGN KEY (fk_project_id) REFERENCES projects(project_id) ON DELETE CASCADE,
   FOREIGN KEY (fk_tag_id) REFERENCES tags(tag_id) ON DELETE CASCADE
 );
+
+CREATE TABLE IF NOT EXISTS newsletter_subscribers(
+  subscriber_id INTEGER PRIMARY KEY AUTOINCREMENT,
+  email TEXT,
+  fk_project_id INTEGER,
+  FOREIGN KEY (fk_project_id) REFERENCES projects(project_id) ON DELETE CASCADE,
+  UNIQUE(email, fk_project_id)
+);

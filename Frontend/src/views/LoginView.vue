@@ -1,5 +1,6 @@
 <script setup>
 import { ref } from 'vue';
+import BackButton from '@/components/BackButton.vue';
 
 const email = ref('');
 const password = ref('');
@@ -12,15 +13,16 @@ const handleLogin = async () => {
 </script>
 
 <template>
+    <section class="login-view">
+        <BackButton />
 
-    <button class="back-button">
-        <RouterLink to="/">< Back</RouterLink>
-    </button>
+        <div class="page-header">
+            <h1>Welcome back</h1>
+            <p>Sign in to continue building and managing your BiteSite presence.</p>
+        </div>
 
-    <div class="account-page">
         <div class="login-card">
             <form class="login-form" @submit.prevent="handleLogin">
-                
                 <div class="form-group">
                     <label for="email">E-Mail</label>
                     <input
@@ -32,7 +34,6 @@ const handleLogin = async () => {
                     />
                 </div>
 
-              
                 <div class="form-group">
                     <label for="password">Password</label>
                     <input
@@ -44,105 +45,114 @@ const handleLogin = async () => {
                     />
                 </div>
 
+                <button type="submit" class="login-button">
+                    Login
+                </button>
             </form>
-            
-            <button type="submit" class="login-button">
-                Login
-            </button>
 
-             <p class="register-text">
-                Don't have an account? <RouterLink to="/register">Register</RouterLink>
-             </p>
-
+            <p class="register-text">
+                Don't have an account?
+                <RouterLink to="/register">Register</RouterLink>
+            </p>
         </div>
-    </div>
+    </section>
 </template>
 
-<style>
-body {
+<style scoped>
+.login-view {
+  min-height: calc(100vh - 160px);
+  padding: 42px 78px 80px;
   background: var(--background);
   font-family: var(--font);
   color: var(--font-color-dark-blue);
+  box-sizing: border-box;
 }
 
-.account-page {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  flex-direction: column;
+.page-header {
+  margin: 32px auto;
+  max-width: 520px;
+  text-align: center;
 }
 
+.page-header h1 {
+  margin: 0 0 6px;
+  font-size: 48px;
+  font-weight: 800;
+}
+
+.page-header p {
+  margin: 0;
+  font-size: 18px;
+  color: rgba(32, 32, 32, 0.65);
+  font-weight: 600;
+}
 
 .login-card {
-  background-color: #ffeede;
-  width: 738px; 
-  height: 614px; 
-  border-radius: 66px;
+  width: 100%;
+  max-width: 520px;
+  margin: 0 auto;
+  background: white;
+  border-radius: 28px;
+  padding: 40px 48px 48px;
+  box-shadow: 0 28px 60px rgba(49, 38, 110, 0.12);
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  gap: 24px;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
 }
 
 .form-group label {
   display: block;
-  font-size: 32px;
-  display: flex;
-  justify-content: center;
-  margin-top: 20px;
-  font-weight: 600;
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 10px;
 }
 
 .form-group input {
-    width: 635px;
-    height: 90px;
-    border-radius: 66px;
-    border: none;
-    font-size: 32px;
-    font-family: var(--font);
-    margin-top: 17px;
-    padding-left: 42px;
-    padding-right: 42px;
-    box-sizing: border-box;
+  width: 100%;
+  height: 64px;
+  border-radius: 999px;
+  border: none;
+  background: #f9f6f1;
+  padding: 0 28px;
+  font-family: var(--font);
+  font-size: 18px;
+  font-weight: 600;
+  color: #2b2b2b;
+  box-sizing: border-box;
 }
 
 .login-button {
-    width: 635px;
-    height: 90px;
-    border-radius: 66px;
-    border: none;
-    margin-top: 64px;
-    background-color: var(--accent);
-    color: white;
-    font-size: 32px;
-    cursor: pointer;
-    font-weight: 600;
-    box-sizing: border-box;
-    margin-bottom: 0;
+  width: 100%;
+  height: 64px;
+  border-radius: 999px;
+  border: none;
+  background-color: var(--accent);
+  color: white;
+  font-size: 18px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.2s ease;
 }
 
 .login-button:hover {
-    background-color: var(--button-hover-color);
+  background-color: var(--button-hover-color);
+  transform: translateY(-2px);
 }
 
 .register-text {
-    font-size: 26px;
-    font-weight: 600;
+  text-align: center;
+  font-size: 16px;
+  font-weight: 600;
 }
 
-.back-button {
-    background: none;
-    border: none;
-    font-size: 20px;
-    cursor: pointer;
-    color: var(--font-color-dark-blue);
-    font-weight: 600;
-    margin-left: 70px;
-    font-family: var(--font);
-}
-
-.back-button > a {
-    text-decoration: none;
+.register-text a {
+  color: var(--font-color-dark-blue);
+  font-weight: 800;
 }
 </style>
