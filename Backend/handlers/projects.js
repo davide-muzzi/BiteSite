@@ -5,24 +5,23 @@ export async function createProject(req, res) {
   const {name, tags, templateName} = req.body;
   checkReq(!name || !tags || !templateName);
 
+  if (templateName !== "blank") return res.status(400).json({ success: false, message: "Not a recognized template" });
+  const template = [];
+
   const tagSelectPlaceholders = tags.map(() => "?").join(",");
 
   const existingTags = await safeOperation(
-    () => db.get(`select tag_id, name from tags where name in (${tagSelectPlaceholders})`, tags),
+    () => db.all(`select tag_id, name from tags where name in (${tagSelectPlaceholders})`, tags),
     "Error while getting tags from database"
-  );
+  ) || [];
 
   const newTags = tags.filter(tag => !existingTags.some(exTag => exTag.name === tag));
-  const newTagInsertPlaceholder = newTags.map(() => "(?)").join(",");
+  const newTagInsertPlaceholder = newTags.map(() => "(?)").join(",") || "(?)";
 
   const newTagsInsert = await safeOperation(
-    () => db.run(`insert into tags (name) values ${newTagInsertPlaceholder}`, tags),
+    () => db.run(`insert into tags (name) values ${newTagInsertPlaceholder}`, newTags),
     "Error while inserting new tags"
   );
-
-  if (templateName !== "blank") return res.status(400).json({ success: false, message: "Not a recognized template" });
-
-  const template = [];
 
   const projectInsert = await safeOperation(
     () => db.run("insert into projects (name, website, fk_user_id) values (?,?,?)", [name, JSON.stringify(template), req.session.user.id]),
@@ -31,15 +30,15 @@ export async function createProject(req, res) {
 
   const newTagIds = [];
 
-  for (let i; i < newTags.length(); i++) {
-    newTagIds.push(newTagsInsert.lastInsertRowId);
-    newTagsInsert.lastInsertRowId--;
+  for (let i = 0; i < newTags.length; i++) {
+    newTagIds.push(newTagsInsert.lastID);
+    newTagsInsert.lastID--;
   }
 
   const referenceTagIds = [...newTagIds, ...existingTags.map(tag => tag.tag_id)];
 
   const tagInsertPlaceholders = referenceTagIds.map(() => "(?,?)").join(",");
-  const tagInsertParams = referenceTagIds.flatMap(tag => [tag, projectInsert.lastInsertRowId]);
+  const tagInsertParams = referenceTagIds.flatMap(tag => [tag, projectInsert.lastID]);
 
   await safeOperation(
     () => db.run(
