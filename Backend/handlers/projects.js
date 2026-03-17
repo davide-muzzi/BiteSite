@@ -72,3 +72,25 @@ export async function editTitle(req, res) {
 
   res.status(200).json({ success: true, message: "Successfully updated website title" });
 }
+
+export async function editName(req, res) {
+  const {projectId, name} = req.body;
+  checkReq(!projectId || !name);
+
+  const project = await safeOperation(
+    () => db.get("select fk_user_id from projects where project_id = ?", [projectId]),
+    "Error while getting project from database"
+  );
+
+  if (!project) 
+    return res.status(404).json({ success: false, message: "Project not found" });
+  if (project.fk_user_id !== req.session.user.id) 
+    return res.status(403).json({ success: false, message: "Not your project" });
+  
+  await safeOperation(
+    () => db.run("update projects set name = ? where project_id = ?", [name, projectId]),
+    "Error while updating website name"
+  );
+
+  res.status(200).json({ success: true, message: "Successfully updated website name" });
+}
