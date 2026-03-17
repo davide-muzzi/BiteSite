@@ -94,3 +94,33 @@ export async function editName(req, res) {
 
   res.status(200).json({ success: true, message: "Successfully updated website name" });
 }
+
+export async function getProject(req, res) {
+  const {projectId} = req.query;
+
+  const project = await safeOperation(
+    () => db.get("select project_id, name, website_title, website_route, published, fk_user_id from projects where project_id = ?", [projectId]),
+    "Error while getting project from database"
+  );
+
+  if (!project) 
+    return res.status(404).json({ success: false, message: "Project not found" });
+  if (project.fk_user_id !== req.session.user.id) 
+    return res.status(403).json({ success: false, message: "Not your project" });
+
+  const tags = await safeOperation(
+    () => db.all("select name from tags join project_tags on tag_id = fk_tag_id where fk_project_id = ?", [projectId]),
+    "Error while getting tags from database"
+  );
+  
+  const formattedProject = {
+    projectId: project.project_id,
+    name: project.name,
+    websiteTitle: project.website_title || "",
+    websiteRoute: project.website_route || "",
+    published: Boolean(project.published),
+    tags: tags.map(tag => tag.name),
+  };
+
+  res.status(200).json({ success: true, message: "Successfully retrieved project from database", project: formattedProject });
+}
