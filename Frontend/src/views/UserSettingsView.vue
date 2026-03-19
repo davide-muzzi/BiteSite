@@ -1,6 +1,7 @@
 <script setup>
 import { ref } from "vue";
 import BackButton from "@/components/BackButton.vue";
+import { logout } from "@/api/routes/user.js";
 
 const username = ref("Julian");
 const email = ref("E@Mail.com");
@@ -20,8 +21,10 @@ function saveSettings() {
     });
 }
 
-function logout() {
-    console.log("Logout clicked");
+const handleLogout = async () => {
+  const result = await logout();
+
+  if (result.success) window.location.href = "/";
 }
 </script>
 
@@ -64,7 +67,7 @@ function logout() {
 
                 <div class="button-row">
                     <button class="save-button" type="submit">Save Changes</button>
-                    <button class="logout-button" type="button" @click="logout">
+                    <button class="logout-button" type="button" @click="handleLogout()">
                         Logout
                     </button>
                 </div>
