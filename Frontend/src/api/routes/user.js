@@ -15,3 +15,7 @@ export async function checkLogin() {
 export async function logout() {
   return request("post", "/users/logout")
 }
+
+export async function editUser(username, email) {
+  return request("patch", "/users/edit", { data: { username, email}})
+}
