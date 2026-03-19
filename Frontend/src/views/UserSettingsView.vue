@@ -1,8 +1,8 @@
 <script setup>
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import BackButton from "@/components/BackButton.vue";
-import { logout } from "@/api/routes/user.js";
-import { editUser } from "@/api/routes/user.js";
+import { logout, editUser, getUser } from "@/api/routes/user.js";
+
 
 const username = ref("Julian");
 const email = ref("E@Mail.com");
@@ -32,6 +32,15 @@ const handleLogout = async () => {
 const handleEditUser = async () => {
   await editUser(username.value, email.value)
 }
+
+onMounted(async () => {
+  const result = await getUser()
+  if (result.success)
+  {
+    username.value = result.user.username;
+    email.value = result.user.email
+  }
+})
 </script>
 
 <template>

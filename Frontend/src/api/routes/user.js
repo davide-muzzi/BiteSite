@@ -19,3 +19,7 @@ export async function logout() {
 export async function editUser(username, email) {
   return request("patch", "/users/edit", { data: { username, email}})
 }
+
+export async function getUser() {
+  return request("get", "/users")
+}
