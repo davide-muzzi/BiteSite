@@ -2,7 +2,6 @@
 import { ref } from 'vue';
 import BackButton from '@/components/BackButton.vue';
 import { login } from "@/api/routes/user.js";
-import router from "@/router";
 
 const email = ref('');
 const password = ref('');
@@ -10,7 +9,7 @@ const password = ref('');
 const handleLogin = async () => {
   const result = await login(email.value, password.value);
 
-  if (result.success) router.push("/projects-overview");
+  if (result.success) window.location.href = "/projects-overview";
 };
 
 </script>

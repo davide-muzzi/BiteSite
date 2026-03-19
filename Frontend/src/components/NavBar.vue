@@ -1,4 +1,4 @@
-<script>
+<script setup>
 import { checkLogin } from "@/api/routes/user.js";
 import { onMounted, ref } from "vue";
 
@@ -8,6 +8,7 @@ onMounted(async () => {
   const result = await checkLogin();
 
   loggedIn.value = result.loggedIn;
+  console.log(loggedIn.value)
 })
 </script>
 
@@ -18,7 +19,7 @@ onMounted(async () => {
     <div class="nav-links">
       <RouterLink to="/top-restaurants" class="nav-link">Restaurants</RouterLink>
       <span class="nav-link disabled">About Us</span>
-      <div v-if="loggedIn">
+      <div v-if="!loggedIn">
         <RouterLink to="/login" class="nav-link">Login</RouterLink>
       </div>
       <div v-else>

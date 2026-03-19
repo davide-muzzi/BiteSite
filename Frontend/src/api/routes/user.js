@@ -11,3 +11,7 @@ export async function register(username, email, password, subscription) {
 export async function checkLogin() {
   return request("get", "/users/check-login");
 }
+
+export async function logout() {
+  return request("post", "/users/logout")
+}
