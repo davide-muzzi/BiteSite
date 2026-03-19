@@ -2,7 +2,7 @@ import { db } from "../database/db.js";
 import { safeOperation, checkReq } from "../error-handling.js";
 
 export async function createProject(req, res) {
-  const {name, tags, templateName} = req.body;
+  const { name, tags, templateName } = req.body;
   checkReq(!name || !tags || !templateName);
 
   if (templateName !== "blank") return res.status(400).json({ success: false, message: "Not a recognized template" });
@@ -49,10 +49,10 @@ export async function createProject(req, res) {
   );
 
   res.status(200).json({ success: true, message: "Successfully created project" });
-} 
+}
 
 export async function editTitle(req, res) {
-  const {projectId, title} = req.body;
+  const { projectId, title } = req.body;
   checkReq(!projectId || !title);
 
   const project = await safeOperation(
@@ -60,11 +60,11 @@ export async function editTitle(req, res) {
     "Error while getting project from database"
   );
 
-  if (!project) 
+  if (!project)
     return res.status(404).json({ success: false, message: "Project not found" });
-  if (project.fk_user_id !== req.session.user.id) 
+  if (project.fk_user_id !== req.session.user.id)
     return res.status(403).json({ success: false, message: "Not your project" });
-  
+
   await safeOperation(
     () => db.run("update projects set website_title = ? where project_id = ?", [title, projectId]),
     "Error while updating website title"
@@ -74,7 +74,7 @@ export async function editTitle(req, res) {
 }
 
 export async function editName(req, res) {
-  const {projectId, name} = req.body;
+  const { projectId, name } = req.body;
   checkReq(!projectId || !name);
 
   const project = await safeOperation(
@@ -82,11 +82,11 @@ export async function editName(req, res) {
     "Error while getting project from database"
   );
 
-  if (!project) 
+  if (!project)
     return res.status(404).json({ success: false, message: "Project not found" });
-  if (project.fk_user_id !== req.session.user.id) 
+  if (project.fk_user_id !== req.session.user.id)
     return res.status(403).json({ success: false, message: "Not your project" });
-  
+
   await safeOperation(
     () => db.run("update projects set name = ? where project_id = ?", [name, projectId]),
     "Error while updating website name"
@@ -96,23 +96,23 @@ export async function editName(req, res) {
 }
 
 export async function getProject(req, res) {
-  const {projectId} = req.query;
+  const { projectId } = req.query;
 
   const project = await safeOperation(
     () => db.get("select project_id, name, website_title, website_route, published, fk_user_id from projects where project_id = ?", [projectId]),
     "Error while getting project from database"
   );
 
-  if (!project) 
+  if (!project)
     return res.status(404).json({ success: false, message: "Project not found" });
-  if (project.fk_user_id !== req.session.user.id) 
+  if (project.fk_user_id !== req.session.user.id)
     return res.status(403).json({ success: false, message: "Not your project" });
 
   const tags = await safeOperation(
     () => db.all("select name from tags join project_tags on tag_id = fk_tag_id where fk_project_id = ?", [projectId]),
     "Error while getting tags from database"
   );
-  
+
   const formattedProject = {
     projectId: project.project_id,
     name: project.name,
@@ -123,4 +123,32 @@ export async function getProject(req, res) {
   };
 
   res.status(200).json({ success: true, message: "Successfully retrieved project from database", project: formattedProject });
+}
+
+export async function editRoute(req, res) {
+  const { projectId, routeName } = req.body;
+
+  const project = await safeOperation(
+    () => db.get("select project_id, name, website_title, website_route, published, fk_user_id from projects where project_id = ?", [projectId]),
+    "Error while getting project from database"
+  );
+
+  if (!project)
+    return res.status(404).json({ success: false, message: "Project not found" });
+  if (project.fk_user_id !== req.session.user.id)
+    return res.status(403).json({ success: false, message: "Not your project" });
+
+  const routeProject = await safeOperation(
+    () => db.get("select project_id from projects where website_route = ?", [routeName.toLowerCase()]),
+    "Error while checking if route exists"
+  );
+
+  if (routeProject && routeProject.project_id !== projectId) res.status(409).json({ success: false, message: "Route is already registered" });
+
+  await safeOperation(
+    () => db.run("update projects set website_route = ? where project_id = ?", [routeName.toLowerCase(), projectId]),
+    "Error while updating route"
+  );
+
+  res.status(200).json({ success: true, message: "Successfully updated route" });
 }
