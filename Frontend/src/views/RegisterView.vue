@@ -55,7 +55,7 @@ const steps = [
 
               <div class="label" :class="{ activeLabel: currentStep === index + 1 }">
                 {{ s.label }}
-              </div>    
+              </div>
             </div>
           </div>
         </div>
@@ -91,12 +91,12 @@ body {
     width: 80%;
     max-width: 900px;
     margin-bottom: 30px;
-  
+
 }
 
 .line {
     height: 6px;
-    background: #e7dcd6; 
+    background: #e7dcd6;
     border-radius: 999px;
     position: relative;
     overflow: hidden;
@@ -104,7 +104,7 @@ body {
 
 .line-fill {
     height: 100%;
-    background: #e5002b; 
+    background: #e5002b;
     width: 0%;
     border-radius: 999px;
     transition: width 0.35s ease;
@@ -113,7 +113,7 @@ body {
 .points {
     position: relative;
     height: 55px;
-    margin-top: -12px; 
+    margin-top: -12px;
 }
 
 .point-wrap {

@@ -1,23 +1,26 @@
 <script setup>
-    import { ref, computed } from 'vue';
-    import { useRouter } from 'vue-router';
+import { ref } from 'vue';
+import { useRouter } from 'vue-router';
+import { useRegisterStore } from '@/stores/register.js';
 
-    const router = useRouter();
+const registerStore = useRegisterStore();
 
+const router = useRouter();
 
-    const username = ref('');
-    const email = ref('');
-    const password = ref('');
-    // Sample validation 
-    const handleregister = async () => {
-        if (!username.value.trim()) return;
-        if (!email.value.includes("@")) return;
-        if (password.value.length < 3) return;
-  console.log("register with:", email.value, password.value);
+const username = ref('');
+const email = ref('');
+const password = ref('');
+
+// Sample validation
+const handleregister = async () => {
+  if (!username.value.trim()) return;
+  if (!email.value.includes("@")) return;
+  if (password.value.length < 3) return;
+
+  registerStore.setRegisterData(username.value, password.value, email.value);
 
   router.push("/register/step-2");
-    };
-
+};
 </script>
 
 <template>
@@ -43,7 +46,7 @@
                     required
                 />
         </div>
-      
+
         <div class="form-group">
             <label for="password">Password</label>
             <input
@@ -73,8 +76,8 @@ body {
 
 .register-card {
     background-color: #ffeede;
-    width: 517px; 
-    height: 580px; 
+    width: 517px;
+    height: 580px;
     border-radius: 66px;
     display: flex;
     flex-direction: column;
