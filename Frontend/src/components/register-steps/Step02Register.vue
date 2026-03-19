@@ -91,8 +91,8 @@ body {
 
 .beginner-card {
     background-color: #ffeede;
-    width: 607px; 
-    height: 341px; 
+    width: 607px;
+    height: 341px;
     border-radius: 46px;
     display: flex;
     flex-direction: column;
@@ -143,8 +143,8 @@ body {
 
 .masterchef-card {
     background-color: #ffeede;
-    width: 607px; 
-    height: 485px; 
+    width: 607px;
+    height: 485px;
     border-radius: 66px;
     display: flex;
     flex-direction: column;

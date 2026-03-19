@@ -2,6 +2,7 @@
 import { computed } from 'vue';
 import { useRegisterStore } from "../../stores/register";
 import { ref } from 'vue';
+import router from '@/router';
 
 const cardnumber = ref("");
 const cardholdername = ref("");
@@ -20,13 +21,19 @@ const buttonenabled = computed(() => {
         cvv.value
     );
 });
+
+const handleRegister = async () => {
+  const result = await store.register();
+
+  if (result.success) router.push("/login");
+};
 </script>
 
 <template>
     <div class="🦅">
         <div class="paymentinfo-card">
             <h2>Payment Information</h2>
-            <form class="register-form" >
+            <form class="register-form" @submit.prevent="handleRegister()">
                 <div class="form-group">
                     <input
                         id="cardnumber"
@@ -45,7 +52,7 @@ const buttonenabled = computed(() => {
                             required
                         />
                 </div>
-                
+
                 <div class="next-to">
                     <div class="form-group-half">
                         <input
@@ -112,8 +119,8 @@ body {
 
 .paymentinfo-card {
     background-color: #ffeede;
-    width: 510px; 
-    height: 460px; 
+    width: 510px;
+    height: 460px;
     border-radius: 66px;
     display: flex;
     flex-direction: column;
@@ -171,8 +178,8 @@ body {
 
 .overview-card {
     background-color: #ffeede;
-    width: 422px; 
-    height: 460px; 
+    width: 422px;
+    height: 460px;
     border-radius: 66px;
     display: flex;
     flex-direction: column;
@@ -202,8 +209,8 @@ body {
 }
 
 
-/*Idea from ChatGPT*/ 
-.payment-button:disabled { 
+/*Idea from ChatGPT*/
+.payment-button:disabled {
   opacity: 0.5;
   cursor: not-allowed;
 }
