@@ -129,7 +129,7 @@ export async function editRoute(req, res) {
   const { projectId, routeName } = req.body;
 
   const project = await safeOperation(
-    () => db.get("select project_id, name, website_title, website_route, published, fk_user_id from projects where project_id = ?", [projectId]),
+    () => db.get("select project_id from projects where project_id = ?", [projectId]),
     "Error while getting project from database"
   );
 
@@ -139,7 +139,7 @@ export async function editRoute(req, res) {
     return res.status(403).json({ success: false, message: "Not your project" });
 
   const routeProject = await safeOperation(
-    () => db.get("select project_id from projects where website_route = ?", [routeName.toLowerCase()]),
+    () => db.get("select project_id, fk_user_id from projects where website_route = ?", [routeName.toLowerCase()]),
     "Error while checking if route exists"
   );
 
@@ -151,4 +151,20 @@ export async function editRoute(req, res) {
   );
 
   res.status(200).json({ success: true, message: "Successfully updated route" });
+}
+
+export async function getWebsite(req, res) {
+  const { projectId } = req.query;
+
+  const project = await safeOperation(
+    () => db.get("select website, fk_user_id from projects where project_id = ?", [projectId]),
+    "Error while getting project from database"
+  );
+
+  if (!project)
+    return res.status(404).json({ success: false, message: "Project not found" });
+  if (project.fk_user_id !== req.session.user.id)
+    return res.status(403).json({ success: false, message: "Not your project" });
+
+  res.status(200).json({ success: true, message: "Successfully retrieved website from database", website: JSON.parse(project.website) });
 }
