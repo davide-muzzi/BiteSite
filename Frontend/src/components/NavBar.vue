@@ -1,3 +1,16 @@
+<script>
+import { checkLogin } from "@/api/routes/user.js";
+import { onMounted, ref } from "vue";
+
+const loggedIn = ref("");
+
+onMounted(async () => {
+  const result = await checkLogin();
+
+  loggedIn.value = result.loggedIn;
+})
+</script>
+
 <template>
   <nav class="nav">
     <RouterLink to="/" class="logo">BiteSite</RouterLink>
@@ -5,7 +18,12 @@
     <div class="nav-links">
       <RouterLink to="/top-restaurants" class="nav-link">Restaurants</RouterLink>
       <span class="nav-link disabled">About Us</span>
-      <RouterLink to="/login" class="nav-link">Login</RouterLink>
+      <div v-if="loggedIn">
+        <RouterLink to="/login" class="nav-link">Login</RouterLink>
+      </div>
+      <div v-else>
+        <RouterLink to="/user-settings" class="nav-link">Settings</RouterLink>
+      </div>
     </div>
   </nav>
 </template>
