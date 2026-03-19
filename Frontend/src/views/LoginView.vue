@@ -1,13 +1,16 @@
 <script setup>
 import { ref } from 'vue';
 import BackButton from '@/components/BackButton.vue';
+import { login } from "@/api/routes/user.js";
+import router from "@/router";
 
 const email = ref('');
 const password = ref('');
 
 const handleLogin = async () => {
+  const result = await login(email.value, password.value);
 
-  console.log("Login with:", email.value, password.value);
+  if (result.success) router.push("/projects-overview");
 };
 
 </script>
