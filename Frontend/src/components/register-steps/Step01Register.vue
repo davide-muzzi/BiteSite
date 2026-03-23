@@ -28,7 +28,6 @@ const handleregister = async () => {
     <header class="card-header">
       <p class="eyebrow">Account</p>
       <h2>Tell us about you</h2>
-      <p>Share the credentials you'll use to access your BiteSite dashboard.</p>
     </header>
 
     <form class="register-form" @submit.prevent="handleregister">
