@@ -99,4 +99,4 @@ jobs:
             fi
 
             # restart backend (PM2)
-            pm2 restart bitesite-backend || pm2 start server.js --name bitesite-backend
+            npx pm2 restart bitesite-backend || npx pm2 start server.js --name bitesite-backend
