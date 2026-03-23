@@ -35,7 +35,6 @@ const steps = [
       <header class="register-lead">
         <p class="eyebrow">Step {{ currentStep }} of 3</p>
         <h1>Set up your BiteSite workspace</h1>
-        <p>Complete the quick steps below to start designing and publishing your restaurant site.</p>
       </header>
 
       <div class="progress-bar">
