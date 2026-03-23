@@ -74,8 +74,8 @@ const handleRegister = async () => {
         <article class="step-card overview-card">
             <header class="card-header">
                 <p class="eyebrow">Overview</p>
-                <h2>Your selection</h2>
-                <p v-if="selected" class="selected-name">{{ selected.name }}</p>
+                <h2>Your selection:</h2>
+                <h2 v-if="selected" class="selected-name">{{ selected.name }}</h2>
             </header>
 
             <div v-if="selected" class="overview-content">
