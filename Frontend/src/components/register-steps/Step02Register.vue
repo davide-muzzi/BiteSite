@@ -214,14 +214,4 @@ function selectPlan(plan) {
     background-color: var(--button-hover-color);
     transform: translateY(-2px);
 }
-
-@media (max-width: 720px) {
-    .plan-card {
-        padding: 28px 26px 32px;
-    }
-
-    .section-header h2 {
-        font-size: 30px;
-    }
-}
 </style>

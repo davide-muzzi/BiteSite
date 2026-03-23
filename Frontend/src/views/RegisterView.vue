@@ -199,14 +199,4 @@ body {
   justify-content: center;
   width: 100%;
 }
-
-@media (max-width: 768px) {
-  .register-lead h1 {
-    font-size: 34px;
-  }
-
-  .stepper {
-    max-width: none;
-  }
-}
 </style>

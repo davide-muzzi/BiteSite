@@ -248,12 +248,6 @@ const handleRegister = async () => {
     color: var(--accent);
     flex-shrink: 0;
 }
-
-@media (max-width: 600px) {
-    .step-card {
-        padding: 28px 26px 32px;
-    }
-}
 </style>
 .selected-name {
 margin: 6px 0 0;
