@@ -1,6 +1,7 @@
 <script setup>
 import { useRegisterStore } from "../../stores/register";
 import { useRouter } from "vue-router";
+import { Check } from "lucide-vue-next";
 
 const store = useRegisterStore();
 const router = useRouter();
@@ -71,7 +72,8 @@ function selectPlan(plan) {
 
         <ul class="feature-list">
           <li v-for="feature in plan.features" :key="feature">
-            {{ feature }}
+            <Check class="feature-icon" />
+            <span>{{ feature }}</span>
           </li>
         </ul>
 
@@ -186,19 +188,18 @@ function selectPlan(plan) {
 }
 
 .feature-list li {
-  position: relative;
-  padding-left: 28px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
   font-weight: 600;
   color: rgba(30, 30, 30, 0.9);
 }
 
-.feature-list li::before {
-  content: "-";
-  position: absolute;
-  left: 0;
-  top: 0;
+.feature-icon {
+  width: 18px;
+  height: 18px;
   color: var(--accent);
-  font-weight: 900;
+  flex-shrink: 0;
 }
 
 .plan-button {

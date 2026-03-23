@@ -2,6 +2,7 @@
 import { computed, ref } from 'vue';
 import { useRegisterStore } from "../../stores/register";
 import router from '@/router';
+import { Check } from "lucide-vue-next";
 
 const cardnumber = ref("");
 const cardholdername = ref("");
@@ -112,7 +113,10 @@ const handleRegister = async () => {
         </p>
 
         <ul class="feature-list">
-          <li v-for="(f, i) in selected.features" :key="i">{{ f }}</li>
+          <li v-for="(f, i) in selected.features" :key="i">
+            <Check class="feature-icon" />
+            <span>{{ f }}</span>
+          </li>
         </ul>
       </div>
 
@@ -255,19 +259,18 @@ const handleRegister = async () => {
 }
 
 .feature-list li {
-  position: relative;
-  padding-left: 26px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
   font-weight: 600;
   color: rgba(30, 30, 30, 0.9);
 }
 
-.feature-list li::before {
-  content: "-";
-  position: absolute;
-  left: 0;
-  top: 0;
+.feature-icon {
+  width: 18px;
+  height: 18px;
   color: var(--accent);
-  font-weight: 900;
+  flex-shrink: 0;
 }
 
 @media (max-width: 600px) {
