@@ -103,7 +103,7 @@ const handleRegister = async () => {
       <header class="card-header">
         <p class="eyebrow">Overview</p>
         <h2>Your selection</h2>
-        <p v-if="selected">{{ selected.name }} subscription</p>
+        <p v-if="selected" class="selected-name">{{ selected.name }}</p>
       </header>
 
       <div v-if="selected" class="overview-content">
@@ -133,6 +133,7 @@ const handleRegister = async () => {
   gap: 32px;
   font-family: var(--font);
   color: var(--font-color-dark-blue);
+  align-items: stretch;
 }
 
 .step-card {
@@ -142,6 +143,7 @@ const handleRegister = async () => {
   box-shadow: 0 32px 70px rgba(49, 38, 110, 0.12);
   display: flex;
   flex-direction: column;
+  height: 100%;
 }
 
 .card-header h2 {
@@ -227,6 +229,8 @@ const handleRegister = async () => {
 
 .overview-card {
   min-height: 100%;
+  border: 2px solid rgba(253, 4, 60, 0.2);
+  background: linear-gradient(180deg, #fff 0%, #fff7f4 100%);
 }
 
 .overview-content {
@@ -279,3 +283,9 @@ const handleRegister = async () => {
   }
 }
 </style>
+.selected-name {
+  margin: 6px 0 0;
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--accent);
+}

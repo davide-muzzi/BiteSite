@@ -84,8 +84,9 @@ body {
 .register-view {
   min-height: calc(100vh - 160px);
   background: var(--background);
-  padding: 40px 28px 72px;
+  padding: 40px 28px 120px;
   box-sizing: border-box;
+  margin-bottom: 40px;
 }
 
 .register-shell {
