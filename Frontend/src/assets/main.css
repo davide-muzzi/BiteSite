@@ -1,4 +1,6 @@
-body, html, #app {
+body,
+html,
+#app {
   padding: 0px;
   margin: 0px;
   height: 100%;
@@ -7,14 +9,14 @@ body, html, #app {
 
 @font-face {
   font-family: 'outfit';
-  src: url("./Font/Outfit/Outfit-VariableFont_wght.ttf");
+  src: url('./Font/Outfit/Outfit-VariableFont_wght.ttf');
 }
 
 :root {
   --background: #fff5ec;
-  --accent: #FD043C;
+  --accent: #fd043c;
   --font: outfit;
-  --font-color-dark-blue:#31266e;
+  --font-color-dark-blue: #31266e;
   --button-hover-color: #e11b47;
 }
 

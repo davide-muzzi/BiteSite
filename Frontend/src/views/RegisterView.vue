@@ -45,19 +45,11 @@ const steps = [
           </div>
 
           <div class="points">
-            <div
-              v-for="(s, index) in steps"
-              :key="index"
-              class="point-wrap"
-              :style="{ left: positions[index] + '%' }"
-            >
-              <div
-                class="point"
-                :class="{
-                  done: currentStep > index + 1,
-                  active: currentStep === index + 1,
-                }"
-              ></div>
+            <div v-for="(s, index) in steps" :key="index" class="point-wrap" :style="{ left: positions[index] + '%' }">
+              <div class="point" :class="{
+                done: currentStep > index + 1,
+                active: currentStep === index + 1,
+              }"></div>
 
               <div class="label" :class="{ activeLabel: currentStep === index + 1 }">
                 {{ s.label }}
@@ -140,54 +132,54 @@ body {
 }
 
 .line {
-    height: 6px;
-    background: #e7dcd6;
-    border-radius: 999px;
-    position: relative;
-    overflow: hidden;
+  height: 6px;
+  background: #e7dcd6;
+  border-radius: 999px;
+  position: relative;
+  overflow: hidden;
 }
 
 .line-fill {
-    height: 100%;
-    background: #e5002b;
-    width: 0%;
-    border-radius: 999px;
-    transition: width 0.35s ease;
+  height: 100%;
+  background: #e5002b;
+  width: 0%;
+  border-radius: 999px;
+  transition: width 0.35s ease;
 }
 
 .points {
-    position: relative;
-    height: 55px;
-    margin-top: -12px;
+  position: relative;
+  height: 55px;
+  margin-top: -12px;
 }
 
 .point-wrap {
-    position: absolute;
-    top: 0;
-    transform: translateX(-50%);
-    text-align: center;
-    width: 120px;
+  position: absolute;
+  top: 0;
+  transform: translateX(-50%);
+  text-align: center;
+  width: 120px;
 }
 
 .point {
-    width: 14px;
-    height: 14px;
-    border-radius: 999px;
-    background: #e7dcd6;
-    border: 3px solid #e7dcd6;
-    margin: 0 auto;
-    transition: transform 0.2s ease, background 0.2s ease, border 0.2s ease;
+  width: 14px;
+  height: 14px;
+  border-radius: 999px;
+  background: #e7dcd6;
+  border: 3px solid #e7dcd6;
+  margin: 0 auto;
+  transition: transform 0.2s ease, background 0.2s ease, border 0.2s ease;
 }
 
 .point.active {
-    background: #e5002b;
-    border-color: #e5002b;
-    transform: scale(1.4);
+  background: #e5002b;
+  border-color: #e5002b;
+  transform: scale(1.4);
 }
 
 .point.done {
-    background: #e5002b;
-    border-color: #e5002b;
+  background: #e5002b;
+  border-color: #e5002b;
 }
 
 .label {
