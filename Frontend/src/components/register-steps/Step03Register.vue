@@ -248,10 +248,11 @@ const handleRegister = async () => {
     color: var(--accent);
     flex-shrink: 0;
 }
-</style>
+
 .selected-name {
-margin: 6px 0 0;
-font-size: 22px;
-font-weight: 800;
-color: var(--accent);
+    margin: 6px 0 0;
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--accent);
 }
+</style>
