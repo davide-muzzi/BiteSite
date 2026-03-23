@@ -28,10 +28,17 @@ const steps = [
 </script>
 
 <template>
+  <section class="register-view">
+    <div class="register-shell">
+      <BackButton class="register-back" />
 
-    <BackButton />
+      <header class="register-lead">
+        <p class="eyebrow">Step {{ currentStep }} of 3</p>
+        <h1>Set up your BiteSite workspace</h1>
+        <p>Complete the quick steps below to start designing and publishing your restaurant site.</p>
+      </header>
 
-    <div class="progress-bar">
+      <div class="progress-bar">
         <!-- Progressbar 80% ChatGPT -->
         <div class="stepper">
           <div class="line">
@@ -43,15 +50,15 @@ const steps = [
               v-for="(s, index) in steps"
               :key="index"
               class="point-wrap"
-              :style="{ left: positions[index] + '%' }">
-
+              :style="{ left: positions[index] + '%' }"
+            >
               <div
                 class="point"
                 :class="{
-                done: currentStep > index + 1,
-                active: currentStep === index + 1,
-                }">
-              </div>
+                  done: currentStep > index + 1,
+                  active: currentStep === index + 1,
+                }"
+              ></div>
 
               <div class="label" :class="{ activeLabel: currentStep === index + 1 }">
                 {{ s.label }}
@@ -59,39 +66,77 @@ const steps = [
             </div>
           </div>
         </div>
-    </div>
+      </div>
 
-    <div class="account-page">
-
+      <div class="register-content">
         <router-view />
+      </div>
     </div>
+  </section>
 </template>
 
 <style>
 body {
-    background: var(--background);
-    font-family: var(--font);
-    color: var(--font-color-dark-blue);
+  background: var(--background);
+  font-family: var(--font);
+  color: var(--font-color-dark-blue);
 }
 
-.account-page {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
+.register-view {
+  min-height: calc(100vh - 160px);
+  background: var(--background);
+  padding: 40px 28px 72px;
+  box-sizing: border-box;
+}
+
+.register-shell {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.register-back {
+  margin-bottom: 6px;
+}
+
+.register-lead {
+  max-width: 620px;
+}
+
+.register-lead h1 {
+  margin: 6px 0;
+  font-size: 44px;
+  font-weight: 800;
+}
+
+.register-lead p {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: rgba(21, 21, 21, 0.7);
+}
+
+.eyebrow {
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-size: 13px;
+  font-weight: 700;
+  color: rgba(49, 38, 110, 0.75);
 }
 
 .progress-bar {
-    margin-top: 118px;
-    display: flex;
-    justify-content: center;
+  margin-top: 32px;
+  display: flex;
+  justify-content: center;
 }
 
 .stepper {
-    width: 80%;
-    max-width: 900px;
-    margin-bottom: 30px;
-
+  width: 100%;
+  max-width: 900px;
+  margin-bottom: 10px;
 }
 
 .line {
@@ -146,13 +191,30 @@ body {
 }
 
 .label {
-    margin-top: 10px;
-    font-size: 12px;
-    color: #7b6f6a;
-    font-weight: 600;
+  margin-top: 10px;
+  font-size: 12px;
+  color: #7b6f6a;
+  font-weight: 600;
 }
 
 .activeLabel {
-    color: #2b2b2b;
+  color: #2b2b2b;
+}
+
+.register-content {
+  margin-top: 40px;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+@media (max-width: 768px) {
+  .register-lead h1 {
+    font-size: 34px;
+  }
+
+  .stepper {
+    max-width: none;
+  }
 }
 </style>
