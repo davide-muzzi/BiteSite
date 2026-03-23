@@ -35,7 +35,6 @@ const handleRegister = async () => {
             <header class="card-header">
                 <p class="eyebrow">Payment</p>
                 <h2>Secure payment information</h2>
-                <p>We use industry best practices to keep your data protected.</p>
             </header>
 
             <form class="register-form" @submit.prevent="handleRegister()">
