@@ -13,122 +13,132 @@ const password = ref('');
 
 // Sample validation
 const handleregister = async () => {
-  if (!username.value.trim()) return;
-  if (!email.value.includes("@")) return;
-  if (password.value.length < 3) return;
+    if (!username.value.trim()) return;
+    if (!email.value.includes("@")) return;
+    if (password.value.length < 3) return;
 
-  registerStore.setRegisterData(username.value, password.value, email.value);
+    registerStore.setRegisterData(username.value, password.value, email.value);
 
-  router.push("/register/step-2");
+    router.push("/register/step-2");
 };
 </script>
 
 <template>
-  <div class="register-card">
-    <form class="register-form" @submit.prevent="handleregister">
-        <div class="form-group">
-            <label for ="username">Username</label>
-            <input
-                id="username"
-                type="text"
-                v-model="username"
-                placeholder="Username..."
-                required
-            />
-        </div>
-        <div class="form-group">
-                <label for="email">E-Mail</label>
-                <input
-                    id="email"
-                    type="email"
-                    v-model="email"
-                    placeholder="E-Mail..."
-                    required
-                />
-        </div>
+    <section class="step-card">
+    <header class="card-header">
+      <h2>Tell us about you</h2>
+    </header>
 
-        <div class="form-group">
-            <label for="password">Password</label>
-            <input
-                id="password"
-                type="password"
-                v-model="password"
-                placeholder="Password..."
-                required
-            />
-        </div>
-        <button type="submit" class="register-button">
-            Register
-        </button>
-    </form>
-      <p class="register-text">
-        Already have an account? <RouterLink to="/login">Login</RouterLink>
-     </p>
-  </div>
+        <form class="register-form" @submit.prevent="handleregister">
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input id="username" type="text" v-model="username" placeholder="Username..." required />
+            </div>
+
+            <div class="form-group">
+                <label for="email">E-Mail</label>
+                <input id="email" type="email" v-model="email" placeholder="E-Mail..." required />
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input id="password" type="password" v-model="password" placeholder="Password..." required />
+            </div>
+
+            <button type="submit" class="register-button">
+                Register
+            </button>
+        </form>
+
+        <p class="register-text">
+            Already have an account? <RouterLink to="/login">Login</RouterLink>
+        </p>
+    </section>
 </template>
 
 <style scoped>
-body {
-   background: var(--background);
-   font-family: var(--font);
-   color: var(--font-color-dark-blue);
+.step-card {
+    width: 100%;
+    max-width: 560px;
+    background: #fff;
+    border-radius: 32px;
+    padding: 38px 48px 42px;
+    box-shadow: 0 32px 70px rgba(49, 38, 110, 0.12);
+    font-family: var(--font);
+    color: var(--font-color-dark-blue);
+    box-sizing: border-box;
 }
 
-.register-card {
-    background-color: #ffeede;
-    width: 517px;
-    height: 580px;
-    border-radius: 66px;
+.card-header h2 {
+    margin: 6px 0;
+    font-size: 32px;
+    font-weight: 800;
+}
+
+.eyebrow {
+    margin: 0;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-size: 13px;
+    font-weight: 700;
+    color: rgba(49, 38, 110, 0.75);
+}
+
+.card-header p {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 600;
+    color: rgba(33, 33, 33, 0.7);
+}
+
+.register-form {
+    margin-top: 28px;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: center;
-
+    gap: 22px;
 }
 
 .form-group label {
     display: block;
-    font-size: 22px;
-    display: flex;
-    justify-content: center;
-    margin-top: 14px;
-    font-weight: 600;
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 10px;
 }
 
 .form-group input {
-    width: 445px;
-    height: 63px;
-    border-radius: 66px;
+    width: 100%;
+    height: 60px;
+    border-radius: 999px;
     border: none;
-    font-size: 22px;
-    font-family: var(--font);
-    margin-top: 12px;
-    padding-left: 29px;
-    padding-right: 29px;
+    background: #f9f6f1;
+    padding: 0 28px;
+    font-size: 18px;
+    font-weight: 600;
     box-sizing: border-box;
 }
 
 .register-button {
-    width: 445px;
-    height: 63px;
-    border-radius: 66px;
+    width: 100%;
+    height: 60px;
+    border-radius: 999px;
     border: none;
-    margin-top: 45px;
+    margin-top: 8px;
     background-color: var(--accent);
     color: white;
-    font-size: 22px;
-    cursor: pointer;
-    font-weight: 600;
-    box-sizing: border-box;
-
+    font-size: 18px;
+    font-weight: 700;
+    transition: background 0.2s ease, transform 0.2s ease;
 }
 
 .register-button:hover {
     background-color: var(--button-hover-color);
+    transform: translateY(-2px);
 }
 
 .register-text {
-    font-size: 18px;
+    margin-top: 30px;
+    font-size: 15px;
     font-weight: 600;
+    text-align: center;
 }
 </style>

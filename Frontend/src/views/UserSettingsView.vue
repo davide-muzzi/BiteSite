@@ -23,14 +23,14 @@ function saveSettings() {
 }
 
 const handleLogout = async () => {
-  const result = await logout();
+    const result = await logout();
 
-  if (result.success) window.location.href = "/";
+    if (result.success) window.location.href = "/";
 
 }
 
 const handleEditUser = async () => {
-  await editUser(username.value, email.value)
+    await editUser(username.value, email.value)
 }
 </script>
 
@@ -73,7 +73,7 @@ const handleEditUser = async () => {
 
                 <div class="button-row">
                     <button class="save-button" type="submit" @click="handleEditUser()">
-                      Save Changes
+                        Save Changes
                     </button>
                     <button class="logout-button" type="button" @click="handleLogout()">
                         Logout

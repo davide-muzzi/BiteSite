@@ -15,7 +15,9 @@ function handleClick(event) {
 <template>
     <button class="back" type="button" v-bind="$attrs" @click="handleClick">
         <ChevronLeft class="icon" />
-        <span><slot>Back</slot></span>
+        <span>
+            <slot>Back</slot>
+        </span>
     </button>
 </template>
 
