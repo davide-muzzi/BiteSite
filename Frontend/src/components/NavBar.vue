@@ -8,7 +8,6 @@ onMounted(async () => {
   const result = await checkLogin();
 
   loggedIn.value = result.loggedIn;
-  console.log(loggedIn.value)
 })
 </script>
 
