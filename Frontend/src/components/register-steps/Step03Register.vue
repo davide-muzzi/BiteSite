@@ -33,7 +33,6 @@ const handleRegister = async () => {
     <section class="checkout-grid">
         <article class="step-card">
             <header class="card-header">
-                <p class="eyebrow">Payment</p>
                 <h2>Secure payment information</h2>
             </header>
 
@@ -72,7 +71,6 @@ const handleRegister = async () => {
 
         <article class="step-card overview-card">
             <header class="card-header">
-                <p class="eyebrow">Overview</p>
                 <h2>Your selection:</h2>
                 <h2 v-if="selected" class="selected-name">{{ selected.name }}</h2>
             </header>

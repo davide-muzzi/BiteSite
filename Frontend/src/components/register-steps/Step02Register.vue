@@ -49,7 +49,6 @@ function selectPlan(plan) {
 <template>
     <section class="plan-section">
         <header class="section-header">
-            <p class="eyebrow">Subscription</p>
             <h2>Choose your plan</h2>
             <p>All plans include secure hosting, template access, and concierge onboarding.</p>
         </header>

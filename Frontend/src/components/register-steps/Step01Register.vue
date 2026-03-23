@@ -25,10 +25,9 @@ const handleregister = async () => {
 
 <template>
     <section class="step-card">
-        <header class="card-header">
-            <p class="eyebrow">Account</p>
-            <h2>Tell us about you</h2>
-        </header>
+    <header class="card-header">
+      <h2>Tell us about you</h2>
+    </header>
 
         <form class="register-form" @submit.prevent="handleregister">
             <div class="form-group">
