@@ -11,5 +11,6 @@ projectRouter.patch("/edit-title", checkAuth, routeWrapper(projectHandlers.editT
 projectRouter.patch("/edit-name", checkAuth, routeWrapper(projectHandlers.editName));
 projectRouter.patch("/edit-route", checkAuth, routeWrapper(projectHandlers.editRoute));
 projectRouter.get("/website", checkAuth, routeWrapper(projectHandlers.getWebsite));
+projectRouter.patch("/update-website", checkAuth, routeWrapper(projectHandlers.updateWebsite));
 
 export default projectRouter
