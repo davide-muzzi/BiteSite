@@ -97,6 +97,7 @@ export async function editName(req, res) {
 
 export async function getProject(req, res) {
   const { projectId } = req.query;
+  checkReq(!projectId);
 
   const project = await safeOperation(
     () => db.get("select project_id, name, website_title, website_route, published, fk_user_id from projects where project_id = ?", [projectId]),
@@ -127,9 +128,10 @@ export async function getProject(req, res) {
 
 export async function editRoute(req, res) {
   const { projectId, routeName } = req.body;
+  checkReq(!projectId || !routeName);
 
   const project = await safeOperation(
-    () => db.get("select project_id from projects where project_id = ?", [projectId]),
+    () => db.get("select fk_user_id from projects where project_id = ?", [projectId]),
     "Error while getting project from database"
   );
 
@@ -155,6 +157,7 @@ export async function editRoute(req, res) {
 
 export async function getWebsite(req, res) {
   const { projectId } = req.query;
+  checkReq(!projectId);
 
   const project = await safeOperation(
     () => db.get("select website, fk_user_id from projects where project_id = ?", [projectId]),
@@ -167,4 +170,26 @@ export async function getWebsite(req, res) {
     return res.status(403).json({ success: false, message: "Not your project" });
 
   res.status(200).json({ success: true, message: "Successfully retrieved website from database", website: JSON.parse(project.website) });
+}
+
+export async function updateWebsite(req, res) {
+  const { projectId, website } = req.body;
+  checkReq(!projectId || !website);
+
+  const project = await safeOperation(
+    () => db.get("select fk_user_id from projects where project_id = ?", [projectId]),
+    "Error while getting project from database"
+  );
+
+  if (!project)
+    return res.status(404).json({ success: false, message: "Project not found" });
+  if (project.fk_user_id !== req.session.user.id)
+    return res.status(403).json({ success: false, message: "Not your project" });
+
+  await safeOperation(
+    () => db.run("update projects set website = ? where project_id = ?", [JSON.stringify(website), projectId]),
+    "Error while updating website"
+  );
+
+  res.status(200).json({ success: true, message: "Successfully updated website" });
 }
