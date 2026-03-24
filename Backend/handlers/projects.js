@@ -206,7 +206,7 @@ export async function publish(req, res) {
   const { projectId } = req.body;
 
   const project = await safeOperation(
-    () => db.get("select website_route, website_title, fk_user_id from projects where project_id = ?", [projectId]),
+    () => db.get("select website, website_route, website_title, fk_user_id from projects where project_id = ?", [projectId]),
     "Error while getting project from database"
   );
 
@@ -215,9 +215,46 @@ export async function publish(req, res) {
   if (project.fk_user_id !== req.session.user.id)
     return res.status(403).json({ success: false, message: "Not your project" });
 
+  let htmlContent = await safeOperation(
+    () => readFile("./websites/.template.html", "utf-8"),
+    "Error while reading website html file"
+  );
+
+  htmlContent = htmlContent.replace(/\|websiteTitle\|/, project.website_title);
+
+  project.website = JSON.parse(project.website);
+  const navbar = project.website.navbar;
+
+  if (navbar) {
+    let navbarItems = "";
+
+    for (const item of navbar.content) {
+      navbarItems += `<a href="/${item}">${item}</a>\n`
+    }
+
+    const navbarReplacement = `
+      <div class="navbar">
+        ${navbarItems}
+      </div>
+    `;
+
+    htmlContent = htmlContent.replace(/\|navbar\|/, navbarReplacement)
+      .replace(/\|navbarBackground\|/, navbar.backgroundColor)
+      .replace(/\|navbarColor\|/, navbar.textColor)
+      .replace(/\|navbarFont\|/, navbar.font);
+  } else {
+    htmlContent = htmlContent.replace(/\|navbar\|/, "")
+      .replace(/\|navbarBackground\|/, "#fff")
+      .replace(/\|navbarColor\|/, "#fff")
+      .replace(/\|navbarFont\|/, "Arial");
+  }
+
+  htmlContent = htmlContent.replace(/\|mainContent\|/, "")
+    .replace(/\|mainCssClasses\|/, "");
+
   await safeOperation(
-    () => copyFile("./websites/.template.html", `./websites/${project.website_route}.html`),
-    "Error while copying template html"
+    () => writeFile(`./websites/${project.website_route}.html`, htmlContent),
+    "Error while writing to html file"
   );
 
   await safeOperation(
