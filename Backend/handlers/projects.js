@@ -1,6 +1,6 @@
 import { db } from "../database/db.js";
 import { safeOperation, checkReq } from "../error-handling.js";
-import { copyFile, readFile, writeFile, mkdir } from "fs/promises";
+import { copyFile, readFile, writeFile, mkdir, rename } from "fs/promises";
 
 export async function createProject(req, res) {
   const { name, tags, templateName } = req.body;
@@ -132,7 +132,7 @@ export async function editRoute(req, res) {
   checkReq(!projectId || !routeName);
 
   const project = await safeOperation(
-    () => db.get("select fk_user_id from projects where project_id = ?", [projectId]),
+    () => db.get("select published, website_route, fk_user_id from projects where project_id = ?", [projectId]),
     "Error while getting project from database"
   );
 
@@ -152,6 +152,13 @@ export async function editRoute(req, res) {
     () => db.run("update projects set website_route = ? where project_id = ?", [routeName.toLowerCase(), projectId]),
     "Error while updating route"
   );
+
+  if (project.published) {
+    await safeOperation(
+      () => rename(`./websites/${project.website_route}.html`, `./websites/${routeName}.html`),
+      "Error while renaming website html file"
+    );
+  }
 
   res.status(200).json({ success: true, message: "Successfully updated route" });
 }
