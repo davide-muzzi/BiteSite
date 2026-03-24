@@ -1,5 +1,6 @@
 import { db } from "../database/db.js";
 import { safeOperation, checkReq } from "../error-handling.js";
+import { copyFile, readFile, writeFile, mkdir } from "fs/promises";
 
 export async function createProject(req, res) {
   const { name, tags, templateName } = req.body;
@@ -192,4 +193,30 @@ export async function updateWebsite(req, res) {
   );
 
   res.status(200).json({ success: true, message: "Successfully updated website" });
+}
+
+export async function publish(req, res) {
+  const { projectId } = req.body;
+
+  const project = await safeOperation(
+    () => db.get("select website_route, website_title, fk_user_id from projects where project_id = ?", [projectId]),
+    "Error while getting project from database"
+  );
+
+  if (!project)
+    return res.status(404).json({ success: false, message: "Project not found" });
+  if (project.fk_user_id !== req.session.user.id)
+    return res.status(403).json({ success: false, message: "Not your project" });
+
+  await safeOperation(
+    () => copyFile("./websites/.template.html", `./websites/${project.website_route}.html`),
+    "Error while copying template html"
+  );
+
+  await safeOperation(
+    () => db.run("update projects set published = 1 where project_id = ?", [projectId]),
+    "Error while publishing website"
+  );
+
+  res.status(200).json({ success: true, message: "Successfully published website" });
 }
