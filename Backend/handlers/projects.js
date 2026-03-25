@@ -215,46 +215,9 @@ export async function publish(req, res) {
   if (project.fk_user_id !== req.session.user.id)
     return res.status(403).json({ success: false, message: "Not your project" });
 
-  let htmlContent = await safeOperation(
-    () => readFile("./websites/.template.html", "utf-8"),
-    "Error while reading website html file"
-  );
-
-  htmlContent = htmlContent.replace(/\|websiteTitle\|/, project.website_title);
-
-  project.website = JSON.parse(project.website);
-  const navbar = project.website.navbar;
-
-  if (navbar) {
-    let navbarItems = "";
-
-    for (const item of navbar.content) {
-      navbarItems += `<a href="/${item}">${item}</a>\n`
-    }
-
-    const navbarReplacement = `
-      <div class="navbar">
-        ${navbarItems}
-      </div>
-    `;
-
-    htmlContent = htmlContent.replace(/\|navbar\|/, navbarReplacement)
-      .replace(/\|navbarBackground\|/, navbar.backgroundColor)
-      .replace(/\|navbarColor\|/, navbar.textColor)
-      .replace(/\|navbarFont\|/, navbar.font);
-  } else {
-    htmlContent = htmlContent.replace(/\|navbar\|/, "")
-      .replace(/\|navbarBackground\|/, "#fff")
-      .replace(/\|navbarColor\|/, "#fff")
-      .replace(/\|navbarFont\|/, "Arial");
-  }
-
-  htmlContent = htmlContent.replace(/\|mainContent\|/, "")
-    .replace(/\|mainCssClasses\|/, "");
-
   await safeOperation(
-    () => writeFile(`./websites/${project.website_route}.html`, htmlContent),
-    "Error while writing to html file"
+    () => makeWebsite(JSON.parse(project.website), project.website_route, project.website_title),
+    "Error while making website"
   );
 
   await safeOperation(
@@ -263,4 +226,48 @@ export async function publish(req, res) {
   );
 
   res.status(200).json({ success: true, message: "Successfully published website" });
+}
+
+function objectToCSS(object) {
+  let css = "";
+
+  for (const [key, value] of Object.entries(object)) {
+    css += `${key}: ${value};`
+  }
+
+  return css
+}
+
+async function makeWebsite(website, route, title) {
+  let htmlContent = await safeOperation(
+    () => readFile("./websites/.template.html", "utf-8"),
+    "Error while reading website html file"
+  );
+
+  htmlContent = htmlContent.replace(/\|websiteTitle\|/, title);
+
+  const navbar = website.navbar;
+  const pages = website.pages;
+
+  let navbarItems = "";
+
+  for (const page of pages) {
+    navbarItems += `<a href="#${page.name.toLowerCase()}">${page.name[0] + page.name.slice(1)}</a>\n`
+  }
+
+  htmlContent = htmlContent.replace(/\|navbarItems\|/, navbarItems)
+    .replace(/\|navbarBackground\|/g, navbar.backgroundColor)
+    .replace(/\|navbarColor\|/g, navbar.textColor)
+    .replace(/\|navbarAdditionalCSS\|/, objectToCSS(navbar.css));
+
+  htmlContent = htmlContent.replace(/\|firstPage\|/, pages[0].name.toLowerCase());
+
+  for (const page of pages) {
+
+  }
+
+  await safeOperation(
+    () => writeFile(`./websites/${route}.html`, htmlContent),
+    "Error while writing to html file"
+  );
 }
