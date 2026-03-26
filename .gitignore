@@ -42,3 +42,7 @@ __screenshots__/
 # Database
 sessions.sqlite
 database.sqlite
+
+# Websites
+Backend/websites/*
+!Backend/websites/.template.html
