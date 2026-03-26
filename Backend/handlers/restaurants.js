@@ -40,7 +40,7 @@ export async function subscribeToNewsletter(req, res) {
 }
 
 export async function sendNewsletter(req, res) {
-  const { projectId, subject, body, html } = req.body;
+  const { projectId, subject, body } = req.body;
   checkReq(!projectId || !subject?.trim() || !body?.trim());
 
   const project = await safeOperation(
@@ -67,12 +67,12 @@ export async function sendNewsletter(req, res) {
   const recipientList = subscribers.map((subscriber) => subscriber.email);
 
   await safeOperation(
-    () => mailer({
-      from: project.name,
+    () => mailer(
+      project.name,
+      recipientList,
       subject,
-      text: body,
-      recipients: recipientList,
-    }),
+      body,
+    ),
     "Error while sending newsletter",
   );
 
