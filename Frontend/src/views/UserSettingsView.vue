@@ -24,15 +24,16 @@ function saveSettings() {
 }
 
 const handleLogout = async () => {
-  const result = await logout();
+    const result = await logout();
 
-  if (result.success) window.location.href = "/";
+    if (result.success) window.location.href = "/";
 
 }
 
 const handleEditUser = async () => {
   const result = await editUser(username.value, email.value)
-  if (result.success) window.location.href = "/user-settings";
+  if (result.success) window.location.href = "/ussr-settings";
+    await editUser(username.value, email.value)
 }
 
 onMounted(async () => {
@@ -84,7 +85,7 @@ onMounted(async () => {
 
                 <div class="button-row">
                     <button class="save-button" type="submit" @click="handleEditUser()">
-                      Save Changes
+                        Save Changes
                     </button>
                     <button class="logout-button" type="button" @click="handleLogout()">
                         Logout
