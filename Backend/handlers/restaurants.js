@@ -68,6 +68,7 @@ export async function sendNewsletter(req, res) {
 
   await safeOperation(
     () => mailer({
+      from: project.name,
       subject,
       text: body,
       recipients: recipientList,
