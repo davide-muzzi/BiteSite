@@ -11,7 +11,6 @@ const username = ref('');
 const email = ref('');
 const password = ref('');
 
-// Sample validation
 const handleregister = async () => {
   if (!username.value.trim()) return;
   if (!email.value.includes("@")) return;

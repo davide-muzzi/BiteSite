@@ -8,7 +8,8 @@ const username = ref("Julian");
 const email = ref("E@Mail.com");
 
 function changePlan() {
-    console.log("Change Plan clicked");
+  console.log("Change Plan clicked");
+    window.location.href = "/change-plan"
 }
 
 function changePassword() {
@@ -30,7 +31,8 @@ const handleLogout = async () => {
 }
 
 const handleEditUser = async () => {
-  await editUser(username.value, email.value)
+  const result = await editUser(username.value, email.value)
+  if (result.success) window.location.href = "/user-settings";
 }
 
 onMounted(async () => {
