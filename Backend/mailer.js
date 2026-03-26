@@ -21,11 +21,17 @@ export async function smtpVerifier() {
   });
 }
 
-export async function mailer(from, to, subject, text) {
-  await mailConfig.sendMail({
-    from: `${from} <${process.env.SMTP_USER}>`,
-    to: to,
-    subject: subject,
-    text: text,
-  });
+export async function mailer(from, recipients = [], subject, text) {
+  if (!recipients.length) throw new Error("No recipients provided");
+
+  for (const email of recipients) {
+    // Sends one SMTP call per recipient; stay under ?? subscribers or rate limits will kick in
+    // When thewshold exceeded, switch to single BCC’d message or bulk provider
+    await mailConfig.sendMail({
+      from: `${from} <${process.env.SMTP_USER}>`,
+      to: email,
+      subject: subject,
+      text: text,
+    });
+  }
 }

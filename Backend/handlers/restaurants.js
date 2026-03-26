@@ -70,8 +70,7 @@ export async function sendNewsletter(req, res) {
     () => mailer({
       subject,
       text: body,
-      html,
-      bcc: recipientList,
+      recipients: recipientList,
     }),
     "Error while sending newsletter",
   );
