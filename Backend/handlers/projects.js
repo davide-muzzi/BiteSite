@@ -1,6 +1,6 @@
 import { db } from "../database/db.js";
 import { safeOperation, checkReq } from "../error-handling.js";
-import { copyFile, readFile, writeFile, mkdir, rename } from "fs/promises";
+import { readFile, writeFile, rename } from "fs/promises";
 
 export async function createProject(req, res) {
   const { name, tags, templateName } = req.body;
@@ -57,7 +57,7 @@ export async function editTitle(req, res) {
   checkReq(!projectId || !title);
 
   const project = await safeOperation(
-    () => db.get("select fk_user_id from projects where project_id = ?", [projectId]),
+    () => db.get("select website, website_route, fk_user_id from projects where project_id = ?", [projectId]),
     "Error while getting project from database"
   );
 
@@ -65,6 +65,11 @@ export async function editTitle(req, res) {
     return res.status(404).json({ success: false, message: "Project not found" });
   if (project.fk_user_id !== req.session.user.id)
     return res.status(403).json({ success: false, message: "Not your project" });
+
+  await safeOperation(
+    () => makeWebsite(JSON.parse(project.website), project.website_route, title),
+    "Error while making website"
+  );
 
   await safeOperation(
     () => db.run("update projects set website_title = ? where project_id = ?", [title, projectId]),
@@ -185,7 +190,7 @@ export async function updateWebsite(req, res) {
   checkReq(!projectId || !website);
 
   const project = await safeOperation(
-    () => db.get("select fk_user_id from projects where project_id = ?", [projectId]),
+    () => db.get("select website_route, website_title, fk_user_id from projects where project_id = ?", [projectId]),
     "Error while getting project from database"
   );
 
@@ -193,6 +198,11 @@ export async function updateWebsite(req, res) {
     return res.status(404).json({ success: false, message: "Project not found" });
   if (project.fk_user_id !== req.session.user.id)
     return res.status(403).json({ success: false, message: "Not your project" });
+
+  await safeOperation(
+    () => makeWebsite(website, project.website_route, project.website_title),
+    "Error while making website"
+  );
 
   await safeOperation(
     () => db.run("update projects set website = ? where project_id = ?", [JSON.stringify(website), projectId]),
@@ -202,11 +212,11 @@ export async function updateWebsite(req, res) {
   res.status(200).json({ success: true, message: "Successfully updated website" });
 }
 
-export async function publish(req, res) {
+export async function togglePublish(req, res) {
   const { projectId } = req.body;
 
   const project = await safeOperation(
-    () => db.get("select website, website_route, website_title, fk_user_id from projects where project_id = ?", [projectId]),
+    () => db.get("select published, fk_user_id from projects where project_id = ?", [projectId]),
     "Error while getting project from database"
   );
 
@@ -215,24 +225,21 @@ export async function publish(req, res) {
   if (project.fk_user_id !== req.session.user.id)
     return res.status(403).json({ success: false, message: "Not your project" });
 
-  await safeOperation(
-    () => makeWebsite(JSON.parse(project.website), project.website_route, project.website_title),
-    "Error while making website"
-  );
+  project.published = Boolean(project.published);
 
   await safeOperation(
-    () => db.run("update projects set published = 1 where project_id = ?", [projectId]),
+    () => db.run("update projects set published = ? where project_id = ?", [!project.published, projectId]),
     "Error while publishing website"
   );
 
-  res.status(200).json({ success: true, message: "Successfully published website" });
+  res.status(200).json({ success: true, message: "Successfully toggled publish on website", published: !project.published });
 }
 
 function objectToCSS(object) {
   let css = "";
 
   for (const [key, value] of Object.entries(object)) {
-    css += `${key}: ${value};`
+    css += `${key}: ${value} !important;\n`
   }
 
   return css
@@ -255,16 +262,44 @@ async function makeWebsite(website, route, title) {
     navbarItems += `<a href="#${page.name.toLowerCase()}">${page.name[0] + page.name.slice(1)}</a>\n`
   }
 
-  htmlContent = htmlContent.replace(/\|navbarItems\|/, navbarItems)
+  htmlContent = htmlContent
+    .replace(/\|navbarItems\|/, navbarItems)
     .replace(/\|navbarBackground\|/g, navbar.backgroundColor)
     .replace(/\|navbarColor\|/g, navbar.textColor)
-    .replace(/\|navbarAdditionalCSS\|/, objectToCSS(navbar.css));
+    .replace(/\|navbarHeight\|/g, navbar.height)
+    .replace(/\|navbarWidth\|/g, navbar.width)
+    .replace(/\|navbarBorderRadius\|/g, navbar.borderRadius)
+    .replace(/\|navbarAdditionalBarCSS\|/, objectToCSS(navbar.barCss))
+    .replace(/\|navbarAdditionalContainerCSS\|/, objectToCSS(navbar.containerCss))
+    .replace(/\|navbarAdditionalItemCSS\|/, objectToCSS(navbar.itemCss));
 
   htmlContent = htmlContent.replace(/\|firstPage\|/, pages[0].name.toLowerCase());
 
+  let pagesHtml = "";
+  let pagesCss = "";
   for (const page of pages) {
 
+    pagesCss += `#${page.name.toLowerCase()} {
+      background-color: ${page.backgroundColor};
+    }`;
+
+    let componentsHtml = "";
+    for (const [index, component] of page.content.entries()) {
+      const componentId = `component-${page.name.toLowerCase()}-${index}`;
+      componentsHtml += `<div id="${componentId}">${component.html}</div>\n`;
+      pagesCss += `#${componentId}>* {
+        ${objectToCSS(component.css)}
+      }`;
+    }
+
+    pagesHtml += `<div class="page" id="${page.name.toLowerCase()}">
+      ${componentsHtml}
+    </div>`;
   }
+
+  htmlContent = htmlContent
+    .replace(/\|pageContent\|/, pagesHtml)
+    .replace(/\|pageCss\|/, pagesCss);
 
   await safeOperation(
     () => writeFile(`./websites/${route}.html`, htmlContent),
