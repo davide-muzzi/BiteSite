@@ -23,3 +23,8 @@ export async function editUser(username, email) {
 export async function getUser() {
   return request("get", "/users")
 }
+
+
+export async function editSubscription(subscription) {
+  return request("patch", "/users/edit-subscription", { data: { subscription  }})
+}
