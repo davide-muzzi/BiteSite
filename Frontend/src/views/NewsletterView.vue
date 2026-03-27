@@ -1,6 +1,7 @@
 <script setup>
 import { computed, ref } from 'vue';
 import BackButton from '@/components/BackButton.vue';
+import { sendNewsletter } from '@/api/routes/restaurant.js';
 
 const subject = ref('');
 const body = ref('');
@@ -42,7 +43,7 @@ function removeUpload(id) {
     uploads.value = uploads.value.filter((item) => item.id !== id);
 }
 
-function sendNewsletter() {
+function handleSendNewsletter() {
     if (isSendDisabled.value) return;
     sending.value = true;
     statusMessage.value = '';
@@ -78,7 +79,7 @@ function sendNewsletter() {
                 <textarea id="newsletter-body" v-model="body"
                     placeholder="Share curated menus, events, or limited offers..." rows="8"></textarea>
 
-                <button class="send-btn" type="button" :disabled="isSendDisabled" @click="sendNewsletter">
+                <button class="send-btn" type="button" :disabled="isSendDisabled" @click="handleSendNewsletter">
                     {{ sending ? 'Sending...' : 'Send' }}
                 </button>
                 <p v-if="statusMessage" class="status-message">{{ statusMessage }}</p>
