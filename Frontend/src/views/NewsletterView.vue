@@ -2,6 +2,9 @@
 import { computed, ref } from 'vue';
 import BackButton from '@/components/BackButton.vue';
 import { sendNewsletter } from '@/api/routes/restaurant.js';
+import { useRoute } from 'vue-router';
+
+const route = useRoute();
 
 const subject = ref('');
 const body = ref('');
@@ -48,10 +51,11 @@ function handleSendNewsletter() {
     sending.value = true;
     statusMessage.value = '';
 
-    setTimeout(() => {
-        sending.value = false;
-        statusMessage.value = `Newsletter queued for ${formattedSubscribers.value} subscribers.`;
-    }, 800);
+    const result = sendNewsletter(route.params.id, subject.value, body.value);
+
+    if (result.success) {
+        // Implement success handling
+    }
 }
 </script>
 
