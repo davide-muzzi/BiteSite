@@ -70,7 +70,7 @@ const router = createRouter({
       ],
     },
     {
-      path: '/newsletter',
+      path: '/:id/newsletter',
       name: 'newsletter',
       component: NewsletterView,
     },
