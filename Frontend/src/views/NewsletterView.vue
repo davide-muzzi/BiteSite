@@ -2,9 +2,10 @@
 import { computed, ref } from 'vue';
 import BackButton from '@/components/BackButton.vue';
 import { sendNewsletter } from '@/api/routes/restaurant.js';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 
 const route = useRoute();
+const router = useRouter();
 
 const subject = ref('');
 const body = ref('');
@@ -14,14 +15,24 @@ const uploads = ref([]);
 let nextUploadId = 1;
 const statusMessage = ref('');
 const sending = ref(false);
+const sendSuccess = ref(false);
 
 const formattedSubscribers = computed(() =>
     subscribers.value.toLocaleString('en-US'),
 );
 
 const isSendDisabled = computed(
-    () => !subject.value.trim() || !body.value.trim() || sending.value,
+    () =>
+        !subject.value.trim() ||
+        !body.value.trim() ||
+        sending.value ||
+        sendSuccess.value,
 );
+
+const sendButtonLabel = computed(() => {
+    if (sendSuccess.value) return 'Sucessfully sent';
+    return sending.value ? 'Sending...' : 'Send';
+});
 
 function handleUpload(event) {
     const files = event.target.files ? Array.from(event.target.files) : [];
@@ -46,15 +57,31 @@ function removeUpload(id) {
     uploads.value = uploads.value.filter((item) => item.id !== id);
 }
 
-function handleSendNewsletter() {
+async function handleSendNewsletter() {
     if (isSendDisabled.value) return;
     sending.value = true;
+    sendSuccess.value = false;
     statusMessage.value = '';
 
-    const result = sendNewsletter(route.params.id, subject.value, body.value);
+    try {
+        const result = await sendNewsletter(route.params.id, subject.value, body.value,);
 
-    if (result.success) {
-        // Implement success handling
+        if (result?.success) {
+            sendSuccess.value = true;
+            sending.value = false;
+            statusMessage.value = 'Newsletter sent! Redirecting...';
+            setTimeout(() => { router.push('/dashboard'); }, 3000);
+            return;
+        }
+
+        statusMessage.value = result?.message || 'Unable to send the newsletter.';
+    } catch (error) {
+        console.error('Failed to send newsletter', error);
+        statusMessage.value = 'Unable to send the newsletter.';
+    } finally {
+        if (!sendSuccess.value) {
+            sending.value = false;
+        }
     }
 }
 </script>
@@ -84,7 +111,7 @@ function handleSendNewsletter() {
                     placeholder="Share curated menus, events, or limited offers..." rows="8"></textarea>
 
                 <button class="send-btn" type="button" :disabled="isSendDisabled" @click="handleSendNewsletter">
-                    {{ sending ? 'Sending...' : 'Send' }}
+                    {{ sendButtonLabel }}
                 </button>
                 <p v-if="statusMessage" class="status-message">{{ statusMessage }}</p>
             </div>
