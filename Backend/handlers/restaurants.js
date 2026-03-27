@@ -7,8 +7,10 @@ export async function subscribeToNewsletter(req, res) {
   checkReq(!email || (!projectId && !projectRoute));
 
   const project = await safeOperation(
-    () => db.get("select fk_user_id from projects where project_id = ?", [projectId]),
-    "Error while getting project from database"
+    () => projectId
+      ? db.get("select project_id from projects where project_id = ?", [projectId])
+      : db.get("select project_id from projects where website_route = ?", [projectRoute.trim().toLowerCase()]),
+  "Error while getting project from database"
   );
 
   if (!project)
@@ -44,7 +46,7 @@ export async function sendNewsletter(req, res) {
   checkReq(!projectId || !subject?.trim() || !body?.trim());
 
   const project = await safeOperation(
-    () => db.get("select fk_user_id from projects where project_id = ?", [projectId]),
+    () => db.get("select fk_user_id, name from projects where project_id = ?", [projectId]),
     "Error while getting project from database"
   );
 
@@ -54,10 +56,7 @@ export async function sendNewsletter(req, res) {
     return res.status(403).json({ success: false, message: "Not your project" });
   
   const subscribers = await safeOperation(
-    () => db.all(
-      "select email from newsletter_subscribers where fk_project_id = ?",
-      [projectId],
-    ),
+    () => db.all("select email from newsletter_subscribers where fk_project_id = ?", [projectId]),
     "Error while retrieving subscribers",
   );
 
