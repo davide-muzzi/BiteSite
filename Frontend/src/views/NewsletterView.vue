@@ -44,6 +44,7 @@ function handleUpload(event) {
             id: nextUploadId++,
             name: file.name,
             preview,
+            file,
         });
     });
 
@@ -64,7 +65,13 @@ async function handleSendNewsletter() {
     statusMessage.value = '';
 
     try {
-        const result = await sendNewsletter(route.params.id, subject.value, body.value,);
+        const attachments = uploads.value.map((upload) => upload.file);
+        const result = await sendNewsletter(
+            route.params.id,
+            subject.value,
+            body.value,
+            attachments,
+        );
 
         if (result?.success) {
             sendSuccess.value = true;
