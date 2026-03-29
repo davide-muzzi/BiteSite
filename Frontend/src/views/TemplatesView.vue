@@ -1,4 +1,6 @@
 <script setup>
+import BackButton from '@/components/BackButton.vue';
+
 const templates = [
     { id: 1, name: "Template 01", category: "Restaurant Template" },
     { id: 2, name: "Template 02", category: "Restaurant Template" },
@@ -26,6 +28,8 @@ function handleUseClick(template) {
 <template>
     <main class="template-view">
         <section class="template-section">
+            <BackButton class="template-back" />
+
             <div class="section-header">
                 <h1>Explore Templates</h1>
             </div>
@@ -74,6 +78,10 @@ function handleUseClick(template) {
     width: 100%;
     max-width: 1180px;
     margin: 0 auto;
+}
+
+.template-back {
+    margin-bottom: 24px;
 }
 
 .section-header {
