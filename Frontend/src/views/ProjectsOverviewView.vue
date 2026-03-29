@@ -1,11 +1,14 @@
 <script setup>
 import { computed, onMounted, onUnmounted, ref } from "vue";
+import { useRouter } from "vue-router";
 import {
     Plus,
     ArrowRight,
     ChevronLeft,
     ChevronRight
 } from "lucide-vue-next";
+
+const router = useRouter();
 
 const templates = [
     { id: 1, title: "Template 1" },
@@ -37,6 +40,11 @@ const thumbDragStartX = ref(0);
 const thumbDragStartScrollLeft = ref(0);
 
 function handleTemplateClick(template) {
+    if (template.title === "Template catalogue") {
+        router.push({ name: "templates" });
+        return;
+    }
+
     console.log("Template clicked:", template.title);
 }
 
