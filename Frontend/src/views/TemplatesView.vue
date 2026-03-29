@@ -18,10 +18,6 @@ function handleTemplateClick(template) {
     console.log("Template clicked:", template)
 }
 
-function handlePreviewClick(template) {
-    console.log("Preview clicked:", template)
-}
-
 function handleUseClick(template) {
     console.log("Use template clicked:", template)
 }
@@ -54,10 +50,6 @@ function handleUseClick(template) {
                     </div>
 
                     <div class="template-card-footer">
-                        <button class="secondary-btn" @click.stop="handlePreviewClick(template)">
-                            Preview
-                        </button>
-
                         <button class="primary-btn" @click.stop="handleUseClick(template)">
                             Use Template
                         </button>
@@ -169,7 +161,6 @@ function handleUseClick(template) {
 
 .template-card-footer {
     display: flex;
-    gap: 10px;
 }
 
 .template-card-footer button {
@@ -193,14 +184,4 @@ function handleUseClick(template) {
     background: var(--button-hover-color);
 }
 
-.secondary-btn {
-    width: 102px;
-    border: 2px solid var(--font-color-dark-blue);
-    background: transparent;
-    color: var(--font-color-dark-blue);
-}
-
-.secondary-btn:hover {
-    background: rgba(49, 38, 110, 0.08);
-}
 </style>
