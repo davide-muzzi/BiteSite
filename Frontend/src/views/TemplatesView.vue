@@ -1,4 +1,4 @@
-<script setup>
+﻿<script setup>
 import BackButton from '@/components/BackButton.vue';
 
 const templates = [
@@ -18,10 +18,6 @@ const templates = [
 
 function handleTemplateClick(template) {
     console.log("Template clicked:", template)
-}
-
-function handleUseClick(template) {
-    console.log("Use template clicked:", template)
 }
 </script>
 
@@ -49,11 +45,6 @@ function handleUseClick(template) {
 
                     </div>
 
-                    <div class="template-card-footer">
-                        <button class="primary-btn" @click.stop="handleUseClick(template)">
-                            Use Template
-                        </button>
-                    </div>
                 </article>
             </div>
         </section>
@@ -147,29 +138,5 @@ function handleUseClick(template) {
     color: white;
     text-shadow: 0 2px 12px rgba(0, 0, 0, 0.28);
 }
-
-.template-card-footer {
-    display: flex;
-}
-
-.template-card-footer button {
-    height: 42px;
-    border-radius: 999px;
-    font-family: var(--font);
-    font-size: 14px;
-    font-weight: 700;
-    cursor: pointer;
-    transition: 0.18s ease;
-}
-
-.primary-btn {
-    flex: 1;
-    border: none;
-    background: var(--accent);
-    color: white;
-}
-
-.primary-btn:hover {
-    background: var(--button-hover-color);
-}
 </style>
+
