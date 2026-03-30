@@ -2,18 +2,18 @@
 import BackButton from '@/components/BackButton.vue';
 
 const templates = [
-    { id: 1, name: "Template 01", category: "Restaurant Template" },
-    { id: 2, name: "Template 02", category: "Restaurant Template" },
-    { id: 3, name: "Template 03", category: "Restaurant Template" },
-    { id: 4, name: "Template 04", category: "Restaurant Template" },
-    { id: 5, name: "Template 05", category: "Restaurant Template" },
-    { id: 6, name: "Template 06", category: "Restaurant Template" },
-    { id: 7, name: "Template 07", category: "Restaurant Template" },
-    { id: 8, name: "Template 08", category: "Restaurant Template" },
-    { id: 9, name: "Template 09", category: "Restaurant Template" },
-    { id: 10, name: "Template 10", category: "Restaurant Template" },
-    { id: 11, name: "Template 11", category: "Restaurant Template" },
-    { id: 12, name: "Template 12", category: "Restaurant Template" },
+    { id: 1, name: "Template 01" },
+    { id: 2, name: "Template 02" },
+    { id: 3, name: "Template 03" },
+    { id: 4, name: "Template 04" },
+    { id: 5, name: "Template 05" },
+    { id: 6, name: "Template 06" },
+    { id: 7, name: "Template 07" },
+    { id: 8, name: "Template 08" },
+    { id: 9, name: "Template 09" },
+    { id: 10, name: "Template 10" },
+    { id: 11, name: "Template 11" },
+    { id: 12, name: "Template 12" },
 ]
 
 function handleTemplateClick(template) {
@@ -42,10 +42,6 @@ function handleUseClick(template) {
                         <div class="template-placeholder">
                             Template
                         </div>
-
-                        <span class="category">
-                            {{ template.category }}
-                        </span>
 
                         <div class="thumbnail-overlay">
                             <h2>{{ template.name }}</h2>
@@ -144,21 +140,6 @@ function handleUseClick(template) {
     bottom: 14px;
 }
 
-.category {
-    position: absolute;
-    top: 14px;
-    left: 14px;
-
-    padding: 5px 10px;
-    border-radius: 999px;
-
-    background: rgba(255, 245, 236, 0.95);
-    color: var(--font-color-dark-blue);
-
-    font-size: 11px;
-    font-weight: 700;
-}
-
 .thumbnail-overlay h2 {
     margin: 0;
     font-size: 18px;
@@ -191,5 +172,4 @@ function handleUseClick(template) {
 .primary-btn:hover {
     background: var(--button-hover-color);
 }
-
 </style>
