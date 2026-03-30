@@ -142,12 +142,6 @@ const restaurants = [
     box-shadow 0.2s ease;
 }
 
-.restaurant-card:hover {
-  background: var(--accent);
-  transform: translateY(-4px);
-  box-shadow: 0 34px 70px rgba(229, 0, 43, 0.3);
-}
-
 .identity {
   display: flex;
   gap: 20px;
@@ -171,10 +165,6 @@ const restaurants = [
   font-weight: 800;
 }
 
-.restaurant-card:hover .title-block h2 {
-  color: white;
-}
-
 .tags {
   display: flex;
   flex-wrap: wrap;
@@ -191,10 +181,6 @@ const restaurants = [
   font-weight: 700;
 }
 
-.restaurant-card:hover .tag {
-  background: rgba(255, 255, 255, 0.25);
-}
-
 .rating {
   display: inline-flex;
   align-items: center;
@@ -202,10 +188,6 @@ const restaurants = [
   font-size: 22px;
   font-weight: 800;
   color: var(--font-color-dark-blue);
-}
-
-.restaurant-card:hover .rating {
-  color: white;
 }
 
 .rating span:first-child {
@@ -216,9 +198,5 @@ const restaurants = [
 .star {
   color: #ffb400;
   font-size: 26px;
-}
-
-.restaurant-card:hover .star {
-  color: white;
 }
 </style>
