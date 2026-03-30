@@ -36,6 +36,16 @@ const handleEditUser = async () => {
     await editUser(username.value, email.value)
 }
 
+const handleDeleteAccount = () => {
+    const confirmed = window.confirm("Are you sure you want to delete your account? This action cannot be undone.");
+
+    if (confirmed) {
+        console.log("Delete account confirmed - placeholder only");
+    } else {
+        console.log("Delete account canceled");
+    }
+}
+
 onMounted(async () => {
   const result = await getUser()
   if (result.success)
@@ -91,6 +101,12 @@ onMounted(async () => {
                         Logout
                     </button>
                 </div>
+                <p class="delete-account-text">
+                    Want to leave BiteSite?
+                    <a href="#" class="delete-account-link" @click.prevent="handleDeleteAccount">
+                        Delete Account
+                    </a>
+                </p>
             </form>
         </div>
     </section>
@@ -227,5 +243,26 @@ onMounted(async () => {
 .logout-button:hover {
     background: rgba(49, 38, 110, 0.15);
     transform: translateY(-1px);
+}
+
+.delete-account-text {
+    margin: 0;
+    text-align: center;
+    font-size: 16px;
+    font-weight: 600;
+    color: rgba(32, 32, 32, 0.8);
+}
+
+.delete-account-link {
+    display: inline-block;
+    color: var(--font-color-dark-blue);
+    font-weight: 800;
+    cursor: pointer;
+    margin-left: 6px;
+    text-decoration: underline;
+}
+
+.delete-account-link:hover {
+    opacity: 0.8;
 }
 </style>
