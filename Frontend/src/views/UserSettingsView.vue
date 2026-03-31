@@ -42,8 +42,6 @@ const handleDeleteAccount = async () => {
     if (result?.success) {
         await logout()
         window.location.href = '/'
-    } else {
-        console.error(result?.message ?? 'Failed to delete account')
     }
 }
 
