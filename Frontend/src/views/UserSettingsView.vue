@@ -1,14 +1,14 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import BackButton from "@/components/BackButton.vue";
-import { logout, editUser, getUser } from "@/api/routes/user.js";
+import { logout, editUser, getUser, deleteUser } from "@/api/routes/user.js";
 
 
-const username = ref("Julian");
-const email = ref("E@Mail.com");
+const username = ref("Placeholder_Username");
+const email = ref("placeholder@email.com");
 
 function changePlan() {
-  console.log("Change Plan clicked");
+    console.log("Change Plan clicked");
     window.location.href = "/change-plan"
 }
 
@@ -31,18 +31,26 @@ const handleLogout = async () => {
 }
 
 const handleEditUser = async () => {
-  const result = await editUser(username.value, email.value)
-  if (result.success) window.location.href = "/ussr-settings";
-    await editUser(username.value, email.value)
+    const result = await editUser(username.value, email.value)
+    if (result.success) return window.location.href = "/user-settings";
+}
+
+const handleDeleteAccount = async () => {
+    if (!window.confirm('Are you sure you want to delete your account? This action cannot be undone.')) return
+
+    const result = await deleteUser()
+    if (result?.success) {
+        await logout()
+        window.location.href = '/'
+    }
 }
 
 onMounted(async () => {
-  const result = await getUser()
-  if (result.success)
-  {
-    username.value = result.user.username;
-    email.value = result.user.email
-  }
+    const result = await getUser()
+    if (result.success) {
+        username.value = result.user.username;
+        email.value = result.user.email
+    }
 })
 </script>
 
@@ -91,6 +99,12 @@ onMounted(async () => {
                         Logout
                     </button>
                 </div>
+                <p class="delete-account-text">
+                    Want to leave BiteSite?
+                    <a href="#" class="delete-account-link" @click.prevent="handleDeleteAccount">
+                        Delete Account
+                    </a>
+                </p>
             </form>
         </div>
     </section>
@@ -227,5 +241,26 @@ onMounted(async () => {
 .logout-button:hover {
     background: rgba(49, 38, 110, 0.15);
     transform: translateY(-1px);
+}
+
+.delete-account-text {
+    margin: 0;
+    text-align: center;
+    font-size: 16px;
+    font-weight: 600;
+    color: rgba(32, 32, 32, 0.8);
+}
+
+.delete-account-link {
+    display: inline-block;
+    color: var(--font-color-dark-blue);
+    font-weight: 800;
+    cursor: pointer;
+    margin-left: 6px;
+    text-decoration: underline;
+}
+
+.delete-account-link:hover {
+    opacity: 0.8;
 }
 </style>
