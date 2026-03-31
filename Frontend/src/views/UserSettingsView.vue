@@ -32,8 +32,7 @@ const handleLogout = async () => {
 
 const handleEditUser = async () => {
     const result = await editUser(username.value, email.value)
-    if (result.success) window.location.href = "/user-settings";
-    await editUser(username.value, email.value)
+    if (result.success) return window.location.href = "/user-settings";
 }
 
 const handleDeleteAccount = async () => {
