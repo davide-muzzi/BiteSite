@@ -4,8 +4,8 @@ import BackButton from "@/components/BackButton.vue";
 import { logout, editUser, getUser, deleteUser } from "@/api/routes/user.js";
 
 
-const username = ref("Julian");
-const email = ref("E@Mail.com");
+const username = ref("Placeholder_Username");
+const email = ref("placeholder@email.com");
 
 function changePlan() {
     console.log("Change Plan clicked");
@@ -32,7 +32,7 @@ const handleLogout = async () => {
 
 const handleEditUser = async () => {
     const result = await editUser(username.value, email.value)
-    if (result.success) window.location.href = "/ussr-settings";
+    if (result.success) window.location.href = "/user-settings";
     await editUser(username.value, email.value)
 }
 
