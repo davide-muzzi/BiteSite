@@ -1,14 +1,14 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import BackButton from "@/components/BackButton.vue";
-import { logout, editUser, getUser } from "@/api/routes/user.js";
+import { logout, editUser, getUser, deleteUser } from "@/api/routes/user.js";
 
 
 const username = ref("Julian");
 const email = ref("E@Mail.com");
 
 function changePlan() {
-  console.log("Change Plan clicked");
+    console.log("Change Plan clicked");
     window.location.href = "/change-plan"
 }
 
@@ -31,28 +31,29 @@ const handleLogout = async () => {
 }
 
 const handleEditUser = async () => {
-  const result = await editUser(username.value, email.value)
-  if (result.success) window.location.href = "/ussr-settings";
+    const result = await editUser(username.value, email.value)
+    if (result.success) window.location.href = "/ussr-settings";
     await editUser(username.value, email.value)
 }
 
-const handleDeleteAccount = () => {
-    const confirmed = window.confirm("Are you sure you want to delete your account? This action cannot be undone.");
+const handleDeleteAccount = async () => {
+    if (!window.confirm('Are you sure you want to delete your account? This action cannot be undone.')) return
 
-    if (confirmed) {
-        console.log("Delete account confirmed - placeholder only");
+    const result = await deleteUser()
+    if (result?.success) {
+        await logout()
+        window.location.href = '/'
     } else {
-        console.log("Delete account canceled");
+        console.error(result?.message ?? 'Failed to delete account')
     }
 }
 
 onMounted(async () => {
-  const result = await getUser()
-  if (result.success)
-  {
-    username.value = result.user.username;
-    email.value = result.user.email
-  }
+    const result = await getUser()
+    if (result.success) {
+        username.value = result.user.username;
+        email.value = result.user.email
+    }
 })
 </script>
 
