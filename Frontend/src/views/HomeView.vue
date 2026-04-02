@@ -2,7 +2,6 @@
 import router from "@/router";
 import { checkLogin } from "@/api/routes/user.js";
 import { onMounted, ref } from "vue";
-import router from "@/router";
 
 const loggedIn = ref("");
 
