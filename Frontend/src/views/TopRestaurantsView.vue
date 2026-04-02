@@ -6,6 +6,7 @@ const restaurants = [
     name: "Pizza Place",
     tags: ["Italian", "Pizza"],
     rating: 5,
+    website: "https://pizza.example.com",
   },
   {
     id: "sushi-star",
@@ -13,6 +14,7 @@ const restaurants = [
     name: "Sushi Star",
     tags: ["Sushi", "Asian", "Fresh"],
     rating: 4,
+    website: "https://sushistar.example.com",
   },
 ];
 </script>
@@ -41,7 +43,13 @@ const restaurants = [
         <div class="identity">
           <span class="icon">{{ restaurant.icon }}</span>
           <div class="title-block">
-            <h2>{{ restaurant.name }}</h2>
+            <div class="title-row">
+              <h2>{{ restaurant.name }}</h2>
+              <div class="rating">
+                <span>{{ restaurant.rating.toFixed(1) }}</span>
+                <span class="star">★</span>
+              </div>
+            </div>
             <div class="tags">
               <span v-for="tag in restaurant.tags" :key="tag" class="tag">
                 #{{ tag }}
@@ -49,9 +57,10 @@ const restaurants = [
             </div>
           </div>
         </div>
-        <div class="rating">
-          <span>{{ restaurant.rating.toFixed(1) }}</span>
-          <span class="star">★</span>
+        <div v-if="restaurant.website" class="actions">
+          <a :href="restaurant.website" class="visit-link" target="_blank" rel="noopener">
+            Visit Site
+          </a>
         </div>
       </article>
     </div>
@@ -134,6 +143,7 @@ const restaurants = [
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 18px;
   padding: 24px 32px;
   border-radius: 28px;
   background: white;
@@ -142,10 +152,26 @@ const restaurants = [
     box-shadow 0.2s ease;
 }
 
-.restaurant-card:hover {
+.actions {
+  margin-left: auto;
+}
+
+.visit-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 18px;
+  border-radius: 999px;
   background: var(--accent);
-  transform: translateY(-4px);
-  box-shadow: 0 34px 70px rgba(229, 0, 43, 0.3);
+  color: white;
+  font-size: 14px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: background 0.2s ease;
+}
+
+.visit-link:hover {
+  background: var(--button-hover-color);
 }
 
 .identity {
@@ -171,8 +197,11 @@ const restaurants = [
   font-weight: 800;
 }
 
-.restaurant-card:hover .title-block h2 {
-  color: white;
+.title-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
 }
 
 .tags {
@@ -191,10 +220,6 @@ const restaurants = [
   font-weight: 700;
 }
 
-.restaurant-card:hover .tag {
-  background: rgba(255, 255, 255, 0.25);
-}
-
 .rating {
   display: inline-flex;
   align-items: center;
@@ -202,10 +227,6 @@ const restaurants = [
   font-size: 22px;
   font-weight: 800;
   color: var(--font-color-dark-blue);
-}
-
-.restaurant-card:hover .rating {
-  color: white;
 }
 
 .rating span:first-child {
@@ -216,9 +237,5 @@ const restaurants = [
 .star {
   color: #ffb400;
   font-size: 26px;
-}
-
-.restaurant-card:hover .star {
-  color: white;
 }
 </style>

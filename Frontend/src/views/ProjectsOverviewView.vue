@@ -1,5 +1,6 @@
 <script setup>
 import { computed, onMounted, onUnmounted, ref } from "vue";
+import router from "@/router";
 import {
     Plus,
     ArrowRight,
@@ -37,13 +38,18 @@ const thumbDragStartX = ref(0);
 const thumbDragStartScrollLeft = ref(0);
 
 function handleTemplateClick(template) {
+    if (template.title === "Template catalogue") {
+        router.push({ name: "templates" });
+        return;
+    }
+
     console.log("Template clicked:", template.title);
 }
 
 function handleProjectClick(project) {
     if (project.isCreateCard) {
-        console.log("Create new project clicked");
-        return;
+      window.location.href = "/create-project"
+      return;
     }
 
     console.log("Project clicked:", project.title);

@@ -19,3 +19,15 @@ export async function logout() {
 export async function editUser(username, email) {
   return request('patch', '/users/edit', { data: { username, email } })
 }
+
+export async function getUser() {
+  return request('get', '/users')
+}
+
+export async function deleteUser() {
+  return request('delete', '/users/delete')
+}
+
+export async function editSubscription(subscription) {
+  return request('patch', '/users/edit-subscription', { data: { subscription } })
+}

@@ -13,6 +13,10 @@ import Step02Register from '@/components/register-steps/Step02Register.vue'
 import Step03Register from '@/components/register-steps/Step03Register.vue'
 import NewsletterView from '@/views/NewsletterView.vue'
 import WebsiteView from '@/views/WebsiteView.vue'
+import ChangePlanView from '@/views/ChangePlanView.vue'
+import ConfirmPlanChangeView from '@/views/ConfirmPlanChangeView.vue'
+import AboutPage from '@/views/footer-links/AboutPage.vue'
+import LegalPage from '@/views/footer-links/LegalPage.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -69,9 +73,29 @@ const router = createRouter({
       ],
     },
     {
-      path: '/newsletter',
+      path: '/:id/newsletter',
       name: 'newsletter',
       component: NewsletterView,
+    },
+    {
+      path: '/change-plan',
+      name: 'change-plan',
+      component: ChangePlanView
+    },
+    {
+      path: '/change-plan/confirm',
+      name: 'change-plan-confirm',
+      component: ConfirmPlanChangeView
+    },
+    {
+      path: '/about',
+      name: 'about',
+      component: AboutPage,
+    },
+    {
+      path: '/legal',
+      name: 'legal',
+      component: LegalPage,
     },
     {
       path: '/:route',

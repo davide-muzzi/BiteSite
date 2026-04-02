@@ -6,5 +6,7 @@ import * as restaurantHandlers from "../handlers/restaurants.js";
 const restaurantRouter = express.Router();
 
 restaurantRouter.get("/website/:route", routeWrapper(restaurantHandlers.serveWebsite));
+restaurantRouter.post("/newsletter/subscribe", routeWrapper(restaurantHandlers.subscribeToNewsletter));
+restaurantRouter.post("/newsletter/send", checkAuth, routeWrapper(restaurantHandlers.sendNewsletter));
 
 export default restaurantRouter

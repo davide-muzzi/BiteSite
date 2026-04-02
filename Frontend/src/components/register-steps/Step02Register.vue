@@ -1,10 +1,9 @@
 <script setup>
 import { useRegisterStore } from "../../stores/register";
-import { useRouter } from "vue-router";
+import router from "@/router";
 import { Check } from "lucide-vue-next";
 
 const store = useRegisterStore();
-const router = useRouter();
 
 const beginnerPlan = {
     id: "beginner",
