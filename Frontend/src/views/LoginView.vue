@@ -5,11 +5,15 @@ import { login } from "@/api/routes/user.js";
 
 const email = ref('');
 const password = ref('');
+const errorMessage = ref('');
 
 const handleLogin = async () => {
   const result = await login(email.value, password.value);
 
-  if (result.success) window.location.href = "/projects-overview";
+  if (result.success) 
+    window.location.href = "/projects-overview";
+  else
+    errorMessage.value = result.message;
 };
 
 </script>
@@ -44,6 +48,7 @@ const handleLogin = async () => {
         Don't have an account?
         <RouterLink to="/register">Register</RouterLink>
       </p>
+      <div class="error-message" v-if="errorMessage">{{ errorMessage }}</div>
     </div>
   </section>
 </template>
@@ -144,5 +149,11 @@ const handleLogin = async () => {
 .register-text a {
   color: var(--font-color-dark-blue);
   font-weight: 800;
+}
+
+.error-message {
+  margin-top: 16px;
+  color: red;
+  text-align: center;
 }
 </style>
