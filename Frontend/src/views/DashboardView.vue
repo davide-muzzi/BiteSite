@@ -13,6 +13,7 @@ import {
 } from "lucide-vue-next";
 import BackButton from "@/components/BackButton.vue";
 import { editTitle } from "@/api/routes/project.js";
+import router from "@/router";
 
 const isPublished = ref(true);
 const newTitle = ref("");
@@ -153,7 +154,7 @@ const handleEditTitle = async (newTitle) => {
                     Open in editor
                 </button>
 
-                <button class="main-btn">
+                <button class="main-btn" @click="router.push(`/${1}/newsletter`)">
                     <Mail class="icon" />
                     Manage Newsletter
                 </button>
