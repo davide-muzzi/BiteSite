@@ -251,7 +251,7 @@ async function makeWebsite(website, route, title) {
     "Error while reading website html file"
   );
 
-  htmlContent = htmlContent.replace(/\|websiteTitle\|/, title);
+  htmlContent = htmlContent.replace(/\|websiteTitle\|/g, title);
 
   const navbar = website.navbar;
   const pages = website.pages;
@@ -271,9 +271,11 @@ async function makeWebsite(website, route, title) {
     .replace(/\|navbarBorderRadius\|/g, navbar.borderRadius)
     .replace(/\|navbarAdditionalBarCSS\|/, objectToCSS(navbar.barCss))
     .replace(/\|navbarAdditionalContainerCSS\|/, objectToCSS(navbar.containerCss))
+    .replace(/\|navbarAdditionalTitleCSS\|/, objectToCSS(navbar.titleCss))
     .replace(/\|navbarAdditionalItemCSS\|/, objectToCSS(navbar.itemCss));
 
-  htmlContent = htmlContent.replace(/\|firstPage\|/, pages[0].name.toLowerCase());
+  htmlContent = htmlContent
+    .replace(/\|firstPage\|/, pages[0].name.toLowerCase());
 
   let pagesHtml = "";
   let pagesCss = "";
@@ -299,7 +301,8 @@ async function makeWebsite(website, route, title) {
 
   htmlContent = htmlContent
     .replace(/\|pageContent\|/, pagesHtml)
-    .replace(/\|pageCss\|/, pagesCss);
+    .replace(/\|pageCss\|/, pagesCss)
+    .replace(/§/g, "");
 
   await safeOperation(
     () => writeFile(`./websites/${route}.html`, htmlContent),
