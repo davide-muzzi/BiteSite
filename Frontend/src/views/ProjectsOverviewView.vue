@@ -48,8 +48,8 @@ function handleTemplateClick(template) {
 
 function handleProjectClick(project) {
     if (project.isCreateCard) {
-        console.log("Create new project clicked");
-        return;
+      window.location.href = "/create-project"
+      return;
     }
 
     console.log("Project clicked:", project.title);
