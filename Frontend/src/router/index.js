@@ -14,6 +14,7 @@ import Step03Register from '@/components/register-steps/Step03Register.vue'
 import NewsletterView from '@/views/NewsletterView.vue'
 import ChangePlanView from '@/views/ChangePlanView.vue'
 import ConfirmPlanChangeView from '@/views/ConfirmPlanChangeView.vue'
+import AboutPage from '@/views/AboutPage.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -84,6 +85,11 @@ const router = createRouter({
       name: 'change-plan-confirm',
       component: ConfirmPlanChangeView
     },
+    {
+      path: '/about',
+      name: 'about',
+      component: AboutPage,
+    }
   ],
 })
 
