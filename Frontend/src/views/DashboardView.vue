@@ -12,13 +12,26 @@ import {
     Save
 } from "lucide-vue-next";
 import BackButton from "@/components/BackButton.vue";
+import { editTitle } from "@/api/routes/project.js";
 import router from "@/router";
 
 const isPublished = ref(true);
+const newTitle = ref("");
 
 function togglePublish() {
     isPublished.value = !isPublished.value;
 }
+
+const handleEditTitle = async (newTitle) => {
+    const result = await editTitle("projectId", newTitle.value);
+
+    if (result.success) {
+        window.location.href = '/dashboard';
+    }
+
+
+};
+
 </script>
 
 <template>
@@ -34,12 +47,12 @@ function togglePublish() {
 
                 <div class="field">
                     <label>Project name:</label>
-                    <input placeholder="BitesFood v1" />
+                    <input placeholder="BitesFood v1"/>
                 </div>
 
                 <div class="field">
                     <label>Website title:</label>
-                    <input placeholder="BitesFood" />
+                    <input placeholder="BitesFood" v-model="newTitle"/>
                 </div>
 
                 <div class="field">
@@ -115,7 +128,7 @@ function togglePublish() {
 
                 <div class="actions">
 
-                    <button class="save">
+                    <button class="save" @click="handleEditTitle('New title')">
                         <Save class="icon" />
                         Save
                     </button>
