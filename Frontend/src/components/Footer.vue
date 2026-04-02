@@ -16,7 +16,7 @@ const isSimple = computed(() => props.variant === "simple");
     <template v-if="isSimple">
       <div class="simple-footer">
         <span>© 2026 BiteSite</span>
-        <span><RouterLink to="/about">About</RouterLink> · Legal · Contact</span>
+        <span><RouterLink to="/about">About</RouterLink> · <RouterLink to="/legal">Legal</RouterLink> · Contact</span>
       </div>
     </template>
     <template v-else>
@@ -28,7 +28,7 @@ const isSimple = computed(() => props.variant === "simple");
 
         <nav class="links">
           <RouterLink to="/about">About</RouterLink>
-          <a href="#">Legal</a>
+          <RouterLink to="/legal">Legal</RouterLink>
           <a href="#">Contact</a>
         </nav>
       </div>
