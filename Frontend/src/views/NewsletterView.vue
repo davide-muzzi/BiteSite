@@ -2,10 +2,10 @@
 import { computed, ref } from 'vue';
 import BackButton from '@/components/BackButton.vue';
 import { sendNewsletter } from '@/api/routes/restaurant.js';
-import { useRoute, useRouter } from 'vue-router';
+import { useRoute } from 'vue-router';
+import router from "@/router";
 
 const route = useRoute();
-const router = useRouter();
 
 const subject = ref('');
 const body = ref('');

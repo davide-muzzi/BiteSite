@@ -1,14 +1,12 @@
 <script setup>
 import { computed, onMounted, onUnmounted, ref } from "vue";
-import { useRouter } from "vue-router";
+import router from "@/router";
 import {
     Plus,
     ArrowRight,
     ChevronLeft,
     ChevronRight
 } from "lucide-vue-next";
-
-const router = useRouter();
 
 const templates = [
     { id: 1, title: "Template 1" },
