@@ -1,9 +1,8 @@
 <script setup>
-import { useRouter } from 'vue-router'
+import router from "@/router";
 import { checkLogin } from "@/api/routes/user.js";
 import { onMounted, ref } from "vue";
 
-const router = useRouter()
 const loggedIn = ref("");
 
 onMounted(async () => {
@@ -11,7 +10,6 @@ onMounted(async () => {
 
   loggedIn.value = result.loggedIn;
 })
-import router from "@/router";
 </script>
 
 <template>
