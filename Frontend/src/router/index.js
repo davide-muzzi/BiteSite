@@ -12,6 +12,7 @@ import Step01Register from '@/components/register-steps/Step01Register.vue'
 import Step02Register from '@/components/register-steps/Step02Register.vue'
 import Step03Register from '@/components/register-steps/Step03Register.vue'
 import NewsletterView from '@/views/NewsletterView.vue'
+import WebsiteView from '@/views/WebsiteView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -71,6 +72,11 @@ const router = createRouter({
       path: '/newsletter',
       name: 'newsletter',
       component: NewsletterView,
+    },
+    {
+      path: '/:route',
+      name: 'website',
+      component: WebsiteView
     },
   ],
 })
