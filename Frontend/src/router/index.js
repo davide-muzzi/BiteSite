@@ -12,6 +12,7 @@ import Step01Register from '@/components/register-steps/Step01Register.vue'
 import Step02Register from '@/components/register-steps/Step02Register.vue'
 import Step03Register from '@/components/register-steps/Step03Register.vue'
 import NewsletterView from '@/views/NewsletterView.vue'
+import WebsiteView from '@/views/WebsiteView.vue'
 import ChangePlanView from '@/views/ChangePlanView.vue'
 import ConfirmPlanChangeView from '@/views/ConfirmPlanChangeView.vue'
 import AboutPage from '@/views/footer-links/AboutPage.vue'
@@ -95,6 +96,11 @@ const router = createRouter({
       path: '/legal',
       name: 'legal',
       component: LegalPage,
+    },
+    {
+      path: '/:route',
+      name: 'website',
+      component: WebsiteView
     },
   ],
 })
