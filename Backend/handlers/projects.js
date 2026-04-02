@@ -102,7 +102,7 @@ export async function editName(req, res) {
 }
 
 export async function getProject(req, res) {
-  const { projectId } = req.query;
+    const { projectId } = req.params;
   checkReq(!projectId);
 
   const project = await safeOperation(
