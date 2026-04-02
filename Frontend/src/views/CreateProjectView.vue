@@ -1,16 +1,15 @@
 <script setup>
 import { ref } from 'vue';
 import BackButton from '@/components/BackButton.vue';
+import { createProject } from '../api/routes/project.js';
 
-const projectName = ref("");
+const name = ref("");
 
 const newTag = ref("");
 
-const tags = ref([
-    { tagName: "#Italian" },
-    { tagName: "#Pasta" },
-    { tagName: "#Pizza" },
-])
+const tags = ref([]);
+
+const templateName = ref("blank");
 
 function addTag() {
     const newTagName = `#${newTag.value}`;
@@ -24,12 +23,15 @@ function deleteTag(deleteTagName) {
     tags.value = tags.value.filter(tag => tag.tagName !== deleteTagName)
 }
 
-function create() {
-    console.log(projectName.value);
-    for (let tag of tags.value) {
-        console.log(tag)
-    }
+const handleCreateProject = async () => {
+  console.log(name.value);
+  const result = await createProject(
+    name.value,
+    tags.value.map(tag => tag.tagName),
+    templateName.value
+  );  if (result.success) window.location.href = "/editor";
 }
+
 </script>
 
 <template>
@@ -44,7 +46,7 @@ function create() {
         <div class="form-card">
             <div class="field-group">
                 <label>Name</label>
-                <input v-model="projectName" type="text" placeholder="Enter project name ..." />
+                <input v-model="name" type="text" placeholder="Enter project name ..." />
             </div>
 
             <div class="field-group">
@@ -66,7 +68,7 @@ function create() {
                 </div>
             </div>
 
-            <button class="create-btn" type="button" @click="create">
+            <button class="create-btn" type="button" @click="handleCreateProject()">
                 Create
             </button>
         </div>
