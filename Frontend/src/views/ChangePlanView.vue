@@ -1,9 +1,8 @@
-<script setup> /*kopiert aus den Regristrationssteps*/
+<script setup>/*kopiert aus den Regristrationssteps*/
 import { useRegisterStore } from '@/stores/register.js';
-import { useRouter } from "vue-router";
+import router from "@/router";
 
 const store = useRegisterStore();
-const router = useRouter();
 
 const beginnerPlan = {
     id: "beginner",
@@ -12,11 +11,11 @@ const beginnerPlan = {
     price: 14.95,
     period: "/Month",
     features: [
-      "✓ One Website",
-      "✓ Direct Hosting",
-      "✓ Restaurant specific SEO",
-      "✓ Reservation possible",
-      "✓ Limited Templates"
+        "✓ One Website",
+        "✓ Direct Hosting",
+        "✓ Restaurant specific SEO",
+        "✓ Reservation possible",
+        "✓ Limited Templates"
     ]
 };
 
@@ -27,13 +26,13 @@ const masterChefPlan = {
     price: 49.95,
     period: "/Month",
     features: [
-      "✓ Unlimited Websites",
-      "✓ Direct Hosting",
-      "✓ Restaurant specific SEO",
-      "✓ Reservation possible",
-      "✓ All Templates",
-      "✓ Consulting",
-      "✓ Newsletter automation"
+        "✓ Unlimited Websites",
+        "✓ Direct Hosting",
+        "✓ Restaurant specific SEO",
+        "✓ Reservation possible",
+        "✓ All Templates",
+        "✓ Consulting",
+        "✓ Newsletter automation"
     ]
 };
 
@@ -47,7 +46,8 @@ function selectPlan(plan) {
     <div class="beginner-card">
         <h2>BiteSite Beginner</h2>
         <div class="price">
-            <h3>CHF 14.95</h3> <p>/Month</p>
+            <h3>CHF 14.95</h3>
+            <p>/Month</p>
         </div>
         <button class="select-beginner" @click="selectPlan(beginnerPlan)">Change</button>
         <div class="beginner-text">
@@ -62,7 +62,8 @@ function selectPlan(plan) {
     <div class="masterchef-card">
         <h2>BiteSite MasterChef</h2>
         <div class="price">
-            <h3>CHF 49.95</h3> <p>/Month</p>
+            <h3>CHF 49.95</h3>
+            <p>/Month</p>
         </div>
         <button class="select-masterchef" @click="selectPlan(masterChefPlan)">Wechseln</button>
         <div class="masterchef-text">
@@ -101,28 +102,34 @@ body {
     gap: 6px;
     color: black;
 }
-.price h3 { margin: 0; }
+
+.price h3 {
+    margin: 0;
+}
+
 .price p {
     margin: 0;
     opacity: 0.4;
 }
 
 .beginner-card button {
-  width: 445px;
-  height: 46px;
-  border-radius: 66px;
-  border: none;
-  margin-top: 10px;
-  background-color: var(--accent);
-  color: white;
-  font-size: 22px;
-  cursor: pointer;
-  font-weight: 600;
-  box-sizing: border-box;
+    width: 445px;
+    height: 46px;
+    border-radius: 66px;
+    border: none;
+    margin-top: 10px;
+    background-color: var(--accent);
+    color: white;
+    font-size: 22px;
+    cursor: pointer;
+    font-weight: 600;
+    box-sizing: border-box;
 }
+
 .beginner-card button:hover {
-  background-color: var(--button-hover-color);
+    background-color: var(--button-hover-color);
 }
+
 .beginner-card .beginner-text {
     color: #000000;
     font-weight: 600;
@@ -140,22 +147,25 @@ body {
     margin-top: 74px;
     margin-bottom: 70px;
 }
+
 .masterchef-card button {
-  width: 445px;
-  height: 46px;
-  border-radius: 66px;
-  border: none;
-  margin-top: 10px;
-  background-color: var(--accent);
-  color: white;
-  font-size: 22px;
-  cursor: pointer;
-  font-weight: 600;
-  box-sizing: border-box;
+    width: 445px;
+    height: 46px;
+    border-radius: 66px;
+    border: none;
+    margin-top: 10px;
+    background-color: var(--accent);
+    color: white;
+    font-size: 22px;
+    cursor: pointer;
+    font-weight: 600;
+    box-sizing: border-box;
 }
+
 .masterchef-card button:hover {
-  background-color: var(--button-hover-color);
+    background-color: var(--button-hover-color);
 }
+
 .masterchef-card .masterchef-text {
     color: #000000;
     font-weight: 600;

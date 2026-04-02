@@ -12,6 +12,7 @@ import {
     Save
 } from "lucide-vue-next";
 import BackButton from "@/components/BackButton.vue";
+import router from "@/router";
 
 const isPublished = ref(true);
 
@@ -140,7 +141,7 @@ function togglePublish() {
                     Open in editor
                 </button>
 
-                <button class="main-btn">
+                <button class="main-btn" @click="router.push(`/${1}/newsletter`)">
                     <Mail class="icon" />
                     Manage Newsletter
                 </button>

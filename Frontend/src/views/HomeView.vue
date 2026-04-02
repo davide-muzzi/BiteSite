@@ -11,6 +11,7 @@ onMounted(async () => {
 
   loggedIn.value = result.loggedIn;
 })
+import router from "@/router";
 </script>
 
 <template>
