@@ -132,6 +132,20 @@ export async function getProject(req, res) {
   res.status(200).json({ success: true, message: "Successfully retrieved project from database", project: formattedProject });
 }
 
+export async function getAllProjects(req, res) {
+  const projects = await safeOperation(
+    () => db.all("select project_id, name from projects where fk_user_id = ?", [req.session.user.id]),
+    "Error while getting projects from database"
+  );
+
+  const formattedProjects = projects.map(project => ({
+    projectId: project.project_id,
+    name: project.name,
+  }));
+
+  res.status(200).json({ success: true, message: "Successfully retrieved projects from database", projects: formattedProjects });
+}
+
 export async function editRoute(req, res) {
   const { projectId, routeName } = req.body;
   checkReq(!projectId || !routeName);

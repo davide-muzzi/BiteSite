@@ -5,7 +5,8 @@ import * as projectHandlers from "../handlers/projects.js";
 
 const projectRouter = express.Router();
 
-projectRouter.get("/", checkAuth, routeWrapper(projectHandlers.getProject));
+projectRouter.get("/", checkAuth, routeWrapper(projectHandlers.getAllProjects));
+projectRouter.get("/single", checkAuth, routeWrapper(projectHandlers.getProject));
 projectRouter.post("/create", checkAuth, routeWrapper(projectHandlers.createProject));
 projectRouter.patch("/edit-title", checkAuth, routeWrapper(projectHandlers.editTitle));
 projectRouter.patch("/edit-name", checkAuth, routeWrapper(projectHandlers.editName));
