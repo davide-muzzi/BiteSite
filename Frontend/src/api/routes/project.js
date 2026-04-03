@@ -11,3 +11,7 @@ export async function createProject(name, tags, templateName) {
 export async function editRoute(projectId, routeName) {
   return request('patch', '/projects/edit-route', { data: { projectId, routeName } })
 }
+
+export async function getAllProjects() {
+  return request('get', '/projects')
+}

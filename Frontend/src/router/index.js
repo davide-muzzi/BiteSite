@@ -98,8 +98,8 @@ const router = createRouter({
       component: LegalPage,
     },
     {
-      path: '/:route',
-      name: 'website',
+      path: '/restaurant/:route',
+      name: 'restaurant',
       component: WebsiteView
     },
   ],
