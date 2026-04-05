@@ -15,3 +15,7 @@ export async function getAllProjects() {
 export async function getSingleProject(projectId) {
   return request('get', '/projects/single', { params: { projectId } });
 }
+
+export async function togglePublish(projectId) {
+  return request('patch', '/projects/toggle-publish', { data: { projectId } });
+}
