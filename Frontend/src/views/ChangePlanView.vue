@@ -1,4 +1,5 @@
 <script setup>/*kopiert aus den Regristrationssteps*/
+import { Check } from "lucide-vue-next";
 import { useRegisterStore } from '@/stores/register.js';
 import router from "@/router";
 
@@ -11,11 +12,11 @@ const beginnerPlan = {
     price: 14.95,
     period: "/Month",
     features: [
-        "✓ One Website",
-        "✓ Direct Hosting",
-        "✓ Restaurant specific SEO",
-        "✓ Reservation possible",
-        "✓ Limited Templates"
+        "One Website",
+        "Direct Hosting",
+        "Restaurant specific SEO",
+        "Reservation possible",
+        "Limited Templates"
     ]
 };
 
@@ -26,13 +27,13 @@ const masterChefPlan = {
     price: 49.95,
     period: "/Month",
     features: [
-        "✓ Unlimited Websites",
-        "✓ Direct Hosting",
-        "✓ Restaurant specific SEO",
-        "✓ Reservation possible",
-        "✓ All Templates",
-        "✓ Consulting",
-        "✓ Newsletter automation"
+        "Unlimited Websites",
+        "Direct Hosting",
+        "Restaurant specific SEO",
+        "Reservation possible",
+        "All Templates",
+        "Consulting",
+        "Newsletter automation"
     ]
 };
 
@@ -51,11 +52,10 @@ function selectPlan(plan) {
         </div>
         <button class="select-beginner" @click="selectPlan(beginnerPlan)">Change</button>
         <div class="beginner-text">
-            <p>✓ One Website</p>
-            <p>✓ Direct Hosting</p>
-            <p>✓ Restaurant specific SEO</p>
-            <p>✓ Reservation possible</p>
-            <p>✓ Limited Templates</p>
+            <p v-for="feature in beginnerPlan.features" :key="feature" class="feature-row">
+                <Check class="feature-icon" />
+                <span>{{ feature }}</span>
+            </p>
         </div>
     </div>
 
@@ -67,13 +67,10 @@ function selectPlan(plan) {
         </div>
         <button class="select-masterchef" @click="selectPlan(masterChefPlan)">Wechseln</button>
         <div class="masterchef-text">
-            <p>✓ Unlimited Websites</p>
-            <p>✓ Direct Hosting</p>
-            <p>✓ Restaurant specific SEO</p>
-            <p>✓ Reservation possible</p>
-            <p>✓ All Templates</p>
-            <p>✓ Consulting</p>
-            <p>✓ Newsletter automation</p>
+            <p v-for="feature in masterChefPlan.features" :key="feature" class="feature-row">
+                <Check class="feature-icon" />
+                <span>{{ feature }}</span>
+            </p>
         </div>
     </div>
 </template>
@@ -133,6 +130,21 @@ body {
 .beginner-card .beginner-text {
     color: #000000;
     font-weight: 600;
+}
+
+.feature-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 8px 0;
+}
+
+.feature-icon {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+    color: var(--accent);
+    stroke-width: 2.5;
 }
 
 .masterchef-card {
