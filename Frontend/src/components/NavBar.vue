@@ -17,13 +17,10 @@ onMounted(async () => {
 
     <div class="nav-links">
       <RouterLink to="/top-restaurants" class="nav-link">Restaurants</RouterLink>
-      <span class="nav-link disabled">About Us</span>
-      <div v-if="!loggedIn">
-        <RouterLink to="/login" class="nav-link">Login</RouterLink>
-      </div>
-      <div v-else>
-        <RouterLink to="/user-settings" class="nav-link">Settings</RouterLink>
-      </div>
+      <RouterLink to="/about" class="nav-link">About</RouterLink>
+      <RouterLink to="/login" class="nav-link" v-if="!loggedIn">Login</RouterLink>
+      <RouterLink to="/user-settings" class="nav-link" v-else>Settings</RouterLink>
+      <RouterLink to="/projects-overview" class="nav-link" v-if="loggedIn">Projects</RouterLink>
     </div>
   </nav>
 </template>

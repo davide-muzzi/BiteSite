@@ -1,4 +1,6 @@
 <script setup>
+import { Search, Star } from "lucide-vue-next";
+
 const restaurants = [
   {
     id: "pizza-palace",
@@ -29,11 +31,7 @@ const restaurants = [
       <div class="search">
         <input type="search" placeholder="Search restaurants..." />
         <button type="button" aria-label="Search">
-          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
-            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="11" cy="11" r="8" />
-            <path d="m21 21-4.35-4.35" />
-          </svg>
+          <Search class="search-icon" />
         </button>
       </div>
     </div>
@@ -46,7 +44,7 @@ const restaurants = [
             <h2>{{ restaurant.name }}</h2>
             <div class="rating" :aria-label="`Rated ${restaurant.rating} stars`">
               <span>{{ restaurant.rating.toFixed(1) }}</span>
-              <span class="star">★</span>
+              <Star class="star" />
             </div>
           </div>
           <div class="tags">
@@ -66,6 +64,11 @@ const restaurants = [
 </template>
 
 <style scoped>
+.search-icon {
+  width: 18px;
+  height: 18px;
+}
+
 .restaurants-view {
   min-height: calc(100vh - 160px);
   padding: 42px 78px 80px;
@@ -147,6 +150,7 @@ const restaurants = [
   border-radius: 28px;
   background: white;
   box-shadow: 0 24px 60px rgba(49, 38, 110, 0.08);
+  transition: background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .actions {

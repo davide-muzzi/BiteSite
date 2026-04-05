@@ -1,37 +1,50 @@
-﻿<script setup>
-import { ref } from "vue";
+<script setup>
+import { ref, onMounted } from "vue";
 import {
-    Globe,
-    GlobeOff,
-    Star,
-    Pencil,
-    Mail,
-    User,
-    Trash,
-    Check,
-    Save
+  Globe,
+  GlobeOff,
+  Star,
+  Pencil,
+  Mail,
+  User,
+  Trash,
+  Check,
+  Save
 } from "lucide-vue-next";
 import BackButton from "@/components/BackButton.vue";
-import { editTitle } from "@/api/routes/project.js";
+import { editProject, getSingleProject, togglePublish } from "@/api/routes/project.js";
 import router from "@/router";
+import { useRoute } from "vue-router";
 
-const isPublished = ref(true);
-const newTitle = ref("");
+const pageRoute = useRoute();
 
-function togglePublish() {
-    isPublished.value = !isPublished.value;
+const published = ref(false);
+const title = ref("");
+const route = ref("");
+const name = ref("");
+
+const handleTogglePublish = async () =>  {
+  const result = await togglePublish(pageRoute.params.projectId);
+
+  if (result.success) published.value = !published.value;
 }
 
-const handleEditTitle = async (newTitle) => {
-    const result = await editTitle("projectId", newTitle.value);
+const handleEditProject = async (newTitle) => {
+  const result = await editProject(pageRoute.params.projectId, route.value, name.value, title.value);
 
-    if (result.success) {
-        window.location.href = '/dashboard';
-    }
-
-
+  if (result.success) console.log("Edited project");
 };
 
+onMounted(async () => {
+  const result = await getSingleProject(pageRoute.params.projectId);
+
+  if (result.success) {
+    name.value = result.project.name;
+    title.value = result.project.websiteTitle;
+    route.value = result.project.websiteRoute;
+    published.value = result.project.published;
+  }
+});
 </script>
 
 <template>
@@ -47,12 +60,12 @@ const handleEditTitle = async (newTitle) => {
 
                 <div class="field">
                     <label>Project name:</label>
-                    <input placeholder="BitesFood v1"/>
+                    <input placeholder="BitesFood v1" v-model="name"/>
                 </div>
 
                 <div class="field">
                     <label>Website title:</label>
-                    <input placeholder="BitesFood" v-model="newTitle"/>
+                    <input placeholder="BitesFood" v-model="title"/>
                 </div>
 
                 <div class="field">
@@ -60,18 +73,18 @@ const handleEditTitle = async (newTitle) => {
 
                     <div class="subdomain">
                         <div class="domain">
-                            bitesite.com/
+                            bitesite.com/restaurant/
                         </div>
-                        <input class="sub-input" placeholder="bitesfood" />
+                        <input class="sub-input" placeholder="bitesfood" v-model="route"/>
                         <Check class="icon check" />
                     </div>
                 </div>
 
                 <div class="published">
-                    <component :is="isPublished ? Globe : GlobeOff" class="icon" />
+                    <component :is="published ? Globe : GlobeOff" class="icon" />
                     <span class="published-text">
-                        {{ isPublished ? "Published" : "Unpublished" }}
-                        <Check v-if="isPublished" class="icon check" />
+                        {{ published ? "Published" : "Unpublished" }}
+                        <Check v-if="published" class="icon check" />
                     </span>
                 </div>
 
@@ -128,14 +141,14 @@ const handleEditTitle = async (newTitle) => {
 
                 <div class="actions">
 
-                    <button class="save" @click="handleEditTitle('New title')">
+                    <button class="save" @click="handleEditProject">
                         <Save class="icon" />
                         Save
                     </button>
 
-                    <button class="outline" @click="togglePublish">
-                        <component :is="isPublished ? GlobeOff : Globe" class="icon" />
-                        {{ isPublished ? "Unpublish" : "Publish" }}
+                    <button class="outline" @click="handleTogglePublish">
+                        <component :is="published ? GlobeOff : Globe" class="icon" />
+                        {{ published ? "Unpublish" : "Publish" }}
                     </button>
 
                     <button class="outline">
