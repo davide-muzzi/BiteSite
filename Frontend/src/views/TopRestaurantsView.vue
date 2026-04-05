@@ -38,21 +38,19 @@ const restaurants = [
 
     <div class="restaurant-list">
       <article v-for="restaurant in restaurants" :key="restaurant.id" class="restaurant-card">
-        <div class="identity">
-          <span class="icon">{{ restaurant.icon }}</span>
-          <div class="title-block">
-            <div class="title-row">
-              <h2>{{ restaurant.name }}</h2>
-              <div class="rating">
-                <span>{{ restaurant.rating.toFixed(1) }}</span>
-                <Star class="star" />
-              </div>
+        <span class="icon">{{ restaurant.icon }}</span>
+        <div class="details">
+          <div class="title-row">
+            <h2>{{ restaurant.name }}</h2>
+            <div class="rating" :aria-label="`Rated ${restaurant.rating} stars`">
+              <span>{{ restaurant.rating.toFixed(1) }}</span>
+              <Star class="star" />
             </div>
-            <div class="tags">
-              <span v-for="tag in restaurant.tags" :key="tag" class="tag">
-                #{{ tag }}
-              </span>
-            </div>
+          </div>
+          <div class="tags">
+            <span v-for="tag in restaurant.tags" :key="tag" class="tag">
+              #{{ tag }}
+            </span>
           </div>
         </div>
         <div v-if="restaurant.website" class="actions">
@@ -143,11 +141,12 @@ const restaurants = [
 }
 
 .restaurant-card {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  display: grid;
+  grid-template-columns: 100px 1fr 100px;
+  height: 125px;
   gap: 18px;
-  padding: 24px 32px;
+  align-items: center;
+  padding: 0 24px;
   border-radius: 28px;
   background: white;
   box-shadow: 0 24px 60px rgba(49, 38, 110, 0.08);
@@ -155,7 +154,8 @@ const restaurants = [
 }
 
 .actions {
-  margin-left: auto;
+  display: flex;
+  justify-content: flex-end;
 }
 
 .visit-link {
@@ -176,12 +176,6 @@ const restaurants = [
   background: var(--button-hover-color);
 }
 
-.identity {
-  display: flex;
-  gap: 20px;
-  align-items: center;
-}
-
 .icon {
   width: 70px;
   height: 70px;
@@ -193,7 +187,7 @@ const restaurants = [
   font-size: 32px;
 }
 
-.title-block h2 {
+.details h2 {
   margin: 0;
   font-size: 24px;
   font-weight: 800;
