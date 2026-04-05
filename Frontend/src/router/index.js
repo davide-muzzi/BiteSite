@@ -32,7 +32,7 @@ const router = createRouter({
       component: LoginView,
     },
     {
-      path: '/dashboard',
+      path: '/dashboard/:projectId',
       name: 'dashboard',
       component: DashboardView,
     },

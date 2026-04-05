@@ -1,18 +1,18 @@
-﻿<script setup>
+<script setup>
 import { ref } from "vue";
 import {
-    Globe,
-    GlobeOff,
-    Star,
-    Pencil,
-    Mail,
-    User,
-    Trash,
-    Check,
-    Save
+  Globe,
+  GlobeOff,
+  Star,
+  Pencil,
+  Mail,
+  User,
+  Trash,
+  Check,
+  Save
 } from "lucide-vue-next";
 import BackButton from "@/components/BackButton.vue";
-import { editTitle } from "@/api/routes/project.js";
+import { editTitle, editRoute } from "@/api/routes/project.js";
 import router from "@/router";
 
 const isPublished = ref(true);
@@ -23,13 +23,11 @@ function togglePublish() {
 }
 
 const handleEditTitle = async (newTitle) => {
-    const result = await editTitle("projectId", newTitle.value);
+  const result = await editTitle("projectId", newTitle.value);
 
-    if (result.success) {
-        window.location.href = '/dashboard';
-    }
-
-
+  if (result.success) {
+      window.location.href = '/dashboard';
+  }
 };
 
 </script>
