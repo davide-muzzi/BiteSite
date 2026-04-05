@@ -32,7 +32,7 @@ const router = createRouter({
       component: LoginView,
     },
     {
-      path: '/dashboard',
+      path: '/dashboard/:projectId',
       name: 'dashboard',
       component: DashboardView,
     },
@@ -98,8 +98,8 @@ const router = createRouter({
       component: LegalPage,
     },
     {
-      path: '/:route',
-      name: 'website',
+      path: '/restaurant/:route',
+      name: 'restaurant',
       component: WebsiteView
     },
   ],

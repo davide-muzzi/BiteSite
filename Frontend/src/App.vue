@@ -6,7 +6,7 @@ import Footer from './components/Footer.vue';
 
 const route = useRoute();
 const footerVariant = computed(() => route.name === 'home' ? 'simple' : 'default');
-const isWebsite = computed(() => route.name === 'website' ? true : false);
+const isWebsite = computed(() => route.name === 'restaurant' ? true : false);
 </script>
 
 <template>

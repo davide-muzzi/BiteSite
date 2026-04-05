@@ -10,7 +10,7 @@ export async function serveWebsite(req, res) {
   const websitePath = `./websites/${route}.html`;
 
   if (!existsSync(websitePath))
-    res.status(404).send("<h1>404 Restaurant not found</h1>");
+    return res.status(404).send("<h1>404 Restaurant not found</h1>");
 
   const website = await safeOperation(
     () => readFile(websitePath, "utf-8"),
@@ -29,7 +29,7 @@ export async function subscribeToNewsletter(req, res) {
     () => projectId
       ? db.get("select project_id from projects where project_id = ?", [projectId])
       : db.get("select project_id from projects where website_route = ?", [projectRoute.trim().toLowerCase()]),
-  "Error while getting project from database"
+    "Error while getting project from database"
   );
 
   if (!project)
@@ -73,7 +73,7 @@ export async function sendNewsletter(req, res) {
     return res.status(404).json({ success: false, message: "Project not found" });
   if (project.fk_user_id !== req.session.user.id)
     return res.status(403).json({ success: false, message: "Not your project" });
-  
+
   const subscribers = await safeOperation(
     () => db.all("select email from newsletter_subscribers where fk_project_id = ?", [projectId]),
     "Error while retrieving subscribers",
