@@ -46,6 +46,10 @@ function selectPlan(plan) {
     store.setSubscription(plan);
     router.push("/change-plan/confirm");
 }
+
+function handleCancelSubscription() {
+    console.log("Cancel subscription clicked");
+}
 </script>
 
 <template>
@@ -87,6 +91,12 @@ function selectPlan(plan) {
                     <button class="plan-button" @click="selectPlan(plan)">Change</button>
                 </article>
             </div>
+
+            <p class="cancel-subscription-text">
+                <button type="button" class="cancel-subscription-button" @click="handleCancelSubscription">
+                    Cancel subscription
+                </button>
+            </p>
         </section>
     </main>
 </template>
@@ -248,6 +258,28 @@ function selectPlan(plan) {
 .plan-button:hover {
     background: var(--button-hover-color);
     transform: translateY(-2px);
+}
+
+.cancel-subscription-text {
+    margin: 28px 0 0;
+    text-align: center;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.cancel-subscription-button {
+    border: none;
+    background: transparent;
+    padding: 0;
+    color: var(--font-color-dark-blue);
+    font: inherit;
+    font-weight: 800;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.cancel-subscription-button:hover {
+    text-decoration: underline;
 }
 
 @media (max-width: 768px) {
