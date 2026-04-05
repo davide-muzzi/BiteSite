@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import {
   Globe,
   GlobeOff,
@@ -12,24 +12,36 @@ import {
   Save
 } from "lucide-vue-next";
 import BackButton from "@/components/BackButton.vue";
-import { editTitle, editRoute } from "@/api/routes/project.js";
+import { editProject, getSingleProject } from "@/api/routes/project.js";
 import router from "@/router";
+import { useRoute } from "vue-router";
 
-const isPublished = ref(true);
-const newTitle = ref("");
+const pageRoute = useRoute();
 
-function togglePublish() {
+const isPublished = ref(false);
+const title = ref("");
+const route = ref("");
+const name = ref("");
+
+function handleTogglePublish() {
     isPublished.value = !isPublished.value;
 }
 
-const handleEditTitle = async (newTitle) => {
-  const result = await editTitle("projectId", newTitle.value);
+const handleEditProject = async (newTitle) => {
+  const result = await editProject(pageRoute.params.projectId, route.value, name.value, title.value);
 
-  if (result.success) {
-      window.location.href = '/dashboard';
-  }
+  if (result.success) console.log("Edited project");
 };
 
+onMounted(async () => {
+  const result = await getSingleProject(pageRoute.params.projectId);
+
+  if (result.success) {
+    name.value = result.project.name;
+    title.value = result.project.websiteTitle;
+    route.value = result.project.websiteRoute;
+  }
+});
 </script>
 
 <template>
@@ -45,12 +57,12 @@ const handleEditTitle = async (newTitle) => {
 
                 <div class="field">
                     <label>Project name:</label>
-                    <input placeholder="BitesFood v1"/>
+                    <input placeholder="BitesFood v1" v-model="name"/>
                 </div>
 
                 <div class="field">
                     <label>Website title:</label>
-                    <input placeholder="BitesFood" v-model="newTitle"/>
+                    <input placeholder="BitesFood" v-model="title"/>
                 </div>
 
                 <div class="field">
@@ -58,9 +70,9 @@ const handleEditTitle = async (newTitle) => {
 
                     <div class="subdomain">
                         <div class="domain">
-                            bitesite.com/
+                            bitesite.com/restaurant/
                         </div>
-                        <input class="sub-input" placeholder="bitesfood" />
+                        <input class="sub-input" placeholder="bitesfood" v-model="route"/>
                         <Check class="icon check" />
                     </div>
                 </div>
@@ -126,7 +138,7 @@ const handleEditTitle = async (newTitle) => {
 
                 <div class="actions">
 
-                    <button class="save" @click="handleEditTitle('New title')">
+                    <button class="save" @click="handleEditProject">
                         <Save class="icon" />
                         Save
                     </button>

@@ -1,6 +1,6 @@
 import { db } from "../database/db.js";
 import { safeOperation, checkReq, HttpError } from "../error-handling.js";
-import { readFile, writeFile, rename, readdir } from "fs/promises";
+import { readFile, writeFile, rename } from "fs/promises";
 
 export async function createProject(req, res) {
   const { name, tags, templateName } = req.body;
