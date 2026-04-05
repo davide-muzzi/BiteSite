@@ -12,6 +12,14 @@ export async function serveWebsite(req, res) {
   if (!existsSync(websitePath))
     return res.status(404).send("<h1>404 Restaurant not found</h1>");
 
+  const project = await safeOperation(
+    () => db.get("select published from projects where website_route = ?", [route]),
+    "Error while checking if restaurant is published"
+  );
+
+  if (!project.published)
+    return res.status(403).send("<h1>403 Restaurant is not published</h1>");
+
   const website = await safeOperation(
     () => readFile(websitePath, "utf-8"),
     "Error while reading html file"

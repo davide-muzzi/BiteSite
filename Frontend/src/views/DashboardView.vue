@@ -12,19 +12,21 @@ import {
   Save
 } from "lucide-vue-next";
 import BackButton from "@/components/BackButton.vue";
-import { editProject, getSingleProject } from "@/api/routes/project.js";
+import { editProject, getSingleProject, togglePublish } from "@/api/routes/project.js";
 import router from "@/router";
 import { useRoute } from "vue-router";
 
 const pageRoute = useRoute();
 
-const isPublished = ref(false);
+const published = ref(false);
 const title = ref("");
 const route = ref("");
 const name = ref("");
 
-function handleTogglePublish() {
-    isPublished.value = !isPublished.value;
+const handleTogglePublish = async () =>  {
+  const result = await togglePublish(pageRoute.params.projectId);
+
+  if (result.success) published.value = !published.value;
 }
 
 const handleEditProject = async (newTitle) => {
@@ -40,6 +42,7 @@ onMounted(async () => {
     name.value = result.project.name;
     title.value = result.project.websiteTitle;
     route.value = result.project.websiteRoute;
+    published.value = result.project.published;
   }
 });
 </script>
@@ -78,10 +81,10 @@ onMounted(async () => {
                 </div>
 
                 <div class="published">
-                    <component :is="isPublished ? Globe : GlobeOff" class="icon" />
+                    <component :is="published ? Globe : GlobeOff" class="icon" />
                     <span class="published-text">
-                        {{ isPublished ? "Published" : "Unpublished" }}
-                        <Check v-if="isPublished" class="icon check" />
+                        {{ published ? "Published" : "Unpublished" }}
+                        <Check v-if="published" class="icon check" />
                     </span>
                 </div>
 
@@ -143,9 +146,9 @@ onMounted(async () => {
                         Save
                     </button>
 
-                    <button class="outline" @click="togglePublish">
-                        <component :is="isPublished ? GlobeOff : Globe" class="icon" />
-                        {{ isPublished ? "Unpublish" : "Publish" }}
+                    <button class="outline" @click="handleTogglePublish">
+                        <component :is="published ? GlobeOff : Globe" class="icon" />
+                        {{ published ? "Unpublish" : "Publish" }}
                     </button>
 
                     <button class="outline">
