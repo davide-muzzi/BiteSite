@@ -1,6 +1,6 @@
 import { db } from "../database/db.js";
 import { safeOperation, checkReq, HttpError } from "../error-handling.js";
-import { readFile, writeFile, rename } from "fs/promises";
+import { readFile, writeFile, rename, readdir } from "fs/promises";
 
 export async function createProject(req, res) {
   const { name, tags, templateName } = req.body;
@@ -57,7 +57,7 @@ export async function editProject(req, res) {
   checkReq(!projectId || (!route && !title && !name));
 
   const project = await safeOperation(
-    () => db.get("select name, website, website_title, website_route, fk_user_id from projects where project_id = ?", [projectId]),
+    () => db.get("select name, published, website, website_title, website_route, fk_user_id from projects where project_id = ?", [projectId]),
     "Error while getting project from database"
   );
 
@@ -66,11 +66,11 @@ export async function editProject(req, res) {
   if (project.fk_user_id !== req.session.user.id)
     return res.status(403).json({ success: false, message: "Not your project" });
 
-  if (route)
+  if (route && route !== project.website_route)
     await editRoute(projectId, route, project.website_route, project.published);
-  if (title)
+  if (title && title !== project.website_title)
     await editTitle(projectId, title, JSON.parse(project.website), project.website_route);
-  if (name)
+  if (name && name !== project.name)
     await editName(projectId, name);
 
   res.status(200).json({ success: true, message: "Successfully edited project" });
@@ -86,7 +86,7 @@ async function editRoute(projectId, route, oldRoute, published) {
     "Error while checking if route exists"
   );
 
-  if (routeProject && routeProject.project_id !== projectId) throw new HttpError("Route is already registered", 409);
+  if (routeProject) throw new HttpError("Route is already registered", 409);
 
   await safeOperation(
     () => db.run("update projects set website_route = ? where project_id = ?", [route.toLowerCase(), projectId]),
