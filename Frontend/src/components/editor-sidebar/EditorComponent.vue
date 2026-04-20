@@ -1,5 +1,6 @@
 <script setup>
 import { ref } from 'vue';
+import { ChevronRight } from "lucide-vue-next";
 
 const props = defineProps({
     title: {
@@ -10,7 +11,7 @@ const props = defineProps({
         type: Boolean,
         default: false
     }
-    
+
 })
 
 const isOpen = ref(props.startOpen);
@@ -18,39 +19,68 @@ const isOpen = ref(props.startOpen);
 </script>
 
 <template>
-<!-- 20% ChatGPT -->
     <div class="editor-dropdown">
         <button class="dropdown-header" @click="isOpen = !isOpen">
-            <span class="icon">{{ isOpen ? '∨ ' : '> ' }}</span>
-            <span class="title">{{ title }}</span>
+          <ChevronRight class="chevron-icon" :class="{ 'open': isOpen }"/>
+            <span>{{ title }}</span>
         </button>
 
-        <div v-if="isOpen" class="dropdown-content">
-            <slot />
+        <div class="dropdown-content" :class="{ 'open': isOpen }">
+            <slot v-if="isOpen" />
         </div>
     </div>
 </template>
 
 <style scoped>
 .editor-dropdown {
-    margin-bottom: 20px;
+    width: 100%;
+    border-radius: 25px;
+    overflow: hidden;
+    display: grid;
 }
 
+.editor-dropdown > * {
+    position: relative;
+    grid-area: 1 / 1;
+}
 
 .dropdown-header {
-    width: 266px;
-    height: 48px;
-    border-radius: 66px;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    padding-left: 10px;
+    height: 50px;
+    border-radius: 25px;
     border: none;
     background-color: var(--accent);
     color: white;
     font-family: var(--font);
     font-weight: 600;
-    font-size: 22 px;
+    font-size: 22px;
+    z-index: 10;
 }
 
+.dropdown-content {
+  background-color: var(--dropdown-color);
+  box-sizing: border-box;
+  width: 100%;
+  z-index: 0;
+  max-height: 0;
+  transition: 0.05s;
+  border-radius: 25px;
+  padding: 10px;
+}
 
+.dropdown-content.open {
+  max-height: unset;
+  padding-top: 50px;
+}
 
+.chevron-icon {
+  transition: 0.05s;
+}
 
-
+.chevron-icon.open {
+  transform: rotate(90deg);
+}
 </style>
