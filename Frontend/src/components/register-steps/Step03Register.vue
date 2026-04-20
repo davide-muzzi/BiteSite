@@ -1,7 +1,8 @@
 <script setup>
-import { computed } from 'vue';
+import { computed, ref } from 'vue';
 import { useRegisterStore } from "../../stores/register";
-import { ref } from 'vue';
+import router from '@/router';
+import { Check } from "lucide-vue-next";
 
 const cardnumber = ref("");
 const cardholdername = ref("");
@@ -20,51 +21,45 @@ const buttonenabled = computed(() => {
         cvv.value
     );
 });
+
+const handleRegister = async () => {
+    const result = await store.register();
+
+    if (result.success) router.push("/login");
+};
 </script>
 
 <template>
-    <div class="🦅">
-        <div class="paymentinfo-card">
-            <h2>Payment Information</h2>
-            <form class="register-form" >
+    <section class="checkout-grid">
+        <article class="step-card">
+            <header class="card-header">
+                <h2>Secure payment information</h2>
+            </header>
+
+            <form class="register-form" @submit.prevent="handleRegister()">
                 <div class="form-group">
-                    <input
-                        id="cardnumber"
-                        type="text"
-                        v-model="cardnumber"
-                        placeholder="Cardnumber"
-                        required
-                    />
+                    <label for="cardnumber">Card Number</label>
+                    <input id="cardnumber" type="text" inputmode="numeric" autocomplete="cc-number" v-model="cardnumber"
+                        placeholder="1234 5678 9101 1121" required />
                 </div>
+
                 <div class="form-group">
-                        <input
-                            id="cardholdername"
-                            type="cardholdername"
-                            v-model="cardholdername"
-                            placeholder="Cardholder Name"
-                            required
-                        />
+                    <label for="cardholdername">Cardholder Name</label>
+                    <input id="cardholdername" type="text" autocomplete="cc-name" v-model="cardholdername"
+                        placeholder="Full Name" required />
                 </div>
-                
-                <div class="next-to">
-                    <div class="form-group-half">
-                        <input
-                            id="mmyy"
-                            type="mmyy"
-                            v-model="mmyy"
-                            placeholder="MM/YY"
-                            required
-                        />
+
+                <div class="form-split">
+                    <div class="form-group">
+                        <label for="mmyy">Expiry</label>
+                        <input id="mmyy" type="text" inputmode="numeric" autocomplete="cc-exp" v-model="mmyy"
+                            placeholder="MM/YY" required />
                     </div>
 
-                    <div class="form-group-half">
-                        <input
-                            id="cvv"
-                            type="cvv"
-                            v-model="cvv"
-                            placeholder="CVV"
-                            required
-                        />
+                    <div class="form-group">
+                        <label for="cvv">CVV</label>
+                        <input id="cvv" type="password" inputmode="numeric" autocomplete="cc-csc" maxlength="4"
+                            v-model="cvv" placeholder="123" required />
                     </div>
                 </div>
 
@@ -72,139 +67,189 @@ const buttonenabled = computed(() => {
                     Pay
                 </button>
             </form>
+        </article>
 
+        <article class="step-card overview-card">
+            <header class="card-header">
+                <h2>Your selection:</h2>
+                <h2 v-if="selected" class="selected-name">{{ selected.name }}</h2>
+            </header>
 
-        </div>
+            <div v-if="selected" class="overview-content">
+                <p class="price">
+                    {{ selected.currency }} {{ selected.price.toFixed(2) }}
+                    <span>{{ selected.period }}</span>
+                </p>
 
-        <div class="overview-card">
-            <h2>Overview</h2>
-
-            <div class="overview-content" v-if="selected">
-                <h3>{{ selected.name }}</h3>
-                <p>{{ selected.currency }} {{ selected.price.toFixed(2) }} {{ selected.period }}</p>
-
-                <div class="features">
-                    <p v-for="(f, i) in selected.features" :key="i">{{ f }}</p>
-                </div>
+                <ul class="feature-list">
+                    <li v-for="(f, i) in selected.features" :key="i">
+                        <Check class="feature-icon" />
+                        <span>{{ f }}</span>
+                    </li>
+                </ul>
             </div>
 
-            <div v-else>
-                <p>No subscription selected.</p>
-            </div>
-
-        </div>
-    </div>
+            <p v-else>No subscription selected.</p>
+        </article>
+    </section>
 </template>
 
 <style scoped>
-body {
-    background: var(--background);
+.checkout-grid {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 32px;
     font-family: var(--font);
     color: var(--font-color-dark-blue);
+    align-items: stretch;
 }
 
-.🦅 {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-}
-
-.paymentinfo-card {
-    background-color: #ffeede;
-    width: 510px; 
-    height: 460px; 
-    border-radius: 66px;
+.step-card {
+    background: #fff;
+    border-radius: 32px;
+    padding: 32px 36px 40px;
+    box-shadow: 0 32px 70px rgba(49, 38, 110, 0.12);
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: center;
+    height: 100%;
+}
+
+.card-header h2 {
+    margin: 6px 0;
+    font-size: 28px;
+    font-weight: 800;
+}
+
+.card-header p {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 600;
+    color: rgba(40, 40, 40, 0.7);
+}
+
+.eyebrow {
+    margin: 0;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-size: 12px;
+    font-weight: 700;
+    color: rgba(49, 38, 110, 0.7);
+}
+
+.register-form {
+    margin-top: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group label {
+    margin-bottom: 8px;
+    font-size: 15px;
+    font-weight: 700;
 }
 
 .form-group input {
-    width: 445px;
-    height: 63px;
-    border-radius: 46px;
+    width: 100%;
+    height: 56px;
+    border-radius: 999px;
     border: none;
-    font-size: 22px;
-    font-family: var(--font);
-    margin-top: 12px;
+    background: #f9f6f1;
+    padding: 0 24px;
+    font-size: 17px;
+    font-weight: 600;
     box-sizing: border-box;
-    text-align: center;
 }
 
-.next-to {
-    display: flex;
-    align-items: baseline;
-    gap: 6px;
-}
-
-.form-group-half input {
-    width: 217px;
-    height: 63px;
-    border-radius: 46px;
-    border: none;
-    font-size: 22px;
-    font-family: var(--font);
-    margin-top: 12px;
-    box-sizing: border-box;
-    text-align: center;
+.form-split {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 16px;
 }
 
 .payment-button {
-    width: 445px;
-    height: 63px;
-    border-radius: 46px;
+    width: 100%;
+    height: 60px;
+    border-radius: 999px;
     border: none;
-    margin-top: 45px;
+    margin-top: 8px;
     background-color: var(--accent);
-    color: white;
-    font-size: 22px;
-    cursor: pointer;
-    font-weight: 600;
-    box-sizing: border-box;
+    color: #fff;
+    font-size: 18px;
+    font-weight: 700;
+    transition: background 0.2s ease, transform 0.2s ease;
 }
 
-.payment-button:hover {
+.payment-button:hover:enabled {
     background-color: var(--button-hover-color);
+    transform: translateY(-2px);
+}
+
+.payment-button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
 }
 
 .overview-card {
-    background-color: #ffeede;
-    width: 422px; 
-    height: 460px; 
-    border-radius: 66px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    margin-left: 50px;
+    min-height: 100%;
+    border: 2px solid rgba(253, 4, 60, 0.2);
+    background: linear-gradient(180deg, #fff 0%, #fff7f4 100%);
 }
 
 .overview-content {
+    margin-top: 24px;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    font-weight: 600;
-    margin-top: 20px;
+    gap: 16px;
 }
 
-.overview-content p {
+.price {
+    font-size: 32px;
+    font-weight: 800;
     margin: 0;
-    color: black;
 }
 
-.features {
-    color: black;
-    margin-top: 20px;
+.price span {
+    font-size: 16px;
+    font-weight: 700;
+    color: rgba(30, 30, 30, 0.6);
+    margin-left: 8px;
 }
 
+.feature-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
 
-/*Idea from ChatGPT*/ 
-.payment-button:disabled { 
-  opacity: 0.5;
-  cursor: not-allowed;
+.feature-list li {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 600;
+    color: rgba(30, 30, 30, 0.9);
+}
+
+.feature-icon {
+    width: 18px;
+    height: 18px;
+    color: var(--accent);
+    flex-shrink: 0;
+}
+
+.selected-name {
+    margin: 6px 0 0;
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--accent);
 }
 </style>

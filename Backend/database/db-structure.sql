@@ -18,7 +18,7 @@ CREATE TABLE IF NOT EXISTS projects(
   "name" TEXT,
   website TEXT,
   website_title TEXT,
-  website_route TEXT,
+  website_route TEXT UNIQUE,
   published INTEGER DEFAULT 0,
   fk_user_id INTEGER,
   FOREIGN KEY (fk_user_id) REFERENCES users(user_id) ON DELETE CASCADE
@@ -46,4 +46,25 @@ CREATE TABLE IF NOT EXISTS reservations(
   "status" TEXT CHECK("status" IN ('open', 'accepted', 'denied')),
   fk_project_id INTEGER,
   FOREIGN KEY (fk_project_id) REFERENCES projects(project_id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS tags(
+  tag_id INTEGER PRIMARY KEY AUTOINCREMENT,
+  "name" TEXT UNIQUE
+);
+
+CREATE TABLE IF NOT EXISTS project_tags(
+  project_tag_id INTEGER PRIMARY KEY AUTOINCREMENT,
+  fk_project_id INTEGER,
+  fk_tag_id INTEGER,
+  FOREIGN KEY (fk_project_id) REFERENCES projects(project_id) ON DELETE CASCADE,
+  FOREIGN KEY (fk_tag_id) REFERENCES tags(tag_id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS newsletter_subscribers(
+  subscriber_id INTEGER PRIMARY KEY AUTOINCREMENT,
+  email TEXT,
+  fk_project_id INTEGER,
+  FOREIGN KEY (fk_project_id) REFERENCES projects(project_id) ON DELETE CASCADE,
+  UNIQUE(email, fk_project_id)
 );

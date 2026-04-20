@@ -98,5 +98,5 @@ jobs:
               npm install --omit=dev
             fi
 
-            # restart backend (PM2) DISABLED FOR NOW
-            # pm2 restart bitesite-backend || pm2 start server.js --name bitesite-backend
+            # restart backend (PM2)
+            npx pm2 restart bitesite-backend || npx pm2 start server.js --name bitesite-backend

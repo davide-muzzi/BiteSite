@@ -1,4 +1,6 @@
 <script setup>
+import { Search, Star } from "lucide-vue-next";
+
 const restaurants = [
   {
     id: "pizza-palace",
@@ -6,6 +8,7 @@ const restaurants = [
     name: "Pizza Place",
     tags: ["Italian", "Pizza"],
     rating: 5,
+    website: "https://pizza.example.com",
   },
   {
     id: "sushi-star",
@@ -13,6 +16,7 @@ const restaurants = [
     name: "Sushi Star",
     tags: ["Sushi", "Asian", "Fresh"],
     rating: 4,
+    website: "https://sushistar.example.com",
   },
 ];
 </script>
@@ -27,48 +31,32 @@ const restaurants = [
       <div class="search">
         <input type="search" placeholder="Search restaurants..." />
         <button type="button" aria-label="Search">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="18"
-            height="18"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          >
-            <circle cx="11" cy="11" r="8" />
-            <path d="m21 21-4.35-4.35" />
-          </svg>
+          <Search class="search-icon" />
         </button>
       </div>
     </div>
 
     <div class="restaurant-list">
-      <article
-        v-for="restaurant in restaurants"
-        :key="restaurant.id"
-        class="restaurant-card"
-      >
-        <div class="identity">
-          <span class="icon">{{ restaurant.icon }}</span>
-          <div class="title-block">
+      <article v-for="restaurant in restaurants" :key="restaurant.id" class="restaurant-card">
+        <span class="icon">{{ restaurant.icon }}</span>
+        <div class="details">
+          <div class="title-row">
             <h2>{{ restaurant.name }}</h2>
-            <div class="tags">
-              <span
-                v-for="tag in restaurant.tags"
-                :key="tag"
-                class="tag"
-              >
-                #{{ tag }}
-              </span>
+            <div class="rating" :aria-label="`Rated ${restaurant.rating} stars`">
+              <span>{{ restaurant.rating.toFixed(1) }}</span>
+              <Star class="star" />
             </div>
           </div>
+          <div class="tags">
+            <span v-for="tag in restaurant.tags" :key="tag" class="tag">
+              #{{ tag }}
+            </span>
+          </div>
         </div>
-        <div class="rating">
-          <span>{{ restaurant.rating.toFixed(1) }}</span>
-          <span class="star">★</span>
+        <div v-if="restaurant.website" class="actions">
+          <a :href="restaurant.website" class="visit-link" target="_blank" rel="noopener">
+            Visit Site
+          </a>
         </div>
       </article>
     </div>
@@ -76,6 +64,11 @@ const restaurants = [
 </template>
 
 <style scoped>
+.search-icon {
+  width: 18px;
+  height: 18px;
+}
+
 .restaurants-view {
   min-height: calc(100vh - 160px);
   padding: 42px 78px 80px;
@@ -148,27 +141,39 @@ const restaurants = [
 }
 
 .restaurant-card {
-  display: flex;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: 100px 1fr 100px;
+  height: 125px;
+  gap: 18px;
   align-items: center;
-  padding: 24px 32px;
+  padding: 0 24px;
   border-radius: 28px;
   background: white;
   box-shadow: 0 24px 60px rgba(49, 38, 110, 0.08);
-  transition: background 0.2s ease, transform 0.2s ease,
-    box-shadow 0.2s ease;
+  transition: background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-.restaurant-card:hover {
-  background: var(--accent);
-  transform: translateY(-4px);
-  box-shadow: 0 34px 70px rgba(229, 0, 43, 0.3);
-}
-
-.identity {
+.actions {
   display: flex;
-  gap: 20px;
+  justify-content: flex-end;
+}
+
+.visit-link {
+  display: inline-flex;
   align-items: center;
+  justify-content: center;
+  padding: 10px 18px;
+  border-radius: 999px;
+  background: var(--accent);
+  color: white;
+  font-size: 14px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: background 0.2s ease;
+}
+
+.visit-link:hover {
+  background: var(--button-hover-color);
 }
 
 .icon {
@@ -182,14 +187,17 @@ const restaurants = [
   font-size: 32px;
 }
 
-.title-block h2 {
+.details h2 {
   margin: 0;
   font-size: 24px;
   font-weight: 800;
 }
 
-.restaurant-card:hover .title-block h2 {
-  color: white;
+.title-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
 }
 
 .tags {
@@ -208,10 +216,6 @@ const restaurants = [
   font-weight: 700;
 }
 
-.restaurant-card:hover .tag {
-  background: rgba(255, 255, 255, 0.25);
-}
-
 .rating {
   display: inline-flex;
   align-items: center;
@@ -219,10 +223,6 @@ const restaurants = [
   font-size: 22px;
   font-weight: 800;
   color: var(--font-color-dark-blue);
-}
-
-.restaurant-card:hover .rating {
-  color: white;
 }
 
 .rating span:first-child {
@@ -234,9 +234,4 @@ const restaurants = [
   color: #ffb400;
   font-size: 26px;
 }
-
-.restaurant-card:hover .star {
-  color: white;
-}
-
 </style>

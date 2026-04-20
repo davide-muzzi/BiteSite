@@ -12,7 +12,7 @@ export async function userdata(req, res) {
 }
 
 export async function register(req, res) {
-  const {username, email, password, subscription} = req.body;
+  const { username, email, password, subscription } = req.body;
   checkReq(!username || !email || !password || !subscription);
 
   const [dbUsername, dbEmail] = await safeOperations([
@@ -20,42 +20,42 @@ export async function register(req, res) {
     () => db.get("select * from users where email = ?", [email]),
   ], "Error while fetching username");
 
-  if (dbUsername) return res.status(400).json({success: false, message: "Username is taken"});
-  if (dbEmail) return res.status(400).json({success: false, message: "E-Mail is taken"});
+  if (dbUsername) return res.status(400).json({ success: false, message: "Username is taken" });
+  if (dbEmail) return res.status(400).json({ success: false, message: "E-Mail is taken" });
 
   const hashedPassword = await bcrypt.hash(password, 10);
 
   await safeOperation(
     () => db.run(
-      "insert into users (username, email, password_hash, subscription, subscription_active, period_end) values (?,?,?,?,?,?)", 
+      "insert into users (username, email, password_hash, subscription, subscription_active, period_end) values (?,?,?,?,?,?)",
       [username, email, hashedPassword, subscription, false, new Date().getDate()]
     ),
     "Error while registering"
   );
 
-  res.status(200).json({success: true, message: "Registered successfully"});
+  res.status(200).json({ success: true, message: "Registered successfully" });
 }
 
 export async function login(req, res) {
-  const {email, password} = req.body;
+  const { email, password } = req.body;
   checkReq(!email || !password);
 
   const dbUser = await safeOperation(
-    () => db.get("select * from users where email = ?", [email]), 
+    () => db.get("select * from users where email = ?", [email]),
     "Error while fetching user from the database"
   );
 
-  if (!dbUser) return res.status(404).json({success: false, message: "User not found"});
+  if (!dbUser) return res.status(404).json({ success: false, message: "User not found" });
 
   const isPasswordValid = await bcrypt.compare(password, dbUser.password_hash);
-  if (!isPasswordValid) return res.status(401).json({success: false, message: "Wrong password"});
+  if (!isPasswordValid) return res.status(401).json({ success: false, message: "Wrong password" });
 
   req.session.user = { id: dbUser.user_id };
-  res.status(200).json({success: true, message: "User successfully logged in"});
+  res.status(200).json({ success: true, message: "User successfully logged in" });
 }
 
 export async function edit(req, res) {
-  const {username, email} = req.body;
+  const { username, email } = req.body;
   checkReq(!username && !email);
 
   const [dbUsername, dbEmail] = await safeOperations([
@@ -63,8 +63,8 @@ export async function edit(req, res) {
     () => db.get("select * from users where email = ? and user_id != ?", [email, req.session.user.id])
   ], "Error while fetching username");
 
-  if (dbUsername) return res.status(400).json({success: false, message: "Username is taken"});
-  if (dbEmail) return res.status(400).json({success: false, message: "E-Mail is taken"});
+  if (dbUsername) return res.status(400).json({ success: false, message: "Username is taken" });
+  if (dbEmail) return res.status(400).json({ success: false, message: "E-Mail is taken" });
 
   await safeOperation(
     async () => {
@@ -119,11 +119,11 @@ export async function cancelSubscription(req, res) {
 }
 
 export async function editSubscription(req, res) {
-  const {subscription} = req.body;
+  const { subscription } = req.body;
 
   await safeOperation(
     () => db.run(
-      "update users set subscription = ?, period_end = ?, subscription_active = ? where user_id = ?", 
+      "update users set subscription = ?, period_end = ?, subscription_active = ? where user_id = ?",
       [subscription, new Date().getDate(), false, req.session.user.id]
     ),
     "Error while updating subscription"

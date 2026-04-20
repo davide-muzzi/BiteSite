@@ -1,61 +1,51 @@
 <script setup>
 import { ref } from 'vue';
 import BackButton from '@/components/BackButton.vue';
+import { login } from "@/api/routes/user.js";
 
 const email = ref('');
 const password = ref('');
 
 const handleLogin = async () => {
+  const result = await login(email.value, password.value);
 
-  console.log("Login with:", email.value, password.value);
+  if (result.success) window.location.href = "/projects-overview";
 };
 
 </script>
 
 <template>
-    <section class="login-view">
-        <BackButton />
+  <section class="login-view">
+    <BackButton />
 
-        <div class="page-header">
-            <h1>Welcome back</h1>
-            <p>Sign in to continue building and managing your BiteSite presence.</p>
+    <div class="page-header">
+      <h1>Welcome back</h1>
+      <p>Sign in to continue building and managing your BiteSite presence.</p>
+    </div>
+
+    <div class="login-card">
+      <form class="login-form" @submit.prevent="handleLogin">
+        <div class="form-group">
+          <label for="email">E-Mail</label>
+          <input id="email" type="email" v-model="email" placeholder="E-Mail..." required />
         </div>
 
-        <div class="login-card">
-            <form class="login-form" @submit.prevent="handleLogin">
-                <div class="form-group">
-                    <label for="email">E-Mail</label>
-                    <input
-                        id="email"
-                        type="email"
-                        v-model="email"
-                        placeholder="E-Mail..."
-                        required
-                    />
-                </div>
-
-                <div class="form-group">
-                    <label for="password">Password</label>
-                    <input
-                        id="password"
-                        type="password"
-                        v-model="password"
-                        placeholder="Password..."
-                        required
-                    />
-                </div>
-
-                <button type="submit" class="login-button">
-                    Login
-                </button>
-            </form>
-
-            <p class="register-text">
-                Don't have an account?
-                <RouterLink to="/register">Register</RouterLink>
-            </p>
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input id="password" type="password" v-model="password" placeholder="Password..." required />
         </div>
-    </section>
+
+        <button type="submit" class="login-button">
+          Login
+        </button>
+      </form>
+
+      <p class="register-text">
+        Don't have an account?
+        <RouterLink to="/register">Register</RouterLink>
+      </p>
+    </div>
+  </section>
 </template>
 
 <style scoped>
