@@ -1,8 +1,6 @@
 <script setup>
 import { computed } from "vue";
 
-import Background from './component-properties/Background.vue'
-import Title from './component-properties/Title.vue'
 import EditorComponent from './EditorComponent.vue'
 
 const props = defineProps(["project", "page"])
@@ -12,9 +10,7 @@ const selectedPage = computed(() => props.project.website.pages.find(page => pag
 
 <template>
   <div class="sidebar">
-    <EditorComponent :title="content.name" v-for="content of selectedPage.content">
-      <Background />
-    </EditorComponent>
+    <EditorComponent :component="component" v-for="component of selectedPage.components"/>
   </div>
 </template>
 

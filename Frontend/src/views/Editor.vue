@@ -28,72 +28,35 @@ const project = ref({
             {
                 "name": "Home",
                 "backgroundColor": "#161616",
-                "content": [
+                "components": [
                     {
                         "name": "Greeting",
-                        "text": "Hello",
-                        "fontColor": "white",
-                        "fontWeight": 400,
-                        "fontFamily": "Arial",
-                        "html": "<div>§text§</div>",
-                        "additionalCss": {
-                            "width": "100%",
-                            "height": "200px",
-                            "background-color": "white",
-                            "display": "flex",
-                            "justifty-content": "center",
-                            "align-items": "center"
-                        }
-                    },
-                    {
-                        "name": "Greeting",
-                        "text": "Hello",
-                        "fontColor": "white",
-                        "fontWeight": 400,
-                        "fontFamily": "Arial",
-                        "html": "<div>§text§</div>",
-                        "additionalCss": {
-                            "width": "100%",
-                            "height": "200px",
-                            "background-color": "white",
-                            "display": "flex",
-                            "justifty-content": "center",
-                            "align-items": "center"
-                        }
-                    },
-                    {
-                        "name": "Greeting",
-                        "text": "Hello",
-                        "fontColor": "white",
-                        "fontWeight": 400,
-                        "fontFamily": "Arial",
-                        "html": "<div>§text§</div>",
-                        "additionalCss": {
-                            "width": "100%",
-                            "height": "200px",
-                            "background-color": "white",
-                            "display": "flex",
-                            "justifty-content": "center",
-                            "align-items": "center"
-                        }
-                    }
-                ]
-            },
-            {
-                "name": "Menu",
-                "backgroundColor": "#ff0000",
-                "content": [
-                    {
-                        "name": "Greeting",
-                        "html": "<div>§Hello here too!§</div>",
-                        "css": {
-                            "width": "100%",
-                            "height": "200px",
-                            "background-color": "blue",
-                            "display": "flex",
-                            "justifty-content": "center",
-                            "align-items": "center"
-                        }
+                        "html": "",
+                        "css": "",
+                        "content": [
+                            {
+                                "name": "Greeting",
+                                "type": "text",
+                                "id": "greeting",
+                                "hidden": "false",
+                                "text": "Hello",
+                                "fontColor": "#ff0000",
+                                "fontSize": 34,
+                                "fontWeight": 400,
+                                "fontFamily": "Arial",
+                            },
+                            {
+                                "name": "Message",
+                                "type": "text",
+                                "id": "message",
+                                "hidden": "false",
+                                "text": "How are you doing?",
+                                "fontColor": "white",
+                                "fontSize": 17,
+                                "fontWeight": 400,
+                                "fontFamily": "Arial",
+                            }
+                        ]
                     }
                 ]
             }

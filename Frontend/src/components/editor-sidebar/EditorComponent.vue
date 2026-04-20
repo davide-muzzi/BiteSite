@@ -2,44 +2,41 @@
 import { ref } from 'vue';
 import { ChevronRight } from "lucide-vue-next";
 
-const props = defineProps({
-    title: {
-        type: String,
-        required: true
-    },
-    startOpen: {
-        type: Boolean,
-        default: false
-    }
+import EditorContent from "./EditorContent.vue";
 
-})
+const props = defineProps(["component"])
 
-const isOpen = ref(props.startOpen);
+const isOpen = ref(false);
+const openContent = ref("");
 
 </script>
 
 <template>
-    <div class="editor-dropdown">
+    <div class="component-dropdown">
         <button class="dropdown-header" @click="isOpen = !isOpen">
-          <ChevronRight class="chevron-icon" :class="{ 'open': isOpen }"/>
-            <span>{{ title }}</span>
+            <ChevronRight class="chevron-icon" :class="{ 'open': isOpen }"/>
+            <div>{{ component.name }}</div>
         </button>
 
         <div class="dropdown-content" :class="{ 'open': isOpen }">
-            <slot v-if="isOpen" />
+            <EditorContent
+              :content="content"
+              :openContent="openContent"
+              v-for="content of component.content"
+              v-if="isOpen"
+              @open="contentName => openContent = contentName"
+            />
         </div>
     </div>
 </template>
 
 <style scoped>
-.editor-dropdown {
+.component-dropdown {
     width: 100%;
-    border-radius: 25px;
-    overflow: hidden;
     display: grid;
 }
 
-.editor-dropdown > * {
+.component-dropdown > * {
     position: relative;
     grid-area: 1 / 1;
 }
@@ -61,19 +58,21 @@ const isOpen = ref(props.startOpen);
 }
 
 .dropdown-content {
-  background-color: var(--dropdown-color);
   box-sizing: border-box;
   width: 100%;
   z-index: 0;
   max-height: 0;
   transition: 0.05s;
   border-radius: 25px;
-  padding: 10px;
+  padding-left: 25px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
 .dropdown-content.open {
   max-height: unset;
-  padding-top: 50px;
+  padding-top: 60px;
 }
 
 .chevron-icon {
