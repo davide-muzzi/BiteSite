@@ -8,6 +8,10 @@ export async function register(username, email, password, subscription) {
   return request('post', '/users/register', { data: { username, email, password, subscription } })
 }
 
+export async function checkRegister(username, email) {
+  return request('post', '/users/check-register', { data: { username, email } })
+}
+
 export async function checkLogin() {
   return request('get', '/users/check-login')
 }

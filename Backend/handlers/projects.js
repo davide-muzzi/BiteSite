@@ -52,6 +52,20 @@ export async function createProject(req, res) {
   res.status(200).json({ success: true, message: "Successfully created project" });
 }
 
+export async function deleteProject(req, res) {
+  const { projectId } = req.body;
+  checkReq(!projectId)
+
+  await safeOperation(
+    () => db.run("delete from projects where project_id = ?", [projectId]),
+    "Error while deleting user"
+  );
+
+  res.status(200).json({ success: true, message: "Successfully deleted project" });
+
+}
+
+
 export async function editProject(req, res) {
   const { projectId, route, title, name } = req.body;
   checkReq(!projectId || (!route && !title && !name));

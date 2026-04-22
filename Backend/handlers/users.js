@@ -20,8 +20,9 @@ export async function register(req, res) {
     () => db.get("select * from users where email = ?", [email]),
   ], "Error while fetching username");
 
-  if (dbUsername) return res.status(400).json({ success: false, message: "Username is taken" });
-  if (dbEmail) return res.status(400).json({ success: false, message: "E-Mail is taken" });
+
+  if (dbUsername) return res.status(409).json({success: false, message: "Username is taken"});
+  if (dbEmail) return res.status(409).json({success: false, message: "E-Mail is taken"});
 
   const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -34,6 +35,21 @@ export async function register(req, res) {
   );
 
   res.status(200).json({ success: true, message: "Registered successfully" });
+}
+
+export async function checkRegister(req, res) {
+  const {username, email} = req.body;
+  checkReq(!username && !email);
+
+  const [dbUsername, dbEmail] = await safeOperations([
+    () => db.get("select * from users where username = ?", [username]),
+    () => db.get("select * from users where email = ?", [email]),
+  ], "Error while fetching username");
+
+  if (dbUsername) return res.status(409).json({success: false, message: "Username is taken"});
+  if (dbEmail) return res.status(409).json({success: false, message: "E-Mail is taken"});
+
+  res.status(200).json({success: true, message: "Username and E-Mail are available"});
 }
 
 export async function login(req, res) {

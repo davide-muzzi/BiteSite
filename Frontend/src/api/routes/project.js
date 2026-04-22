@@ -19,3 +19,7 @@ export async function getSingleProject(projectId) {
 export async function togglePublish(projectId) {
   return request('patch', '/projects/toggle-publish', { data: { projectId } });
 }
+
+export async function deleteProject(projectId) {
+  return request('delete', '/projects/delete', { data: { projectId } });
+}
