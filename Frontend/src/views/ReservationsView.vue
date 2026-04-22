@@ -83,16 +83,14 @@ function handlePageChange(page) {
       </button>
     </div>
 
-    <div class="content-layout">
-      <div class="list">
-        <ReservationRow v-for="reservation in currentData" :key="reservation.id" :reservation="reservation"
-          :tab="activeTab" />
-      </div>
+    <div v-if="activeTab === 'history'" class="warning-banner">
+      <TriangleAlert class="warning-icon" />
+      <p>Entries will be automatically deleted if older than 14 days or list exceeds 100 entries</p>
+    </div>
 
-      <div v-if="activeTab === 'history'" class="warning-card">
-        <TriangleAlert class="warning-icon" />
-        <p>Entries will be automatically deleted if older than 14 days or list exceeds 100 entries</p>
-      </div>
+    <div class="list">
+      <ReservationRow v-for="reservation in currentData" :key="reservation.id" :reservation="reservation"
+        :tab="activeTab" />
     </div>
 
     <ReservationPagination :current-page="currentPage" :total-pages="totalPages" @page-change="handlePageChange" />
@@ -213,48 +211,37 @@ function handlePageChange(page) {
   color: white;
 }
 
-.content-layout {
+.warning-banner {
   display: flex;
-  gap: 24px;
-  align-items: flex-start;
-  max-width: 900px;
-  margin: 0 auto;
-}
-
-.list {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-  min-width: 0;
-}
-
-.warning-card {
-  flex-shrink: 0;
-  width: 220px;
-  background: white;
-  border: 2px solid var(--accent);
-  border-radius: 20px;
-  padding: 18px 20px;
-  display: flex;
-  flex-direction: column;
   align-items: center;
   gap: 12px;
-  text-align: center;
+  max-width: 900px;
+  margin: 0 auto 16px;
+  padding: 12px 20px;
+  border-radius: 16px;
+  border: 2px solid var(--accent);
+  background: white;
 }
 
 .warning-icon {
-  width: 28px;
-  height: 28px;
+  width: 20px;
+  height: 20px;
   color: var(--accent);
   flex-shrink: 0;
 }
 
-.warning-card p {
+.warning-banner p {
   margin: 0;
   font-size: 13px;
   font-weight: 600;
   color: var(--accent);
-  line-height: 1.5;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  max-width: 900px;
+  margin: 0 auto;
 }
 </style>
