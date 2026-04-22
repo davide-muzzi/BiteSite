@@ -26,7 +26,7 @@ const toggleDropdown = (_, font) => {
       @click="emit('open', content.name)"
     >
       <div>{{ content.name }}</div>
-      <div class="eye-icons" @click.prevent="content.hidden = !content.hidden">
+      <div class="eye-icons" @click.stop="content.hidden = !content.hidden">
         <EyeOff v-if="content.hidden === true"/>
         <Eye v-else/>
       </div>
