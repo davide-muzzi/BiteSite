@@ -1,5 +1,6 @@
 import { db } from "../database/db.js";
-import { safeOperation, checkReq } from "../error-handling.js";
+import { safeOperation, checkReq, HttpError } from "../error-handling.js";
+import { readFile, writeFile, rename } from "fs/promises";
 
 export async function createProject(req, res) {
   const { name, tags, templateName } = req.body;
@@ -51,12 +52,26 @@ export async function createProject(req, res) {
   res.status(200).json({ success: true, message: "Successfully created project" });
 }
 
-export async function editTitle(req, res) {
-  const { projectId, title } = req.body;
-  checkReq(!projectId || !title);
+export async function deleteProject(req, res) {
+  const { projectId } = req.body;
+  checkReq(!projectId)
+
+  await safeOperation(
+    () => db.run("delete from projects where project_id = ?", [projectId]),
+    "Error while deleting user"
+  );
+
+  res.status(200).json({ success: true, message: "Successfully deleted project" });
+
+}
+
+
+export async function editProject(req, res) {
+  const { projectId, route, title, name } = req.body;
+  checkReq(!projectId || (!route && !title && !name));
 
   const project = await safeOperation(
-    () => db.get("select fk_user_id from projects where project_id = ?", [projectId]),
+    () => db.get("select name, published, website, website_title, website_route, fk_user_id from projects where project_id = ?", [projectId]),
     "Error while getting project from database"
   );
 
@@ -64,36 +79,64 @@ export async function editTitle(req, res) {
     return res.status(404).json({ success: false, message: "Project not found" });
   if (project.fk_user_id !== req.session.user.id)
     return res.status(403).json({ success: false, message: "Not your project" });
+
+  if (route && route !== project.website_route)
+    await editRoute(projectId, route, project.website_route, project.published);
+  if (title && title !== project.website_title)
+    await editTitle(projectId, title, JSON.parse(project.website), project.website_route);
+  if (name && name !== project.name)
+    await editName(projectId, name);
+
+  res.status(200).json({ success: true, message: "Successfully edited project" });
+}
+
+////////////////////////////
+// Edit Project functions //
+//------------------------//
+
+async function editRoute(projectId, route, oldRoute, published) {
+  const routeProject = await safeOperation(
+    () => db.get("select project_id, fk_user_id from projects where website_route = ?", [route.toLowerCase()]),
+    "Error while checking if route exists"
+  );
+
+  if (routeProject) throw new HttpError("Route is already registered", 409);
+
+  await safeOperation(
+    () => db.run("update projects set website_route = ? where project_id = ?", [route.toLowerCase(), projectId]),
+    "Error while updating route"
+  );
+
+  if (published) {
+    await safeOperation(
+      () => rename(`./websites/${oldRoute}.html`, `./websites/${route}.html`),
+      "Error while renaming website html file"
+    );
+  }
+}
+
+async function editTitle(projectId, title, website, route) {
+  await safeOperation(
+    () => makeWebsite(website, route, title),
+    "Error while making website"
+  );
 
   await safeOperation(
     () => db.run("update projects set website_title = ? where project_id = ?", [title, projectId]),
     "Error while updating website title"
   );
-
-  res.status(200).json({ success: true, message: "Successfully updated website title" });
 }
 
-export async function editName(req, res) {
-  const { projectId, name } = req.body;
-  checkReq(!projectId || !name);
-
-  const project = await safeOperation(
-    () => db.get("select fk_user_id from projects where project_id = ?", [projectId]),
-    "Error while getting project from database"
-  );
-
-  if (!project)
-    return res.status(404).json({ success: false, message: "Project not found" });
-  if (project.fk_user_id !== req.session.user.id)
-    return res.status(403).json({ success: false, message: "Not your project" });
-
+async function editName(projectId, name) {
   await safeOperation(
     () => db.run("update projects set name = ? where project_id = ?", [name, projectId]),
     "Error while updating website name"
   );
-
-  res.status(200).json({ success: true, message: "Successfully updated website name" });
 }
+
+//------------------------//
+// Edit Project functions //
+////////////////////////////
 
 export async function getProject(req, res) {
   const { projectId } = req.query;
@@ -126,34 +169,20 @@ export async function getProject(req, res) {
   res.status(200).json({ success: true, message: "Successfully retrieved project from database", project: formattedProject });
 }
 
-export async function editRoute(req, res) {
-  const { projectId, routeName } = req.body;
-  checkReq(!projectId || !routeName);
-
-  const project = await safeOperation(
-    () => db.get("select fk_user_id from projects where project_id = ?", [projectId]),
-    "Error while getting project from database"
+export async function getAllProjects(req, res) {
+  const projects = await safeOperation(
+    () => db.all("select project_id, name from projects where fk_user_id = ?", [req.session.user.id]),
+    "Error while getting projects from database"
   );
 
-  if (!project)
-    return res.status(404).json({ success: false, message: "Project not found" });
-  if (project.fk_user_id !== req.session.user.id)
-    return res.status(403).json({ success: false, message: "Not your project" });
+  const formattedProjects = projects.map(project => ({
+    projectId: project.project_id,
+    name: project.name,
+  }));
 
-  const routeProject = await safeOperation(
-    () => db.get("select project_id, fk_user_id from projects where website_route = ?", [routeName.toLowerCase()]),
-    "Error while checking if route exists"
-  );
-
-  if (routeProject && routeProject.project_id !== projectId) res.status(409).json({ success: false, message: "Route is already registered" });
-
-  await safeOperation(
-    () => db.run("update projects set website_route = ? where project_id = ?", [routeName.toLowerCase(), projectId]),
-    "Error while updating route"
-  );
-
-  res.status(200).json({ success: true, message: "Successfully updated route" });
+  res.status(200).json({ success: true, message: "Successfully retrieved projects from database", projects: formattedProjects });
 }
+
 
 export async function getWebsite(req, res) {
   const { projectId } = req.query;
@@ -177,7 +206,7 @@ export async function updateWebsite(req, res) {
   checkReq(!projectId || !website);
 
   const project = await safeOperation(
-    () => db.get("select fk_user_id from projects where project_id = ?", [projectId]),
+    () => db.get("select website_route, website_title, fk_user_id from projects where project_id = ?", [projectId]),
     "Error while getting project from database"
   );
 
@@ -187,9 +216,112 @@ export async function updateWebsite(req, res) {
     return res.status(403).json({ success: false, message: "Not your project" });
 
   await safeOperation(
+    () => makeWebsite(website, project.website_route, project.website_title),
+    "Error while making website"
+  );
+
+  await safeOperation(
     () => db.run("update projects set website = ? where project_id = ?", [JSON.stringify(website), projectId]),
     "Error while updating website"
   );
 
   res.status(200).json({ success: true, message: "Successfully updated website" });
+}
+
+export async function togglePublish(req, res) {
+  const { projectId } = req.body;
+
+  const project = await safeOperation(
+    () => db.get("select published, fk_user_id from projects where project_id = ?", [projectId]),
+    "Error while getting project from database"
+  );
+
+  if (!project)
+    return res.status(404).json({ success: false, message: "Project not found" });
+  if (project.fk_user_id !== req.session.user.id)
+    return res.status(403).json({ success: false, message: "Not your project" });
+
+  project.published = Boolean(project.published);
+
+  await safeOperation(
+    () => db.run("update projects set published = ? where project_id = ?", [!project.published, projectId]),
+    "Error while publishing website"
+  );
+
+  res.status(200).json({ success: true, message: "Successfully toggled publish on website", published: !project.published });
+}
+
+function objectToCSS(object) {
+  let css = "";
+
+  for (const [key, value] of Object.entries(object)) {
+    css += `${key}: ${value} !important;\n`
+  }
+
+  return css
+}
+
+async function makeWebsite(website, route, title) {
+  let htmlContent = await safeOperation(
+    () => readFile("./websites/.template.html", "utf-8"),
+    "Error while reading website html file"
+  );
+
+  htmlContent = htmlContent.replace(/\|websiteTitle\|/g, title);
+
+  const navbar = website.navbar;
+  const pages = website.pages;
+
+  let navbarItems = "";
+
+  for (const page of pages) {
+    navbarItems += `<a href="#${page.name.toLowerCase()}">${page.name[0] + page.name.slice(1)}</a>\n`
+  }
+
+  htmlContent = htmlContent
+    .replace(/\|navbarItems\|/, navbarItems)
+    .replace(/\|navbarBackground\|/g, navbar.backgroundColor)
+    .replace(/\|navbarColor\|/g, navbar.textColor)
+    .replace(/\|navbarHeight\|/g, navbar.height)
+    .replace(/\|navbarWidth\|/g, navbar.width)
+    .replace(/\|navbarBorderRadius\|/g, navbar.borderRadius)
+    .replace(/\|navbarAdditionalBarCSS\|/, objectToCSS(navbar.barCss))
+    .replace(/\|navbarAdditionalContainerCSS\|/, objectToCSS(navbar.containerCss))
+    .replace(/\|navbarAdditionalTitleCSS\|/, objectToCSS(navbar.titleCss))
+    .replace(/\|navbarAdditionalItemCSS\|/, objectToCSS(navbar.itemCss));
+
+  htmlContent = htmlContent
+    .replace(/\|firstPage\|/, pages[0].name.toLowerCase());
+
+  let pagesHtml = "";
+  let pagesCss = "";
+  for (const page of pages) {
+
+    pagesCss += `#${page.name.toLowerCase()} {
+      background-color: ${page.backgroundColor};
+    }`;
+
+    let componentsHtml = "";
+    for (const [index, component] of page.content.entries()) {
+      const componentId = `component-${page.name.toLowerCase()}-${index}`;
+      componentsHtml += `<div id="${componentId}">${component.html}</div>\n`;
+      pagesCss += `#${componentId}>* {
+        ${objectToCSS(component.css)}
+      }`;
+    }
+
+    pagesHtml += `<div class="page" id="${page.name.toLowerCase()}">
+      ${componentsHtml}
+    </div>`;
+  }
+
+  htmlContent = htmlContent
+    .replace(/\|pageContent\|/, pagesHtml)
+    .replace(/\|pageCss\|/, pagesCss)
+    .replace(/§/g, "");
+
+  await safeOperation(
+    () => writeFile(`./websites/${route}.html`, htmlContent),
+    "Error while writing to html file"
+  );
 }

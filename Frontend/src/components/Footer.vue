@@ -16,7 +16,7 @@ const isSimple = computed(() => props.variant === "simple");
     <template v-if="isSimple">
       <div class="simple-footer">
         <span>© 2026 BiteSite</span>
-        <span>About · Legal · Contact</span>
+        <span><RouterLink to="/about">About</RouterLink> · <RouterLink to="/legal">Legal</RouterLink> · <RouterLink to="/contact">Contact</RouterLink></span>
       </div>
     </template>
     <template v-else>
@@ -27,9 +27,9 @@ const isSimple = computed(() => props.variant === "simple");
         </div>
 
         <nav class="links">
-          <a href="#">About</a>
-          <a href="#">Legal</a>
-          <a href="#">Contact</a>
+          <RouterLink to="/about">About</RouterLink>
+          <RouterLink to="/legal">Legal</RouterLink>
+          <RouterLink to="/contact">Contact</RouterLink>
         </nav>
       </div>
 
@@ -57,6 +57,7 @@ const isSimple = computed(() => props.variant === "simple");
   color: var(--font-color-dark-blue);
   padding: 32px 40px 48px;
   text-align: center;
+  text-decoration: none;
 }
 
 .simple-footer {
@@ -65,6 +66,7 @@ const isSimple = computed(() => props.variant === "simple");
   gap: 20px;
   font-size: 15px;
   font-weight: 600;
+  text-decoration: none;
 }
 
 .footer-content {
@@ -96,11 +98,17 @@ const isSimple = computed(() => props.variant === "simple");
   font-weight: 700;
 }
 
-.links a {
+.links a,
+.links a:visited {
   color: white;
   text-decoration: none;
   font-size: 15px;
   transition: opacity 0.2s ease;
+}
+
+.simple-footer a {
+  text-decoration: none;
+  color: inherit;
 }
 
 .links a:hover {

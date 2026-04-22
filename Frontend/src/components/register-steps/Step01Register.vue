@@ -1,19 +1,14 @@
 <script setup>
 import { ref } from 'vue';
-import { useRouter } from 'vue-router';
+import router from "@/router";
 import { useRegisterStore } from '@/stores/register.js';
 import { checkRegister } from '@/api/routes/user.js';
 
 const registerStore = useRegisterStore();
 
-const router = useRouter();
-
 const username = ref('');
 const email = ref('');
 const password = ref('');
-
-const errorMessage = ref('');
-
 
 const handleregister = async () => {
     if (!username.value.trim()) return;
@@ -34,9 +29,9 @@ const handleregister = async () => {
 
 <template>
     <section class="step-card">
-    <header class="card-header">
-      <h2>Tell us about you</h2>
-    </header>
+        <header class="card-header">
+            <h2>Tell us about you</h2>
+        </header>
 
         <form class="register-form" @submit.prevent="handleregister">
             <div class="form-group">

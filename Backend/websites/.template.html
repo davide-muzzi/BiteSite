@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>|websiteTitle|</title>
+</head>
+
+<body>
+  <nav>
+    <div>
+      <div></div>
+      <div>
+        <div>|websiteTitle|</div>
+        <div>
+          |navbarItems|
+        </div>
+      </div>
+    </div>
+  </nav>
+  |pageContent|
+</body>
+
+<style>
+  * {
+    box-sizing: border-box;
+    position: relative;
+    z-index: 0;
+  }
+
+  html,
+  body,
+  main {
+    height: 100%;
+    width: 100%;
+    margin: 0px;
+    padding: 0px;
+  }
+
+  nav {
+    position: fixed;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    z-index: 10;
+  }
+
+  nav>div {
+    height: |navbarHeight|;
+    width: |navbarWidth|;
+    overflow: hidden;
+    border-radius: |navbarBorderRadius|;
+    |navbarAdditionalContainerCSS|
+  }
+
+  nav>div>div:first-child {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: |navbarBackground|;
+    |navbarAdditionalBarCSS|
+  }
+
+  nav>div>div:last-child {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  nav>div>div>div:first-child {
+    display: flex;
+    align-items: center;
+    font-weight: bold;
+    font-size: 20px;
+    margin-left: 10px;
+    color: |navbarColor|;
+    |navbarAdditionalTitleCss|
+  }
+
+  nav>div>div>div:last-child {
+    display: flex;
+  }
+
+  nav a {
+    color: |navbarColor|;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    padding: 0 10px;
+    |navbarAdditionalItemCSS|
+  }
+
+  nav a:hover {
+    background-color: |navbarColor|;
+    color: |navbarBackground|;
+  }
+
+  .page {
+    width: 100%;
+    height: 100%;
+    padding-top: |navbarHeight|;
+  }
+
+  |pageCss|
+</style>
+
+<script>
+  function showPage() {
+    const hash = location.hash.slice(1);
+    document.querySelectorAll('.page').forEach(page => page.style.display = 'none');
+    const active = document.getElementById(hash);
+    if (active) active.style.display = 'block';
+  }
+  window.addEventListener('hashchange', showPage);
+
+  if (!location.hash) location.hash = "#|firstPage|";
+  showPage();
+</script>
+
+</html>
