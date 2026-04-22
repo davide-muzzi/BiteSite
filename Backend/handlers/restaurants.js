@@ -1,5 +1,5 @@
 import { db } from "../database/db.js";
-import { safeOperation, checkReq } from "../error-handling.js";
+import { safeOperation, checkReq, safeOperations } from "../error-handling.js";
 import { existsSync } from "fs";
 import { readFile } from "fs/promises";
 import { mailer } from "../mailer.js";
@@ -105,5 +105,72 @@ export async function sendNewsletter(req, res) {
   res.status(200).json({
     success: true,
     message: `Newsletter sent to ${recipientList.length} subscriber${recipientList.length > 1 ? "s" : ""}`,
+  });
+}
+
+export async function getAllRestaurants(req, res) {
+  const restaurants = await safeOperation(
+    () => db.all("select project_id, name, website_title, website_route from projects where published = 1"),
+    "Error while getting projects from database"
+  );
+
+  const formattedRestaurants = restaurants.map(restaurant => ({
+    projectId: restaurant.project_id,
+    websiteName: restaurant.name,
+    websiteTitle: restaurant.website_title,
+    websiteRoute: restaurant.website_route,
+  }));
+
+  res.status(200).json({
+    success: true,
+    message: "Successfully got restaurants from database",
+    projects: formattedRestaurants
+  });
+}
+
+export async function getRestaurantsTags(req, res) {
+  const { projectId } = req.query;
+  const restaurantsTags = await safeOperation(
+    () => db.all(
+      `select tags.tag_id, tags.name
+       from tags
+       inner join project_tags on project_tags.fk_tag_id = tags.tag_id
+       where project_tags.fk_project_id = ?`,
+      projectId
+    ), "Error while getting tags from database"
+  );
+
+
+  const formattedTags = restaurantsTags.map(tag => ({
+    tagId: tag.tag_id,
+    name: tag.name,
+  }));
+
+  res.status(200).json({
+    success: true,
+    message: "Successfully got tags from database",
+    tags: formattedTags
+  });
+}
+
+export async function getRestaurantsReviews(req, res) {
+  const { projectId } = req.query;
+
+  const restaurantsReviews = await safeOperation(
+    () => db.all('select * from reviews where fk_project_id = ?', projectId), "Error while getting tags from database"
+  );
+  const formattedReviews = restaurantsReviews.map(review => ({
+    reviewId: review.review_id,
+    reviewName: review.name,
+    reviewRating: review.rating,
+    reviewTitle: review.title,
+    reviewMessage: review.message,
+    reviewDate: review.date,
+  }));
+
+  res.status(200).json({
+    success: true,
+    message: "Successfully got reviews from database",
+    reviews: formattedReviews
   });
 }
