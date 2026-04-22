@@ -10,11 +10,12 @@ const props = defineProps({
 const emit = defineEmits(['page-change'])
 
 const visiblePages = computed(() => {
-  const pages = []
-  const start = Math.max(1, props.currentPage - 3)
-  const end = Math.min(props.totalPages, props.currentPage + 3)
-  for (let i = start; i <= end; i++) pages.push(i)
-  return pages
+  const total = props.totalPages
+  if (total <= 5) return Array.from({ length: total }, (_, i) => i + 1)
+  let start = props.currentPage - 2
+  if (start < 1) start = 1
+  if (start + 4 > total) start = total - 4
+  return Array.from({ length: 5 }, (_, i) => start + i)
 })
 
 function goTo(page) {
