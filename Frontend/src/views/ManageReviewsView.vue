@@ -3,6 +3,18 @@
     import { ref } from 'vue'
 
     const reviewsEnabled = ref(true)
+
+    const reviewcount = 2
+    const username = "Julius Maximus24"
+    const date = "11.11.2011"
+    const userRating = 4
+    const reviewTitle = "Lecker"
+    const reviewText = "AHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH"
+
+    function s() {
+        return reviewcount !== 1 ? 's' : ''
+    }
+    
 </script>
 
 <template>
@@ -10,7 +22,7 @@
     <div class="header">
       <div class="header-text">
         <span class="label">Enable Reviews</span>
-        <p class="sub">39 Reviews</p>
+        <p class="sub">{{ reviewcount }} Review{{ s() }}</p>
       </div>
       <label class="toggle">
         <input type="checkbox" v-model="reviewsEnabled" />
@@ -24,7 +36,27 @@
 
     <div v-if="reviewsEnabled" class="reviews-card">
       <div class="reviews-section">
-        Here reviews! 👋
+        <div class="card-header">
+          <div class="user-n-date">
+            <span> {{ username }} </span> 
+            <span>{{ date }}</span>   
+          </div>
+
+          <div class="star-rating">
+            <Star
+              v-for="n in 5"
+              :key="n"
+              class="rating-star"
+              :class="{ filled: n <= userRating }"
+            />
+          </div>
+        </div>
+        <div class="line"></div>
+        <div class="details">
+           <h3> {{ reviewTitle }} </h3> 
+            {{ reviewText }}
+        </div>
+
       </div>
     </div>
   </div>
@@ -123,16 +155,68 @@
 }
 
 .reviews-card {
-  width: 100%;
-  max-width: 700px;
-  margin: 0 auto;
-  background: white;
-  border-radius: 28px;
-  padding: 40px 48px 48px;
-  box-shadow: 0 28px 60px rgba(49, 38, 110, 0.12);
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
+    width: 100%;
+    max-width: 700px;
+    margin: 0 auto;
+    background: white;
+    border-radius: 10px;
+    padding: 0px 0px 48px;
+    box-shadow: 0 28px 60px rgba(49, 38, 110, 0.12);
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
 
 }
+
+.card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding-right: 20px;
+}
+.user-n-date {
+    background-color: var(--accent);
+    border-radius: 10px 0px 0px 0px;
+    padding: 10px;
+    flex: 1;
+    width: 75%;
+    display: flex;
+    justify-content: space-between;
+    color: white;
+}
+
+.star-rating {
+    display: flex;
+    gap: 4px;
+}
+
+.rating-star {
+    width: 24px;
+    height: 24px;
+    fill: #ccc;
+    color: #ccc;
+}
+
+.rating-star.filled {
+    fill: #ffb400;
+    color: #ffb400;
+}
+
+.details {
+    padding: 0 20px 0 10px;
+    overflow-wrap: break-word; 
+    word-break: break-word;
+}
+
+.line {
+    margin: -1px 0 0 auto;
+    padding: 0;
+    color:#888;
+    width: 24.55%;
+    text-decoration: none;
+    border-radius: 0;
+    height: 1px;
+}
+
 </style>
