@@ -110,7 +110,7 @@ export async function sendNewsletter(req, res) {
 
 export async function getAllRestaurants(req, res) {
   const restaurants = await safeOperation(
-    () => db.all("SELECT project_id, name, website_title FROM projects WHERE published = 1"),
+    () => db.all("select project_id, name, website_title, website_route from projects where published = 1"),
     "Error while getting projects from database"
   );
 
@@ -118,6 +118,7 @@ export async function getAllRestaurants(req, res) {
     projectId: restaurant.project_id,
     websiteTitle: restaurant.name,
     // websiteTitle: restaurant.website_title,
+    websiteRoute: restaurant.website_route,
   }));
 
   res.status(200).json({

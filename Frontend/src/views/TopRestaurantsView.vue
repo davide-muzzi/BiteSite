@@ -7,10 +7,10 @@ const restaurants = ref([]);
 
 onMounted(async () => {
   const result = await getAllRestaurants();
-  console.log("Restaurants result:", result);
+  console.log("Restaurants:", result);
   if (result.success) {
     restaurants.value = result.projects;
-    console.log("Erstes Restaurant:", restaurants.value[0]);
+    
 
     for (const restaurant of restaurants.value) {
       const tagsResult = await getRestaurantsTags(restaurant.projectId);
@@ -32,6 +32,10 @@ const sortedRestaurants = computed(() => {
     .filter(r => r.websiteTitle.toLowerCase().includes(searchQuery.value.toLowerCase()))
     .sort((a, b) => b.rating - a.rating)
 });
+
+function visitSite(url) {
+  window.location.href = url
+}
 </script>
 
 <template>
@@ -69,10 +73,8 @@ const sortedRestaurants = computed(() => {
             </span>
           </div>
         </div>
-        <div v-if="restaurant.website" class="actions">
-          <a :href="restaurant.website" class="visit-link" target="_blank" rel="noopener">
-            Visit Site
-          </a>
+         <div  class="actions">
+           <div class="visit-link" @click="visitSite(restaurant.websiteRoute)">Visit Site</div>
         </div>
       </article>
     </div>
