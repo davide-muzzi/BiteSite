@@ -18,6 +18,8 @@ html,
   --font: outfit;
   --font-color-dark-blue: #31266e;
   --button-hover-color: #e11b47;
+  --card-color: #ffeede;
+  --dropdown-color: #ffe4cc;
 }
 
 button {
