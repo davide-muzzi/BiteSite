@@ -45,6 +45,8 @@ const currentData = computed(() => {
   return mockHistory
 })
 
+const activeTabIndex = computed(() => tabs.findIndex(t => t.key === activeTab.value))
+
 const totalPages = computed(() => 7)
 
 function setTab(tab) {
@@ -79,6 +81,7 @@ function handlePageChange(page) {
     </div>
 
     <div class="tab-bar">
+      <div class="tab-slider" :style="{ transform: `translateX(${activeTabIndex * 100}%)` }"></div>
       <button
         v-for="tab in tabs"
         :key="tab.key"
@@ -184,6 +187,7 @@ function handlePageChange(page) {
 }
 
 .tab-bar {
+  position: relative;
   display: flex;
   background: rgba(49, 38, 110, 0.07);
   border-radius: 999px;
@@ -192,6 +196,18 @@ function handlePageChange(page) {
   max-width: 900px;
   margin-left: auto;
   margin-right: auto;
+}
+
+.tab-slider {
+  position: absolute;
+  top: 6px;
+  left: 6px;
+  width: calc((100% - 12px) / 3);
+  height: calc(100% - 12px);
+  border-radius: 999px;
+  background: var(--accent);
+  transition: transform 0.25s ease;
+  pointer-events: none;
 }
 
 .tab-btn {
@@ -205,17 +221,14 @@ function handlePageChange(page) {
   font-family: var(--font);
   color: var(--font-color-dark-blue);
   cursor: pointer;
-  transition: background 0.2s ease, color 0.2s ease;
+  position: relative;
+  z-index: 1;
+  transition: color 0.2s ease;
   white-space: nowrap;
 }
 
 .tab-btn.active {
-  background: var(--accent);
   color: white;
-}
-
-.tab-btn:hover:not(.active) {
-  background: rgba(49, 38, 110, 0.08);
 }
 
 .content-layout {
