@@ -51,7 +51,7 @@ function handleReject() {
 <style scoped>
 .reservation-row {
   display: grid;
-  grid-template-columns: 200px 1fr 1fr auto;
+  grid-template-columns: 200px 1fr 1fr 100px;
   gap: 20px;
   align-items: center;
   padding: 6px 24px 6px 6px;
