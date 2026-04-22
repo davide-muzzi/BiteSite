@@ -54,7 +54,7 @@ function handleReject() {
   grid-template-columns: 200px 1fr 1fr auto;
   gap: 20px;
   align-items: center;
-  padding: 16px 24px;
+  padding: 6px 24px 6px 6px;
   border-radius: 20px;
   background: white;
   box-shadow: 0 8px 30px rgba(49, 38, 110, 0.07);

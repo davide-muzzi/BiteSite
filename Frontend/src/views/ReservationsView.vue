@@ -76,28 +76,30 @@ function handlePageChange(page) {
       </div>
     </div>
 
-    <div class="tab-bar">
-      <div class="tab-slider" :style="{ transform: `translateX(${activeTabIndex * 100}%)` }"></div>
-      <button v-for="tab in tabs" :key="tab.key" class="tab-btn" :class="{ active: activeTab === tab.key }"
-        @click="setTab(tab.key)">
-        {{ tab.label }}
-      </button>
-    </div>
+    <div class="content-wrapper">
+      <div class="tab-bar">
+        <div class="tab-slider" :style="{ transform: `translateX(${activeTabIndex * 100}%)` }"></div>
+        <button v-for="tab in tabs" :key="tab.key" class="tab-btn" :class="{ active: activeTab === tab.key }"
+          @click="setTab(tab.key)">
+          {{ tab.label }}
+        </button>
+      </div>
 
-    <div v-if="activeTab === 'history' && !warningDismissed" class="warning-banner">
-      <TriangleAlert class="warning-icon" />
-      <p>Entries will be automatically deleted if older than 14 days or list exceeds 100 entries</p>
-      <button class="warning-dismiss" @click="warningDismissed = true" aria-label="Dismiss">
-        <X class="warning-dismiss-icon" />
-      </button>
-    </div>
+      <div v-if="activeTab === 'history' && !warningDismissed" class="warning-banner">
+        <TriangleAlert class="warning-icon" />
+        <p>Entries will be automatically deleted if older than 14 days or list exceeds 100 entries</p>
+        <button class="warning-dismiss" @click="warningDismissed = true" aria-label="Dismiss">
+          <X class="warning-dismiss-icon" />
+        </button>
+      </div>
 
-    <div class="list">
-      <ReservationRow v-for="reservation in currentData" :key="reservation.id" :reservation="reservation"
-        :tab="activeTab" />
-    </div>
+      <div class="list">
+        <ReservationRow v-for="reservation in currentData" :key="reservation.id" :reservation="reservation"
+          :tab="activeTab" />
+      </div>
 
-    <ReservationPagination :current-page="currentPage" :total-pages="totalPages" @page-change="handlePageChange" />
+      <ReservationPagination :current-page="currentPage" :total-pages="totalPages" @page-change="handlePageChange" />
+    </div>
   </section>
 </template>
 
@@ -170,6 +172,12 @@ function handlePageChange(page) {
   height: 16px;
 }
 
+.content-wrapper {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 0 12px;
+}
+
 .tab-bar {
   position: relative;
   display: flex;
@@ -177,9 +185,6 @@ function handlePageChange(page) {
   border-radius: 999px;
   padding: 6px;
   margin-bottom: 28px;
-  max-width: 900px;
-  margin-left: auto;
-  margin-right: auto;
 }
 
 .tab-slider {
@@ -219,8 +224,7 @@ function handlePageChange(page) {
   display: flex;
   align-items: center;
   gap: 12px;
-  max-width: 900px;
-  margin: 0 auto 16px;
+  margin-bottom: 16px;
   padding: 12px 20px;
   border-radius: 16px;
   border: 2px solid var(--accent);
@@ -269,7 +273,5 @@ function handlePageChange(page) {
   display: flex;
   flex-direction: column;
   gap: 14px;
-  max-width: 900px;
-  margin: 0 auto;
 }
 </style>
