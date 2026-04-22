@@ -1,12 +1,21 @@
 <script setup>
 import { ref, computed } from "vue";
-import { Eye, EyeOff } from "lucide-vue-next";
+import { Eye, EyeOff, ChevronRight } from "lucide-vue-next";
 
 const props = defineProps(["content", "openContent"]);
 
 const emit = defineEmits(["open"]);
 
+const supportedFonts = ref(["Arial", "Verdena", "Times New Roman", "Comic Sans"]);
+const fontDropdownOpen = ref(false);
 const isOpen = computed(() => props.openContent === props.content.name);
+
+const toggleDropdown = (_, font) => {
+  if (font)
+    props.content.fontFamily = font
+
+  fontDropdownOpen.value = !fontDropdownOpen.value
+}
 </script>
 
 <template>
@@ -24,24 +33,53 @@ const isOpen = computed(() => props.openContent === props.content.name);
     </button>
     <div class="content-input" v-if="isOpen">
       <div v-if="content.type === 'text'">
-        <label>Text:</label>
-        <input v-model="content.text" type="text" />
+        <div>
+          <label>Text:</label>
+          <input v-model="content.text" type="text" />
+        </div>
 
-        <label>Size:</label>
-        <input v-model="content.fontSize" type="number" />
+        <div>
+          <label>Size:</label>
+          <input v-model="content.fontSize" type="number" />
+        </div>
 
-        <label>Weight:</label>
-        <input v-model="content.fontWeight" type="number" />
+        <div>
+          <label>Weight:</label>
+          <input v-model="content.fontWeight" type="number" />
+        </div>
 
-        <label>Color:</label>
-        <input v-model="content.fontColor" type="color" />
+        <div>
+          <label>Color:</label>
+          <div class="color-input">
+            <input v-model="content.fontColor" type="color" />
+            <input v-model="content.fontColor" type="text"/>
+          </div>
+        </div>
 
-        <label>Font</label>
-        <select v-model="content.fontFamily">
-          <option>Arial</option>
-          <option>Times New Roman</option>
-          <option>Verdana</option>
-        </select>
+        <div>
+          <label>Font:</label>
+          <div class="font-dropdown">
+            <div
+              :style="{ fontFamily: content.fontFamily }"
+              @click="toggleDropdown"
+            >
+              <ChevronRight :class="{ 'open': fontDropdownOpen }"/>
+              <div>{{ content.fontFamily }}</div>
+            </div>
+            <div
+              class="dropdown"
+              v-if="fontDropdownOpen"
+            >
+              <div
+                :style="{ fontFamily: font }"
+                v-for="font of supportedFonts"
+                @click="toggleDropdown(_, font)"
+              >
+                {{ font }}
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
       <div v-if="content.type === 'picture'">
         <label>Image URL</label>
@@ -104,8 +142,108 @@ const isOpen = computed(() => props.openContent === props.content.name);
   padding-top: 44px;
 }
 
+.content-input input {
+  outline: none;
+  border: none;
+  color: var(--font-color-dark-blue);
+  font-weight: 500;
+}
+
+.content-input input[type="text"],
+.content-input input[type="number"] {
+  background-color: var(--background-color);
+  border-bottom: 2px solid var(--font-color-dark-blue);
+}
+
+.content-input input[type="color"] {
+  background-color: var(--font-color-dark-blue);
+  padding: 1px;
+  width: 24px;
+  height: 24px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.content-input input[type="color"]::-moz-color-swatch,
+.content-input input[type="color"]::-webkit-color-swatch {
+  border-radius: 4px;
+  border: none;
+  width: 92%;
+  height: 92%;
+}
+
 .content-input > div {
   display: flex;
   flex-direction: column;
+  gap: 10px;
+}
+
+.content-input > div > div {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.color-input {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.color-input input[type="text"] {
+  flex: 1;
+}
+
+.font-dropdown {
+  position: relative;
+  display: grid;
+}
+
+.font-dropdown > div {
+  width: 100%;
+  box-sizing: border-box;
+  border: 2px solid var(--font-color-dark-blue);
+  background-color: var(--dropdown-color);
+  grid-area: 1/1;
+}
+
+.font-dropdown > div:first-child {
+  height: 30px;
+  border-radius: 17px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  z-index: 8;
+  padding: 0 10px;
+}
+
+.font-dropdown .lucide {
+  width: 17px;
+  height: 17px;
+  transition: 0.05s;
+}
+
+.font-dropdown .lucide.open {
+  transform: rotate(90deg);
+}
+
+.font-dropdown > .dropdown {
+  padding: 10px;
+  padding-top: 35px;
+  border-radius: 17px;
+  z-index: 3;
+}
+
+.font-dropdown > .dropdown > div {
+  height: 30px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  border-radius: 5px;
+  padding-left: 5px;
+}
+
+.font-dropdown > .dropdown > div:hover {
+  background-color: color-mix(in srgb, var(--font-color-dark-blue) 20%, transparent);
 }
 </style>

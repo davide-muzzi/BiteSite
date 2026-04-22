@@ -9,6 +9,13 @@ const props = defineProps(["component"])
 const isOpen = ref(false);
 const openContent = ref("");
 
+const changeOpenContent = (name) => {
+  if (openContent.value === name) {
+    openContent.value = "";
+  } else {
+    openContent.value = name;
+  }
+}
 </script>
 
 <template>
@@ -24,7 +31,7 @@ const openContent = ref("");
               :openContent="openContent"
               v-for="content of component.content"
               v-if="isOpen"
-              @open="contentName => openContent = contentName"
+              @open="changeOpenContent"
             />
         </div>
     </div>
