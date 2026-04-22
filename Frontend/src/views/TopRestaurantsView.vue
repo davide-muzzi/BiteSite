@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, computed } from "vue";
 import { Search, Star } from "lucide-vue-next";
 import { getAllRestaurants, getRestaurantsTags } from "@/api/routes/restaurant.js";
 
@@ -7,14 +7,14 @@ const restaurants = ref([]);
 
 onMounted(async () => {
   const result = await getAllRestaurants();
-  console.log("Restaurants result:", result); // Was kommt zurück?
+  console.log("Restaurants result:", result);
   if (result.success) {
     restaurants.value = result.projects;
-    console.log("Erstes Restaurant:", restaurants.value[0]); // Welche Felder hat es?
+    console.log("Erstes Restaurant:", restaurants.value[0]);
 
     for (const restaurant of restaurants.value) {
       const tagsResult = await getRestaurantsTags(restaurant.projectId);
-      console.log(`Tags für ${restaurant.projectId}:`, tagsResult); // Kommen Tags an?
+      console.log(tagsResult);
       if (tagsResult.success) {
         restaurant.tags = tagsResult.tags;
       } else {
@@ -22,6 +22,15 @@ onMounted(async () => {
       }
     }
   }
+});
+
+const searchQuery = ref("");
+
+const sortedRestaurants = computed(() => {
+
+  return restaurants.value
+    .filter(r => r.websiteTitle.toLowerCase().includes(searchQuery.value.toLowerCase()))
+    .sort((a, b) => b.rating - a.rating)
 });
 </script>
 
@@ -33,16 +42,17 @@ onMounted(async () => {
         <p>Browse standout restaurant sites created by BiteSite clients and rated top-notch.</p>
       </div>
       <div class="search">
-        <input type="search" placeholder="Search restaurants..." />
+        <input type="search" v-model="searchQuery" placeholder="Search restaurants..."/>
         <button type="button" aria-label="Search">
           <Search class="search-icon" />
         </button>
       </div>
     </div>
 
+
     <div class="restaurant-list">
-      <article v-for="restaurant in restaurants" :key="restaurant.id" class="restaurant-card">
-        <!-- <span class="icon">{{ restaurant.icon }}</span> -->
+      <article v-for="restaurant in sortedRestaurants" :key="restaurant.id" class="restaurant-card">
+         <span class="icon">{{ restaurant.icon }}</span>
         <div class="details">
           <div class="title-row">
             <h2>{{ restaurant.websiteTitle }}</h2>
