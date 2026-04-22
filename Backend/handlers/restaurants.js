@@ -152,3 +152,25 @@ export async function getRestaurantsTags(req, res) {
     tags: formattedTags
   });
 }
+
+export async function getRestaurantsReviews(req, res) {
+  const { projectId } = req.query;
+
+  const restaurantsReviews = await safeOperation(
+    () => db.all('select * from reviews where fk_project_id = ?', projectId), "Error while getting tags from database"
+  );
+  const formattedReviews = restaurantsReviews.map(review => ({
+    reviewId: review.review_id,
+    reviewName: review.name,
+    reviewRating: review.rating,
+    reviewTitle: review.title,
+    reviewMessage: review.message,
+    reviewDate: review.date,
+  }));
+
+  res.status(200).json({
+    success: true,
+    message: "Successfully got reviews from database",
+    reviews: formattedReviews
+  });
+}

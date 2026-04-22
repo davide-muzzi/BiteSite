@@ -15,3 +15,7 @@ export async function getAllRestaurants() {
 export async function getRestaurantsTags(projectId) {
   return request('get', `/restaurants/get-tags?projectId=${projectId}`);
 }
+
+export async function getRestaurantsReviews(projectId) {
+  return request('get', `/restaurants/get-reviews?projectId=${projectId}`);
+}

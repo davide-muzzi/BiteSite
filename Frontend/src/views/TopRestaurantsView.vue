@@ -1,31 +1,53 @@
 <script setup>
 import { ref, onMounted, computed } from "vue";
 import { Search, Star } from "lucide-vue-next";
-import { getAllRestaurants, getRestaurantsTags } from "@/api/routes/restaurant.js";
+import { getAllRestaurants, getRestaurantsTags, getRestaurantsReviews } from "@/api/routes/restaurant.js";
 
 const restaurants = ref([]);
 
 onMounted(async () => {
   const result = await getAllRestaurants();
   console.log("Restaurants:", result);
+
   if (result.success) {
     restaurants.value = result.projects;
-    
 
     for (const restaurant of restaurants.value) {
+
       const tagsResult = await getRestaurantsTags(restaurant.projectId);
       console.log(tagsResult);
+
       if (tagsResult.success) {
         restaurant.tags = tagsResult.tags;
       } else {
         restaurant.tags = [];
+      }
+
+      const reviewsResult = await getRestaurantsReviews(restaurant.projectId);
+
+      if (reviewsResult.success) {
+        restaurant.reviews = reviewsResult.reviews;
+        console.log(reviewsResult);
+      } else {
+        restaurant.reviews = [];
+      }
+
+      let totalReviews = restaurant.reviews.length;
+      let sumReviews = 0;
+
+      for (const review of restaurant.reviews) {
+        sumReviews += review.reviewRating;      }
+
+      if (totalReviews > 0) {
+        restaurant.averageRating = sumReviews / totalReviews;
+      } else {
+        restaurant.averageRating = 0;
       }
     }
   }
 });
 
 const searchQuery = ref("");
-
 const sortedRestaurants = computed(() => {
 
   return restaurants.value
@@ -60,11 +82,8 @@ function visitSite(url) {
         <div class="details">
           <div class="title-row">
             <h2>{{ restaurant.websiteTitle }}</h2>
-             <!-- <div class="rating" :aria-label="`Rated ${restaurant.rating} stars`">
-              <span>{{ restaurant.rating.toFixed(1) }}</span>  -->
-              <div class="rating" :aria-label="`Rated 2 stars`">
-               <span>2</span>
-              <Star class="star" />
+             <div class="rating" :aria-label="`Rated ${restaurant.averageRating} stars`">
+               {{ restaurant.averageRating ? restaurant.averageRating.toFixed(1) : "0.0" }}               <Star class="star" />
             </div>
           </div>
           <div class="tags">
