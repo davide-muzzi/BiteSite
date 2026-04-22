@@ -4,8 +4,8 @@ export async function createProject(name, tags, templateName) {
   return request('post', '/projects/create', { data: { name, tags, templateName } })
 }
 
-export async function editProject(projectId, route, name, title) {
-  return request('patch', '/projects/edit', { data: { projectId, route, name, title } })
+export async function editProject({ projectId, route, name, title }) {
+  return await request('patch', '/projects/edit', { data: { projectId, route, name, title } });
 }
 
 export async function getAllProjects() {

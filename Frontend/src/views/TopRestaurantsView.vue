@@ -1,24 +1,28 @@
 <script setup>
+import { ref, onMounted } from "vue";
 import { Search, Star } from "lucide-vue-next";
+import { getAllRestaurants, getRestaurantsTags } from "@/api/routes/restaurant.js";
 
-const restaurants = [
-  {
-    id: "pizza-palace",
-    icon: "🍕",
-    name: "Pizza Place",
-    tags: ["Italian", "Pizza"],
-    rating: 5,
-    website: "https://pizza.example.com",
-  },
-  {
-    id: "sushi-star",
-    icon: "🍣",
-    name: "Sushi Star",
-    tags: ["Sushi", "Asian", "Fresh"],
-    rating: 4,
-    website: "https://sushistar.example.com",
-  },
-];
+const restaurants = ref([]);
+
+onMounted(async () => {
+  const result = await getAllRestaurants();
+  console.log("Restaurants result:", result); // Was kommt zurück?
+  if (result.success) {
+    restaurants.value = result.projects;
+    console.log("Erstes Restaurant:", restaurants.value[0]); // Welche Felder hat es?
+
+    for (const restaurant of restaurants.value) {
+      const tagsResult = await getRestaurantsTags(restaurant.projectId);
+      console.log(`Tags für ${restaurant.projectId}:`, tagsResult); // Kommen Tags an?
+      if (tagsResult.success) {
+        restaurant.tags = tagsResult.tags;
+      } else {
+        restaurant.tags = [];
+      }
+    }
+  }
+});
 </script>
 
 <template>
@@ -38,18 +42,20 @@ const restaurants = [
 
     <div class="restaurant-list">
       <article v-for="restaurant in restaurants" :key="restaurant.id" class="restaurant-card">
-        <span class="icon">{{ restaurant.icon }}</span>
+        <!-- <span class="icon">{{ restaurant.icon }}</span> -->
         <div class="details">
           <div class="title-row">
-            <h2>{{ restaurant.name }}</h2>
-            <div class="rating" :aria-label="`Rated ${restaurant.rating} stars`">
-              <span>{{ restaurant.rating.toFixed(1) }}</span>
+            <h2>{{ restaurant.websiteTitle }}</h2>
+             <!-- <div class="rating" :aria-label="`Rated ${restaurant.rating} stars`">
+              <span>{{ restaurant.rating.toFixed(1) }}</span>  -->
+              <div class="rating" :aria-label="`Rated 2 stars`">
+               <span>2</span>
               <Star class="star" />
             </div>
           </div>
           <div class="tags">
             <span v-for="tag in restaurant.tags" :key="tag" class="tag">
-              #{{ tag }}
+              {{ tag.name }}
             </span>
           </div>
         </div>

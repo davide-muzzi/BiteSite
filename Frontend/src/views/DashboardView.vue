@@ -30,8 +30,12 @@ const handleTogglePublish = async () =>  {
 }
 
 const handleEditProject = async (newTitle) => {
-  const result = await editProject(pageRoute.params.projectId, route.value, name.value, title.value);
-
+  const result = await editProject({
+    projectId: pageRoute.params.projectId,
+    route: route.value,
+    name: name.value,
+    title: title.value
+  });
   if (result.success) console.log("Edited project");
 };
 

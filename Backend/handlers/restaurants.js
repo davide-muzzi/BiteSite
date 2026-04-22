@@ -1,5 +1,5 @@
 import { db } from "../database/db.js";
-import { safeOperation, checkReq } from "../error-handling.js";
+import { safeOperation, checkReq, safeOperations } from "../error-handling.js";
 import { existsSync } from "fs";
 import { readFile } from "fs/promises";
 import { mailer } from "../mailer.js";
@@ -105,5 +105,49 @@ export async function sendNewsletter(req, res) {
   res.status(200).json({
     success: true,
     message: `Newsletter sent to ${recipientList.length} subscriber${recipientList.length > 1 ? "s" : ""}`,
+  });
+}
+
+export async function getAllRestaurants(req, res) {
+  const restaurants = await safeOperation(
+    () => db.all("SELECT project_id, name, website_title FROM projects WHERE published = 1"),
+    "Error while getting projects from database"
+  );
+
+  const formattedRestaurants = restaurants.map(restaurant => ({
+    projectId: restaurant.project_id,
+    websiteTitle: restaurant.name,
+    // websiteTitle: restaurant.website_title,
+  }));
+
+  res.status(200).json({
+    success: true,
+    message: "Successfully got restaurants from database",
+    projects: formattedRestaurants
+  });
+}
+
+export async function getRestaurantsTags(req, res) {
+  const { projectId } = req.query;
+  const restaurantsTags = await safeOperation(
+    () => db.all(
+      `select tags.tag_id, tags.name
+       from tags
+       inner join project_tags on project_tags.fk_tag_id = tags.tag_id
+       where project_tags.fk_project_id = ?`,
+      projectId
+    ), "Error while getting tags from database"
+  );
+
+
+  const formattedTags = restaurantsTags.map(tag => ({
+    tagId: tag.tag_id,
+    name: tag.name,
+  }));
+
+  res.status(200).json({
+    success: true,
+    message: "Successfully got tags from database",
+    tags: formattedTags
   });
 }
