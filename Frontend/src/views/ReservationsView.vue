@@ -1,6 +1,6 @@
 <script setup>
 import { ref, computed } from 'vue'
-import { Search, TriangleAlert } from 'lucide-vue-next'
+import { Search, TriangleAlert, X } from 'lucide-vue-next'
 import BackButton from '@/components/BackButton.vue'
 import ReservationRow from '@/components/ReservationRow.vue'
 import ReservationPagination from '@/components/ReservationPagination.vue'
@@ -8,6 +8,7 @@ import ReservationPagination from '@/components/ReservationPagination.vue'
 const activeTab = ref('requests')
 const searchQuery = ref('')
 const currentPage = ref(1)
+const warningDismissed = ref(false)
 
 const tabs = [
   { key: 'requests', label: 'Reservation Requests' },
@@ -83,9 +84,12 @@ function handlePageChange(page) {
       </button>
     </div>
 
-    <div v-if="activeTab === 'history'" class="warning-banner">
+    <div v-if="activeTab === 'history' && !warningDismissed" class="warning-banner">
       <TriangleAlert class="warning-icon" />
       <p>Entries will be automatically deleted if older than 14 days or list exceeds 100 entries</p>
+      <button class="warning-dismiss" @click="warningDismissed = true" aria-label="Dismiss">
+        <X class="warning-dismiss-icon" />
+      </button>
     </div>
 
     <div class="list">
@@ -235,6 +239,30 @@ function handlePageChange(page) {
   font-size: 13px;
   font-weight: 600;
   color: var(--accent);
+  flex: 1;
+}
+
+.warning-dismiss {
+  flex-shrink: 0;
+  background: transparent;
+  border: none;
+  color: var(--accent);
+  cursor: pointer;
+  padding: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.7;
+  transition: opacity 0.2s ease;
+}
+
+.warning-dismiss:hover {
+  opacity: 1;
+}
+
+.warning-dismiss-icon {
+  width: 16px;
+  height: 16px;
 }
 
 .list {
