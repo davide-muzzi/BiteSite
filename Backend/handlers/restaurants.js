@@ -116,8 +116,8 @@ export async function getAllRestaurants(req, res) {
 
   const formattedRestaurants = restaurants.map(restaurant => ({
     projectId: restaurant.project_id,
-    websiteTitle: restaurant.name,
-    // websiteTitle: restaurant.website_title,
+    websiteName: restaurant.name,
+    websiteTitle: restaurant.website_title,
     websiteRoute: restaurant.website_route,
   }));
 
