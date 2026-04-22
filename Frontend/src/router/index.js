@@ -18,6 +18,7 @@ import ConfirmPlanChangeView from '@/views/ConfirmPlanChangeView.vue'
 import AboutPage from '@/views/footer-links/AboutPage.vue'
 import LegalPage from '@/views/footer-links/LegalPage.vue'
 import ContactPage from '@/views/footer-links/ContactPage.vue'
+import ManageReviewsView from '@/views/ManageReviewsView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -107,6 +108,11 @@ const router = createRouter({
       path: '/restaurant/:route',
       name: 'restaurant',
       component: WebsiteView
+    },
+    {
+      path: '/manage-reviews',
+      name: 'managereviews',
+      component: ManageReviewsView
     },
   ],
 })
