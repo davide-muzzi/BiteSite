@@ -12,5 +12,7 @@ projectRouter.patch("/edit", checkAuth, routeWrapper(projectHandlers.editProject
 projectRouter.get("/website", checkAuth, routeWrapper(projectHandlers.getWebsite));
 projectRouter.patch("/update-website", checkAuth, routeWrapper(projectHandlers.updateWebsite));
 projectRouter.patch("/toggle-publish", checkAuth, routeWrapper(projectHandlers.togglePublish));
+projectRouter.delete("/delete", checkAuth, routeWrapper(projectHandlers.deleteProject));
+
 
 export default projectRouter
