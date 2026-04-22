@@ -12,7 +12,7 @@ import {
   Save
 } from "lucide-vue-next";
 import BackButton from "@/components/BackButton.vue";
-import { editProject, getSingleProject, togglePublish } from "@/api/routes/project.js";
+import { editProject, getSingleProject, togglePublish, deleteProject } from "@/api/routes/project.js";
 import router from "@/router";
 import { useRoute } from "vue-router";
 
@@ -33,6 +33,14 @@ const handleEditProject = async (newTitle) => {
   const result = await editProject(pageRoute.params.projectId, route.value, name.value, title.value);
 
   if (result.success) console.log("Edited project");
+};
+
+const handleDeleteProject = async () => {
+  const result = await deleteProject(pageRoute.params.projectId)
+
+  if (result.success) console.log("Deleted Project");
+
+  window.location.href = 'http://localhost:5173/projects-overview'
 };
 
 onMounted(async () => {
@@ -151,7 +159,7 @@ onMounted(async () => {
                         {{ published ? "Unpublish" : "Publish" }}
                     </button>
 
-                    <button class="outline">
+                    <button class="outline" @click="handleDeleteProject">
                         <Trash class="icon" />
                         Delete Project
                     </button>
