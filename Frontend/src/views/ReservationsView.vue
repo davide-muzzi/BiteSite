@@ -68,12 +68,7 @@ function handlePageChange(page) {
     <div class="top-bar">
       <BackButton />
       <div class="search">
-        <input
-          v-model="searchQuery"
-          type="search"
-          placeholder="Search ..."
-          @keydown.enter.prevent="handleSearch"
-        />
+        <input v-model="searchQuery" type="search" placeholder="Search ..." @keydown.enter.prevent="handleSearch" />
         <button type="button" @click="handleSearch" aria-label="Search">
           <Search class="search-icon" />
         </button>
@@ -82,25 +77,16 @@ function handlePageChange(page) {
 
     <div class="tab-bar">
       <div class="tab-slider" :style="{ transform: `translateX(${activeTabIndex * 100}%)` }"></div>
-      <button
-        v-for="tab in tabs"
-        :key="tab.key"
-        class="tab-btn"
-        :class="{ active: activeTab === tab.key }"
-        @click="setTab(tab.key)"
-      >
+      <button v-for="tab in tabs" :key="tab.key" class="tab-btn" :class="{ active: activeTab === tab.key }"
+        @click="setTab(tab.key)">
         {{ tab.label }}
       </button>
     </div>
 
     <div class="content-layout">
       <div class="list">
-        <ReservationRow
-          v-for="reservation in currentData"
-          :key="reservation.id"
-          :reservation="reservation"
-          :tab="activeTab"
-        />
+        <ReservationRow v-for="reservation in currentData" :key="reservation.id" :reservation="reservation"
+          :tab="activeTab" />
       </div>
 
       <div v-if="activeTab === 'history'" class="warning-card">
@@ -109,11 +95,7 @@ function handlePageChange(page) {
       </div>
     </div>
 
-    <ReservationPagination
-      :current-page="currentPage"
-      :total-pages="totalPages"
-      @page-change="handlePageChange"
-    />
+    <ReservationPagination :current-page="currentPage" :total-pages="totalPages" @page-change="handlePageChange" />
   </section>
 </template>
 

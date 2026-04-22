@@ -26,33 +26,18 @@ function goTo(page) {
 
 <template>
   <div class="pagination">
-    <button
-      class="arrow-btn"
-      :disabled="currentPage === 1"
-      @click="goTo(currentPage - 1)"
-      aria-label="Previous page"
-    >
+    <button class="arrow-btn" :disabled="currentPage === 1" @click="goTo(currentPage - 1)" aria-label="Previous page">
       <ChevronLeft class="arrow-icon" />
     </button>
 
-    <button
-      v-for="(page, index) in visiblePages"
-      :key="index"
-      class="page-btn"
-      :class="{ active: page === currentPage }"
-      @click="goTo(page)"
-      :aria-label="`Page ${page}`"
-      :aria-current="page === currentPage ? 'page' : undefined"
-    >
+    <button v-for="(page, index) in visiblePages" :key="index" class="page-btn"
+      :class="{ active: page === currentPage }" @click="goTo(page)" :aria-label="`Page ${page}`"
+      :aria-current="page === currentPage ? 'page' : undefined">
       {{ page }}
     </button>
 
-    <button
-      class="arrow-btn"
-      :disabled="currentPage === totalPages"
-      @click="goTo(currentPage + 1)"
-      aria-label="Next page"
-    >
+    <button class="arrow-btn" :disabled="currentPage === totalPages" @click="goTo(currentPage + 1)"
+      aria-label="Next page">
       <ChevronRight class="arrow-icon" />
     </button>
   </div>
