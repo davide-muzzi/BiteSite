@@ -2,6 +2,7 @@
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { useRegisterStore } from '@/stores/register.js';
+import { checkRegister } from '@/api/routes/user.js';
 
 const registerStore = useRegisterStore();
 
@@ -11,11 +12,19 @@ const username = ref('');
 const email = ref('');
 const password = ref('');
 
-// Sample validation
+const errorMessage = ref('');
+
+
 const handleregister = async () => {
     if (!username.value.trim()) return;
     if (!email.value.includes("@")) return;
     if (password.value.length < 3) return;
+
+    const result = await checkRegister(username.value, email.value);
+
+    if (!result.success) {
+        return errorMessage.value = result.message;
+    }
 
     registerStore.setRegisterData(username.value, password.value, email.value);
 
@@ -53,6 +62,7 @@ const handleregister = async () => {
         <p class="register-text">
             Already have an account? <RouterLink to="/login">Login</RouterLink>
         </p>
+        <div class="error-message" v-if="errorMessage">{{ errorMessage }}</div>
     </section>
 </template>
 
@@ -140,5 +150,11 @@ const handleregister = async () => {
     font-size: 15px;
     font-weight: 600;
     text-align: center;
+}
+
+.error-message {
+  margin-top: 16px;
+  color: red;
+  text-align: center;
 }
 </style>

@@ -7,6 +7,7 @@ const userRouter = express.Router();
 
 userRouter.get("/", checkAuth, routeWrapper(userHandlers.userdata));
 userRouter.post("/register", routeWrapper(userHandlers.register));
+userRouter.post("/check-register", routeWrapper(userHandlers.checkRegister));
 userRouter.post("/login", routeWrapper(userHandlers.login));
 userRouter.patch("/edit", checkAuth, routeWrapper(userHandlers.edit));
 userRouter.get("/check-login", routeWrapper(userHandlers.checkLogin));
