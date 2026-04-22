@@ -36,8 +36,8 @@ function goTo(page) {
     </button>
 
     <button
-      v-for="page in visiblePages"
-      :key="page"
+      v-for="(page, index) in visiblePages"
+      :key="index"
       class="page-btn"
       :class="{ active: page === currentPage }"
       @click="goTo(page)"
