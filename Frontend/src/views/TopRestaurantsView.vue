@@ -52,7 +52,7 @@ const sortedRestaurants = computed(() => {
 
   return restaurants.value
     .filter(r => r.websiteTitle.toLowerCase().includes(searchQuery.value.toLowerCase()))
-    .sort((a, b) => b.rating - a.rating)
+    .sort((a, b) => b.averageRating - a.averageRating)
 });
 
 function visitSite(url) {
