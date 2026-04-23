@@ -1,20 +1,37 @@
 <script setup>
     import { Star } from 'lucide-vue-next';
-    import { ref } from 'vue'
+    import { ref, computed } from 'vue'
 
     const reviewsEnabled = ref(true)
 
-    const reviewcount = 2
-    const username = "Julius Maximus24"
-    const date = "11.11.2011"
-    const userRating = 4
-    const reviewTitle = "Lecker"
-    const reviewText = "AHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH"
+    //TODO: api dings da
+    const reviews = ref([
+        {
+            id: 1,
+            username: "Julius Maximus24",
+            date: "11.11.2011",
+            rating: 4,
+            title: "Lecker",
+            text: "AHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH"
+        },
+        {
+            id: 2,
+            username: "Janikus Minimus25",
+            date: "06.07.2024",
+            rating: 5,
+            title: "Essen!",
+            text: "Nam Nam Nam Nam Nam Nam Nam"
+        },
+    ])
 
-    function s() {
-        return reviewcount !== 1 ? 's' : ''
-    }
-    
+    const reviewCount = computed(() => reviews.value.length)
+    // Claude was here ↓
+    const averageRating = computed(() => {
+        if (reviewCount.value === 0) return 0
+        const sum = reviews.value.reduce((acc, r) => acc + r.rating, 0)
+        return (sum / reviewCount.value).toFixed(1)
+    })
+    // Claude was here ↑
 </script>
 
 <template>
@@ -22,41 +39,46 @@
     <div class="header">
       <div class="header-text">
         <span class="label">Enable Reviews</span>
-        <p class="sub">{{ reviewcount }} Review{{ s() }}</p>
+        <p class="sub">{{ reviewCount }} Review{{ reviewCount !== 1 ? 's' : '' }}</p>
       </div>
       <label class="toggle">
         <input type="checkbox" v-model="reviewsEnabled" />
         <span class="slider"></span>
       </label>
       <div class="rating-group">
-        <span class="rating">4.9</span>
+        <span class="rating">{{ averageRating }}</span>
         <Star class="star"/>
       </div>
     </div>
 
-    <div v-if="reviewsEnabled" class="reviews-card">
-      <div class="reviews-section">
-        <div class="card-header">
-          <div class="user-n-date">
-            <span> {{ username }} </span> 
-            <span>{{ date }}</span>   
-          </div>
+    <div v-if="reviewsEnabled" class="reviews-list">
+      <div
+        v-for="review in reviews"
+        :key="review.id"
+        class="reviews-card"
+      >
+        <div class="reviews-section">
+          <div class="card-header">
+            <div class="user-n-date">
+              <span>{{ review.username }}</span>
+              <span>{{ review.date }}</span>
+            </div>
 
-          <div class="star-rating">
-            <Star
-              v-for="n in 5"
-              :key="n"
-              class="rating-star"
-              :class="{ filled: n <= userRating }"
-            />
+            <div class="star-rating">
+              <Star
+                v-for="n in 5"
+                :key="n"
+                class="rating-star"
+                :class="{ filled: n <= review.rating }"
+              />
+            </div>
+          </div>
+          <div class="line"></div>
+          <div class="details">
+            <h3>{{ review.title }}</h3>
+            {{ review.text }}
           </div>
         </div>
-        <div class="line"></div>
-        <div class="details">
-           <h3> {{ reviewTitle }} </h3> 
-            {{ reviewText }}
-        </div>
-
       </div>
     </div>
   </div>
@@ -154,6 +176,12 @@
   color: #ffb400;
 }
 
+.reviews-list {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
 .reviews-card {
     width: 100%;
     max-width: 700px;
@@ -164,8 +192,6 @@
     box-shadow: 0 28px 60px rgba(49, 38, 110, 0.12);
     display: flex;
     flex-direction: column;
-    gap: 24px;
-
 }
 
 .card-header {
