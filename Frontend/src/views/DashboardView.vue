@@ -83,8 +83,10 @@ onMounted(async () => {
 
   if (totalReviews > 0) {
     restaurant.value.averageRating = sumReviews / totalReviews;
+    restaurant.value.sumReviews = sumReviews;
   } else {
     restaurant.value.averageRating = 0;
+    restaurant.value.sumReviews = 0;
   }
 
   rating.value = restaurant.value.averageRating;
@@ -165,7 +167,8 @@ onMounted(async () => {
 
                         <div class="rating-row">
                             <div>
-                                <div class="stat-label">39 Reviews</div>
+                              <div v-if="restaurant.reviews.length === 1"  class="stat-label">{{ restaurant.reviews.length }} Review</div>
+                                <div v-else class="stat-label">{{ restaurant.reviews.length }} Reviews</div>
                                 <div class="rating-value">
                                  {{ restaurant.averageRating.toFixed(1) }}
                                     <Star class="star" />
