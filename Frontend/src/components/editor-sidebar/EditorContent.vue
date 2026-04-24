@@ -35,24 +35,24 @@ const toggleDropdown = (_, font) => {
       <div v-if="content.type === 'text'">
         <div>
           <label>Text:</label>
-          <input v-model="content.text" type="text" />
+          <input v-model="content.style.text" type="text" />
         </div>
 
         <div>
           <label>Size:</label>
-          <input v-model="content.fontSize" type="number" />
+          <input v-model="content.style.fontSize" type="number" />
         </div>
 
         <div>
           <label>Weight:</label>
-          <input v-model="content.fontWeight" type="number" />
+          <input v-model="content.style.fontWeight" type="number" />
         </div>
 
         <div>
           <label>Color:</label>
           <div class="color-input">
-            <input v-model="content.fontColor" type="color" />
-            <input v-model="content.fontColor" type="text"/>
+            <input v-model="content.style.color" type="color" />
+            <input v-model="content.style.color" type="text"/>
           </div>
         </div>
 

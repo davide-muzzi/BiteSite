@@ -7,22 +7,7 @@ const project = ref({
     "website": {
         "navbar": {
             "backgroundColor": "#121212",
-            "textColor": "#ffffff",
-            "height": "60px",
-            "width": "100%",
-            "borderRadius": "0px",
-            "containerCss": {
-
-            },
-            "barCss": {
-
-            },
-            "itemCss": {
-
-            },
-            "titleCss": {
-
-            }
+            "textColor": "#ffffff"
         },
         "pages": [
             {
@@ -40,7 +25,7 @@ const project = ref({
                                 "id": "greeting",
                                 "hidden": "false",
                                 "text": "Hello",
-                                "fontColor": "#ff0000",
+                                "color": "#ff0000",
                                 "fontSize": 34,
                                 "fontWeight": 400,
                                 "fontFamily": "Arial",
@@ -51,7 +36,7 @@ const project = ref({
                                 "id": "message",
                                 "hidden": "false",
                                 "text": "How are you doing?",
-                                "fontColor": "white",
+                                "color": "white",
                                 "fontSize": 17,
                                 "fontWeight": 400,
                                 "fontFamily": "Arial",
