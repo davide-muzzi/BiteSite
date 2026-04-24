@@ -4,22 +4,17 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>|websiteTitle|</title>
+  <title>§websiteTitle§</title>
 </head>
 
 <body>
   <nav>
+    <div>§navbarTitle§</div>
     <div>
-      <div></div>
-      <div>
-        <div>|websiteTitle|</div>
-        <div>
-          |navbarItems|
-        </div>
-      </div>
+      §navbarItems§
     </div>
   </nav>
-  |pageContent|
+  §pageContent§
 </body>
 
 <style>
@@ -42,70 +37,37 @@
     position: fixed;
     width: 100%;
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     z-index: 10;
   }
 
-  nav>div {
-    height: |navbarHeight|;
-    width: |navbarWidth|;
-    overflow: hidden;
-    border-radius: |navbarBorderRadius|;
-    |navbarAdditionalContainerCSS|
-  }
-
-  nav>div>div:first-child {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    background-color: |navbarBackground|;
-    |navbarAdditionalBarCSS|
-  }
-
-  nav>div>div:last-child {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    justify-content: space-between;
-  }
-
-  nav>div>div>div:first-child {
+  nav > div:first-child {
     display: flex;
     align-items: center;
-    font-weight: bold;
-    font-size: 20px;
-    margin-left: 10px;
-    color: |navbarColor|;
-    |navbarAdditionalTitleCss|
+    margin-left: 20px;
   }
-
-  nav>div>div>div:last-child {
+  
+  nav > div:last-child {
     display: flex;
   }
 
   nav a {
-    color: |navbarColor|;
-    height: 100%;
     display: flex;
+    justify-content: center;
     align-items: center;
     text-decoration: none;
-    padding: 0 10px;
-    |navbarAdditionalItemCSS|
+    padding: 0 20px;
   }
 
-  nav a:hover {
-    background-color: |navbarColor|;
-    color: |navbarBackground|;
-  }
+  §navbarCss§
 
   .page {
     width: 100%;
     height: 100%;
-    padding-top: |navbarHeight|;
+    padding-top: §navbarHeight§;
   }
 
-  |pageCss|
+  §pageCss§
 </style>
 
 <script>
@@ -117,7 +79,7 @@
   }
   window.addEventListener('hashchange', showPage);
 
-  if (!location.hash) location.hash = "#|firstPage|";
+  if (!location.hash) location.hash = "#§firstPage§";
   showPage();
 </script>
 
