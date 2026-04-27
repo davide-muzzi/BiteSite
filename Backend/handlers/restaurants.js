@@ -1,5 +1,5 @@
 import { db } from "../database/db.js";
-import { safeOperation, checkReq, safeOperations } from "../error-handling.js";
+import { safeOperation, checkReq } from "../error-handling.js";
 import { existsSync } from "fs";
 import { readFile } from "fs/promises";
 import { mailer } from "../mailer.js";

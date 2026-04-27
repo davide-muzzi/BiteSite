@@ -278,29 +278,33 @@ async function makeWebsite(website, route, title) {
     navbarItems += `<a href="#${page.name.toLowerCase()}">${page.name[0] + page.name.slice(1)}</a>\n`
   }
 
+  const barItem = navbar.find(x => x.name === "Bar");
+  const titleItem = navbar.find(x => x.name === "Title");
+  const navItem = navbar.find(x => x.name === "Navigation");
+
   const navbarCss = `
     nav {
-      ${objectToCSS(navbar.bar.style)}   
+      ${objectToCSS(barItem.style)}   
     }
 
     nav > div:first-child {
-      ${objectToCSS(navbar.title.style)}
+      ${objectToCSS(titleItem.style)}
     }
 
     nav a {
-      ${objectToCSS(navbar.navigation.style)}  
+      ${objectToCSS(navItem.style)}  
     }
 
     nav a:hover {
-      color: ${navbar.bar.style.backgroundColor};
-      background-color: ${navbar.navigation.style.color};
+      color: ${barItem.style.backgroundColor};
+      background-color: ${navItem.style.color};
     }`;
 
   htmlContent = htmlContent
     .replace(/§navbarItems§/, navbarItems)
     .replace(/§navbarCss§/, navbarCss)
-    .replace(/§navbarTitle§/, navbar.title.text)
-    .replace(/§navbarHeight§/, navbar.bar.style.height);
+    .replace(/§navbarTitle§/, titleItem.text)
+    .replace(/§navbarHeight§/, barItem.style.height);
 
   htmlContent = htmlContent
     .replace(/§firstPage§/, pages[0].name.toLowerCase());

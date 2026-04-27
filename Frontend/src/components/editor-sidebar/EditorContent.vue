@@ -1,6 +1,18 @@
 <script setup>
 import { ref, computed } from "vue";
-import { Eye, EyeOff, ChevronRight } from "lucide-vue-next";
+import {
+  Eye,
+  EyeOff,
+  ChevronRight,
+  AlignStartVertical,
+  AlignCenterVertical,
+  AlignEndVertical,
+  AlignVerticalJustifyStart,
+  AlignVerticalJustifyCenter,
+  AlignVerticalJustifyEnd,
+  ArrowDownUp,
+  ArrowLeftRight,
+} from "lucide-vue-next";
 
 const props = defineProps(["content", "openContent"]);
 
@@ -12,7 +24,7 @@ const isOpen = computed(() => props.openContent === props.content.name);
 
 const toggleDropdown = (_, font) => {
   if (font)
-    props.content.fontFamily = font
+    props.content.style.fontFamily = font
 
   fontDropdownOpen.value = !fontDropdownOpen.value
 }
@@ -32,15 +44,15 @@ const toggleDropdown = (_, font) => {
       </div>
     </button>
     <div class="content-input" v-if="isOpen">
-      <div v-if="content.type === 'text'">
+      <div v-if="content.types.includes('text')">
         <div>
           <label>Text:</label>
-          <input v-model="content.style.text" type="text" />
+          <input v-model="content.text" type="text" />
         </div>
 
         <div>
           <label>Size:</label>
-          <input v-model="content.style.fontSize" type="number" />
+          <input v-model="content.style.fontSize" type="text" />
         </div>
 
         <div>
@@ -60,11 +72,11 @@ const toggleDropdown = (_, font) => {
           <label>Font:</label>
           <div class="font-dropdown">
             <div
-              :style="{ fontFamily: content.fontFamily }"
+              :style="{ fontFamily: content.style.fontFamily }"
               @click="toggleDropdown"
             >
               <ChevronRight :class="{ 'open': fontDropdownOpen }"/>
-              <div>{{ content.fontFamily }}</div>
+              <div>{{ content.style.fontFamily }}</div>
             </div>
             <div
               class="dropdown"
@@ -81,9 +93,97 @@ const toggleDropdown = (_, font) => {
           </div>
         </div>
       </div>
-      <div v-if="content.type === 'picture'">
-        <label>Image URL</label>
+      <div v-if="content.types.includes('picture')">
+        <label>Image URL:</label>
         <input v-model="backgroundImage" type="text" placeholder="Enter image path" />
+      </div>
+      <div v-if="content.types.includes('container')">
+        <div>
+          <label>Width:</label>
+          <input v-model="content.style.width" type="text">
+        </div>
+        <div>
+          <label>Height:</label>
+          <input v-model="content.style.height" type="text">
+        </div>
+        <div>
+          <label>Gap:</label>
+          <input v-model="content.style.gap" type="text">
+        </div>
+        <div>
+          <label>Padding:</label>
+          <input v-model="content.style.padding" type="text">
+        </div>
+        <div>
+          <label>Background color:</label>
+          <div class="color-input">
+            <input v-model="content.style.backgroundColor" type="color" />
+            <input v-model="content.style.backgroundColor" type="text"/>
+          </div>
+        </div>
+        <div>
+          <label>Horizontal Align:</label>
+          <div class="radio-input align-radio">
+            <button
+              :class="{ 'selected': content.style.justifyContent === 'left' }"
+              @click="content.style.justifyContent = 'left'"
+            >
+              <AlignStartVertical/>
+            </button>
+            <button
+              :class="{ 'selected': content.style.justifyContent === 'center' }"
+              @click="content.style.justifyContent = 'center'"
+            >
+              <AlignCenterVertical/>
+            </button>
+            <button
+              :class="{ 'selected': content.style.justifyContent === 'right' }"
+              @click="content.style.justifyContent = 'right'"
+            >
+              <AlignEndVertical/>
+            </button>
+          </div>
+        </div>
+        <div>
+          <label>Vertical Align:</label>
+          <div class="radio-input align-radio">
+            <button
+              :class="{ 'selected': content.style.alignItems === 'top' }"
+              @click="content.style.alignItems = 'top'"
+            >
+              <AlignVerticalJustifyStart/>
+            </button>
+            <button
+              :class="{ 'selected': content.style.alignItems === 'center' }"
+              @click="content.style.alignItems = 'center'"
+            >
+              <AlignVerticalJustifyCenter/>
+            </button>
+            <button
+              :class="{ 'selected': content.style.alignItems === 'bottom' }"
+              @click="content.style.alignItems = 'bottom'"
+            >
+              <AlignVerticalJustifyEnd/>
+            </button>
+          </div>
+        </div>
+        <div>
+          <label>Item Flow:</label>
+          <div class="radio-input flow-radio">
+            <button
+              :class="{ 'selected': content.style.flexDirection === 'row' }"
+              @click="content.style.flexDirection = 'row'"
+            >
+              <ArrowLeftRight/>
+            </button>
+            <button
+              :class="{ 'selected': content.style.flexDirection === 'column' }"
+              @click="content.style.flexDirection = 'column'"
+            >
+              <ArrowDownUp/>
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -245,5 +345,54 @@ const toggleDropdown = (_, font) => {
 
 .font-dropdown > .dropdown > div:hover {
   background-color: color-mix(in srgb, var(--font-color-dark-blue) 20%, transparent);
+}
+
+.radio-input {
+  background-color: var(--dropdown-color);
+  border: 2px solid var(--font-color-dark-blue);
+  border-radius: 5px;
+  overflow: hidden;
+  height: 40px;
+}
+
+.radio-input .lucide {
+  color: var(--font-color-dark-blue);
+}
+
+.radio-input button {
+  height: 100%;
+  aspect-ratio: 1/1;
+  background-color: var(--dropdown-color);
+  border-radius: 5px;
+}
+
+.radio-input button:first-child {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+.radio-input button:last-child {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.radio-input button:hover {
+  background-color: color-mix(in srgb, var(--font-color-dark-blue) 20%, transparent);
+}
+
+.radio-input button.selected {
+  background-color: var(--font-color-dark-blue);
+}
+
+.radio-input button.selected .lucide {
+  color: var(--dropdown-color);
+}
+
+.align-radio {
+  width: 120px;
+}
+
+.flow-radio {
+  width: 80px;
 }
 </style>
