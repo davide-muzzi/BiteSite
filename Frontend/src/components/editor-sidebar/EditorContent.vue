@@ -38,14 +38,18 @@ const toggleDropdown = (_, font) => {
       @click="emit('open', content.name)"
     >
       <div>{{ content.name }}</div>
-      <div class="eye-icons" @click.stop="content.hidden = !content.hidden">
+      <div
+        class="eye-icons"
+        v-if="'hidden' in content"
+        @click.stop="content.hidden = !content.hidden"
+      >
         <EyeOff v-if="content.hidden === true"/>
         <Eye v-else/>
       </div>
     </button>
     <div class="content-input" v-if="isOpen">
       <div v-if="content.types.includes('text')">
-        <div>
+        <div v-if="!content.types.includes('ro-text')">
           <label>Text:</label>
           <input v-model="content.text" type="text" />
         </div>
@@ -182,6 +186,19 @@ const toggleDropdown = (_, font) => {
             >
               <ArrowDownUp/>
             </button>
+          </div>
+        </div>
+      </div>
+      <div v-if="content.types.includes('bar')">
+        <div>
+          <label>Height:</label>
+          <input v-model="content.style.height" type="text">
+        </div>
+        <div>
+          <label>Background color:</label>
+          <div class="color-input">
+            <input v-model="content.style.backgroundColor" type="color" />
+            <input v-model="content.style.backgroundColor" type="text"/>
           </div>
         </div>
       </div>

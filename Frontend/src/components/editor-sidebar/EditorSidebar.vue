@@ -10,6 +10,7 @@ const selectedPage = computed(() => props.project.website.pages.find(page => pag
 
 <template>
   <div class="sidebar">
+    <EditorComponent :component="project.website.navbar"/>
     <EditorComponent :component="component" v-for="component of selectedPage.components"/>
   </div>
 </template>

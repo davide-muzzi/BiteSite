@@ -5,35 +5,48 @@ import EditorSidebar from "@/components/editor-sidebar/EditorSidebar.vue";
 const project = ref({
 	"projectId": 1,
 	"website": {
-		"navbar": [
-			{
-				"name": "Title",
-				"text": "Cool website",
-				"style": {
-					"color": "green",
-					"fontFamily": "Hack Nerd Font Mono",
-					"fontSize": "22px",
-					"fontWeight": 600
-				}
-			},
-			{
-				"name": "Navigation",
-				"style": {
-					"color": "green",
-					"fontFamily": "Hack Nerd Font Mono",
-					"fontSize": "15px",
-					"fontWeight": 600
-				}
-			},
-			{
-				"name": "Bar",
-				"style": {
-					"backgroundColor": "black",
-					"height": "50px"
-				}
-			}
-		],
-		"pages": [
+    "navbar": {
+      "name": "Navbar",
+      "content": [
+        {
+          "name": "Title",
+          "types": [
+            "text"
+          ],
+          "text": "Cool website",
+          "style": {
+            "color": "green",
+            "fontFamily": "Hack Nerd Font Mono",
+            "fontSize": "22px",
+            "fontWeight": 600
+          }
+        },
+        {
+          "name": "Navigation",
+          "types": [
+            "text",
+            "ro-text"
+          ],
+          "style": {
+            "color": "green",
+            "fontFamily": "Hack Nerd Font Mono",
+            "fontSize": "15px",
+            "fontWeight": 600
+          }
+        },
+        {
+          "name": "Bar",
+          "types": [
+            "bar"
+          ],
+          "style": {
+            "backgroundColor": "black",
+            "height": "50px"
+          }
+        }
+      ],
+    },
+    "pages": [
 			{
 				"name": "Home",
 				"backgroundColor": "#161616",
@@ -54,7 +67,7 @@ const project = ref({
 									"height": "200px",
 									"width": "100%",
 									"justifyContent": "center",
-									"alignItems": "left",
+									"alignItems": "center",
 									"flexDirection": "column",
 									"gap": "20px",
 									"padding": "20px"
