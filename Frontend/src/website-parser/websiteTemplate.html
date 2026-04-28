@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Website Preview</title>
+</head>
+
+<body>
+  <nav>
+    <div>§navbarTitle§</div>
+    <div>
+      §navbarItems§
+    </div>
+  </nav>
+  §pageContent§
+</body>
+
+<style>
+  * {
+    box-sizing: border-box;
+    position: relative;
+    z-index: 0;
+  }
+
+  html,
+  body,
+  main {
+    height: 100%;
+    width: 100%;
+    margin: 0px;
+    padding: 0px;
+  }
+
+  nav {
+    position: fixed;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    z-index: 10;
+  }
+
+  nav > div:first-child {
+    display: flex;
+    align-items: center;
+    margin-left: 20px;
+  }
+  
+  nav > div:last-child {
+    display: flex;
+  }
+
+  nav a {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-decoration: none;
+    padding: 0 20px;
+  }
+
+  §navbarCss§
+
+  .page {
+    width: 100%;
+    height: 100%;
+    padding-top: §navbarHeight§;
+  }
+
+  §pageCss§
+</style>
+
+<script>
+  function showPage() {
+    const hash = location.hash.slice(1);
+    document.querySelectorAll('.page').forEach(page => page.style.display = 'none');
+    const active = document.getElementById(hash);
+    if (active) active.style.display = 'block';
+  }
+  window.addEventListener('hashchange', showPage);
+
+  if (!location.hash) location.hash = "#§firstPage§";
+  showPage();
+</script>
+
+</html>

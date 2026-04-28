@@ -320,23 +320,31 @@ async function makeWebsite(website, route, title) {
     let componentsHtml = "";
     for (const [componentIndex, component] of page.components.entries()) {
 
+      let componentHtml = component.html;
       let componentCss = "";
       for (const [contentIndex, content] of component.content.entries()) {
         const idRegex = new RegExp(`class="${content.id}"`, "g");
         const idReplace = `${content.id}-${page.name.toLowerCase()}-${componentIndex}-${contentIndex}`;
 
-        component.html = component.html.replace(idRegex, `class="${idReplace}"`);
+        componentHtml = componentHtml.replace(idRegex, `class="${idReplace}"`);
 
-        let additionalCss = ""; 
+        let contentStyle = { ...content.style };
+        let additionalCss = "";
 
         if (content.types.includes("text") && !content.types.includes("ro-text")) {
           const textRegex = new RegExp(`§${content.id}§`, "g");
 
-          component.html = component.html.replace(textRegex, content.text);
+          componentHtml = componentHtml.replace(textRegex, content.text);
         }
 
         if (content.types.includes("container")) {
           additionalCss += "display: flex;";
+
+          if (contentStyle.flexDirection === "column") {
+            const tempAlign = contentStyle.justifyContent;
+            contentStyle.justifyContent = contentStyle.alignItems;
+            contentStyle.alignItems = tempAlign;
+          }
         }
 
         if (content.hidden) {
@@ -345,12 +353,12 @@ async function makeWebsite(website, route, title) {
 
         componentCss += `\n.${idReplace} {
           ${additionalCss}
-          ${objectToCSS(content.style)}
+          ${objectToCSS(contentStyle)}
         }`;
       }
 
       pagesCss += componentCss;
-      componentsHtml += component.html;
+      componentsHtml += componentHtml;
     }
 
     pagesHtml += `<div class="page" id="${page.name.toLowerCase()}">

@@ -4,7 +4,8 @@ import { ChevronRight } from "lucide-vue-next";
 
 import EditorContent from "./EditorContent.vue";
 
-const props = defineProps(["component"])
+const props = defineProps(["component"]);
+const emit = defineEmits(["selectContent"]);
 
 const isOpen = ref(false);
 const openContent = ref("");
@@ -32,6 +33,7 @@ const changeOpenContent = (name) => {
               v-for="content of component.content"
               v-if="isOpen"
               @open="changeOpenContent"
+              @click="emit('selectElement', content.id)"
             />
         </div>
     </div>
