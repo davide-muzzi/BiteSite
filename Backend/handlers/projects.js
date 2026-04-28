@@ -278,9 +278,9 @@ async function makeWebsite(website, route, title) {
     navbarItems += `<a href="#${page.name.toLowerCase()}">${page.name[0] + page.name.slice(1)}</a>\n`
   }
 
-  const barItem = navbar.find(x => x.name === "Bar");
-  const titleItem = navbar.find(x => x.name === "Title");
-  const navItem = navbar.find(x => x.name === "Navigation");
+  const barItem = navbar.content.find(x => x.name === "Bar");
+  const titleItem = navbar.content.find(x => x.name === "Title");
+  const navItem = navbar.content.find(x => x.name === "Navigation");
 
   const navbarCss = `
     nav {
@@ -329,7 +329,7 @@ async function makeWebsite(website, route, title) {
 
         let additionalCss = ""; 
 
-        if (content.types.includes("text")) {
+        if (content.types.includes("text") && !content.types.includes("ro-text")) {
           const textRegex = new RegExp(`§${content.id}§`, "g");
 
           component.html = component.html.replace(textRegex, content.text);

@@ -3,14 +3,14 @@ import { computed } from "vue";
 
 import EditorComponent from './EditorComponent.vue'
 
-const props = defineProps(["project", "page"])
+const props = defineProps(["website", "page"])
 
-const selectedPage = computed(() => props.project.website.pages.find(page => page.name == props.page));
+const selectedPage = computed(() => props.website.pages.find(page => page.name == props.page));
 </script>
 
 <template>
   <div class="sidebar">
-    <EditorComponent :component="project.website.navbar"/>
+    <EditorComponent :component="website.navbar"/>
     <EditorComponent :component="component" v-for="component of selectedPage.components"/>
   </div>
 </template>

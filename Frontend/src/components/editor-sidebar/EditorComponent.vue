@@ -62,6 +62,7 @@ const changeOpenContent = (name) => {
     font-weight: 600;
     font-size: 22px;
     z-index: 10;
+    gap: 5px;
 }
 
 .dropdown-content {

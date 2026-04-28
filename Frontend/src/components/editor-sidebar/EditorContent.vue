@@ -119,6 +119,10 @@ const toggleDropdown = (_, font) => {
           <input v-model="content.style.padding" type="text">
         </div>
         <div>
+          <label>Border radius:</label>
+          <input v-model="content.style.borderRadius" type="text">
+        </div>
+        <div>
           <label>Background color:</label>
           <div class="color-input">
             <input v-model="content.style.backgroundColor" type="color" />
@@ -129,8 +133,8 @@ const toggleDropdown = (_, font) => {
           <label>Horizontal Align:</label>
           <div class="radio-input align-radio">
             <button
-              :class="{ 'selected': content.style.justifyContent === 'left' }"
-              @click="content.style.justifyContent = 'left'"
+              :class="{ 'selected': content.style.justifyContent === 'flex-start' }"
+              @click="content.style.justifyContent = 'flex-start'"
             >
               <AlignStartVertical/>
             </button>
@@ -141,8 +145,8 @@ const toggleDropdown = (_, font) => {
               <AlignCenterVertical/>
             </button>
             <button
-              :class="{ 'selected': content.style.justifyContent === 'right' }"
-              @click="content.style.justifyContent = 'right'"
+              :class="{ 'selected': content.style.justifyContent === 'flex-end' }"
+              @click="content.style.justifyContent = 'flex-end'"
             >
               <AlignEndVertical/>
             </button>
@@ -152,8 +156,8 @@ const toggleDropdown = (_, font) => {
           <label>Vertical Align:</label>
           <div class="radio-input align-radio">
             <button
-              :class="{ 'selected': content.style.alignItems === 'top' }"
-              @click="content.style.alignItems = 'top'"
+              :class="{ 'selected': content.style.alignItems === 'flex-start' }"
+              @click="content.style.alignItems = 'flex-start'"
             >
               <AlignVerticalJustifyStart/>
             </button>
@@ -164,8 +168,8 @@ const toggleDropdown = (_, font) => {
               <AlignVerticalJustifyCenter/>
             </button>
             <button
-              :class="{ 'selected': content.style.alignItems === 'bottom' }"
-              @click="content.style.alignItems = 'bottom'"
+              :class="{ 'selected': content.style.alignItems === 'flex-end' }"
+              @click="content.style.alignItems = 'flex-end'"
             >
               <AlignVerticalJustifyEnd/>
             </button>

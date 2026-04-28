@@ -19,6 +19,7 @@ import { useRoute } from "vue-router";
 
 const pageRoute = useRoute();
 
+const projectId = ref(pageRoute.params.projectId);
 const published = ref(false);
 const title = ref("");
 const route = ref("");
@@ -57,7 +58,7 @@ const restaurant = ref({
 
 
 onMounted(async () => {
-  const result = await getSingleProject(pageRoute.params.projectId);
+  const result = await getSingleProject(projectId.value);
 
   if (result.success) {
     name.value = result.project.name;
@@ -209,7 +210,7 @@ onMounted(async () => {
                     <img src="https://placehold.co/600x350" />
                 </div>
 
-                <button class="main-btn">
+                <button class="main-btn" @click="router.push(`/editor/${projectId}`)">
                     <Pencil class="icon" />
                     Open in editor
                 </button>
