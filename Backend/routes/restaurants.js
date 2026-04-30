@@ -11,7 +11,6 @@ restaurantRouter.post("/newsletter/send", checkAuth, routeWrapper(restaurantHand
 restaurantRouter.get("/get", routeWrapper(restaurantHandlers.getAllRestaurants));
 restaurantRouter.get("/get-tags", routeWrapper(restaurantHandlers.getRestaurantsTags));
 restaurantRouter.get("/get-reviews", routeWrapper(restaurantHandlers.getRestaurantsReviews));
+restaurantRouter.get("/get-reservations", checkAuth, routeWrapper(restaurantHandlers.getReservations));
 
-
-
-export default restaurantRouter
+export default restaurantRouter;

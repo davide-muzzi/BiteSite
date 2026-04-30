@@ -174,3 +174,40 @@ export async function getRestaurantsReviews(req, res) {
     reviews: formattedReviews
   });
 }
+
+export async function getReservations(req, res) {
+  const { projectId } = req.query;
+  checkReq(!projectId);
+
+  const project = await safeOperation(
+    () => db.get("select fk_user_id from projects where project_id = ?", [projectId]),
+    "Error while getting project from database"
+  );
+
+  if (!project)
+    return res.status(404).json({ success: false, message: "Project not found" });
+  if (project.fk_user_id !== req.session.user.id)
+    return res.status(403).json({ success: false, message: "Not your project" });
+
+  const reservations = await safeOperation(
+    () => db.all("select * from reservations where fk_project_id = ?", [projectId]),
+    "Error while getting reservations from database"
+  );
+
+  const formattedReservations = reservations.map(reservation => ({
+    reservationId: reservation.reservation_id,
+    name: reservation.name,
+    email: reservation.email,
+    location: reservation.location,
+    people: reservation.people,
+    date: reservation.date,
+    time: reservation.time,
+    status: reservation.status,
+  }));
+
+  res.status(200).json({
+    success: true,
+    message: "Successfully got reservations from database",
+    reservations: formattedReservations
+  });
+}
