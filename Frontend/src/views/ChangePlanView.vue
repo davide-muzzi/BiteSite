@@ -3,6 +3,8 @@ import { Check } from "lucide-vue-next";
 import BackButton from "@/components/BackButton.vue";
 import { useRegisterStore } from "@/stores/register.js";
 import router from "@/router";
+// import { editSubscription } from "@/api/routes/users.js";
+
 
 const store = useRegisterStore();
 
@@ -47,8 +49,14 @@ function selectPlan(plan) {
     router.push("/change-plan/confirm");
 }
 
-function handleCancelSubscription() {
-    console.log("Cancel subscription clicked");
+// function handleCancelSubscription() {
+//   const result = await editSubscription();
+
+//   if (result.success) console.log("Cancel subscription clicked");
+// }
+
+async function handleCancelSubscription() {
+  console.log("Cancel subscription clicked");
 }
 </script>
 

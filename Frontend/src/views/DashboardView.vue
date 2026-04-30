@@ -224,7 +224,7 @@ onMounted(async () => {
                     Manage Reservations
                 </button>
 
-                <button class="main-btn">
+                <button class="main-btn" @click="router.push(`manage-reviews`)">
                     <Star class="icon" />
                     Manage Reviews
                 </button>
