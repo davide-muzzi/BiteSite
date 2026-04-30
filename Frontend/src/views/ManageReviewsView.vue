@@ -1,37 +1,35 @@
 <script setup>
     import { Star } from 'lucide-vue-next';
-    import { ref, computed } from 'vue'
+    import { ref, computed, onMounted } from 'vue'
+    import { useRoute } from 'vue-router'
+    import { getRestaurantsReviews } from '@/api/routes/restaurant.js'
 
+    const pageRoute = useRoute()
     const reviewsEnabled = ref(true)
+    const reviews = ref([])
 
-    //TODO: api dings da
-    const reviews = ref([
-        {
-            id: 1,
-            username: "Julius Maximus24",
-            date: "11.11.2011",
-            rating: 1,
-            title: "Lecker",
-            text: "AHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH"
-        },
-        {
-            id: 2,
-            username: "Janikus Minimus25",
-            date: "06.07.2024",
-            rating: 5,
-            title: "Essen!",
-            text: "Nam Nam Nam Nam Nam Nam Nam"
-        },
-    ])
+    onMounted(async () => {
+        const result = await getRestaurantsReviews(pageRoute.params.projectId)
+        if (result.success) {
+            reviews.value = result.reviews.map(review => ({
+                id: review.reviewId,
+                username: review.reviewName,
+                rating: Number(review.reviewRating),
+                title: review.reviewTitle,
+                text: review.reviewMessage,
+                date: review.reviewDate,
+            }))
+        }
+    })
 
     const reviewCount = computed(() => reviews.value.length)
-    // Claude was here ↓
+
     const averageRating = computed(() => {
         if (reviewCount.value === 0) return 0
         const sum = reviews.value.reduce((acc, r) => acc + r.rating, 0)
         return (sum / reviewCount.value).toFixed(1)
     })
-    // Claude was here ↑
+
 </script>
 
 <template>
