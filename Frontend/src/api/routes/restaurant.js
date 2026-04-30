@@ -27,3 +27,7 @@ export async function getReservations(projectId) {
 export async function acceptReservation(reservationId) {
   return request('patch', '/restaurants/accept-reservation', { data: { reservationId } });
 }
+
+export async function rejectReservation(reservationId) {
+  return request('patch', '/restaurants/reject-reservation', { data: { reservationId } });
+}

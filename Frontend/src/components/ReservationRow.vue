@@ -13,7 +13,7 @@ function handleAccept() {
 }
 
 function handleReject() {
-  console.log('Reject reservation', props.reservation.reservationId)
+  emit('reject', props.reservation.reservationId)
 }
 </script>
 
