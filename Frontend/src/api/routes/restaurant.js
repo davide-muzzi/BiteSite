@@ -19,3 +19,7 @@ export async function getRestaurantsTags(projectId) {
 export async function getRestaurantsReviews(projectId) {
   return request('get', `/restaurants/get-reviews?projectId=${projectId}`);
 }
+
+export async function getReservations(projectId) {
+  return request('get', `/restaurants/get-reservations?projectId=${projectId}`);
+}
