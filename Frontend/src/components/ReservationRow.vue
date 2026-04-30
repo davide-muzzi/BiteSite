@@ -6,12 +6,14 @@ const props = defineProps({
   tab: { type: String, required: true }, // 'requests' | 'accepted' | 'history'
 })
 
+const emit = defineEmits(['accept', 'reject'])
+
 function handleAccept() {
-  console.log('Accept reservation', props.reservation.id)
+  emit('accept', props.reservation.reservationId)
 }
 
 function handleReject() {
-  console.log('Reject reservation', props.reservation.id)
+  emit('reject', props.reservation.reservationId)
 }
 </script>
 
