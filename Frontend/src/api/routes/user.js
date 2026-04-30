@@ -35,3 +35,7 @@ export async function deleteUser() {
 export async function editSubscription(subscription) {
   return request('patch', '/users/edit-subscription', { data: { subscription } })
 }
+
+export async function cancelSubscription() {
+  return request('patch', '/users/cancel-subscription')
+}
