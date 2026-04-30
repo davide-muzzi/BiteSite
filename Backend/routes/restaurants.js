@@ -12,5 +12,6 @@ restaurantRouter.get("/get", routeWrapper(restaurantHandlers.getAllRestaurants))
 restaurantRouter.get("/get-tags", routeWrapper(restaurantHandlers.getRestaurantsTags));
 restaurantRouter.get("/get-reviews", routeWrapper(restaurantHandlers.getRestaurantsReviews));
 restaurantRouter.get("/get-reservations", checkAuth, routeWrapper(restaurantHandlers.getReservations));
+restaurantRouter.patch("/accept-reservation", checkAuth, routeWrapper(restaurantHandlers.acceptReservation));
 
 export default restaurantRouter;

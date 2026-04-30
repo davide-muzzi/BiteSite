@@ -211,3 +211,28 @@ export async function getReservations(req, res) {
     reservations: formattedReservations
   });
 }
+
+export async function acceptReservation(req, res) {
+  const { reservationId } = req.body;
+  checkReq(!reservationId);
+
+  const reservation = await safeOperation(
+    () => db.get(
+      "select reservations.reservation_id, projects.fk_user_id from reservations inner join projects on projects.project_id = reservations.fk_project_id where reservations.reservation_id = ?",
+      [reservationId]
+    ),
+    "Error while getting reservation from database"
+  );
+
+  if (!reservation)
+    return res.status(404).json({ success: false, message: "Reservation not found" });
+  if (reservation.fk_user_id !== req.session.user.id)
+    return res.status(403).json({ success: false, message: "Not your project" });
+
+  await safeOperation(
+    () => db.run("update reservations set status = 'accepted' where reservation_id = ?", [reservationId]),
+    "Error while updating reservation status"
+  );
+
+  res.status(200).json({ success: true, message: "Reservation accepted" });
+}
