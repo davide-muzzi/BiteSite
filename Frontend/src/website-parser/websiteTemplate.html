@@ -77,9 +77,8 @@
     const active = document.getElementById(hash);
     if (active) active.style.display = 'block';
   }
-  window.addEventListener('hashchange', showPage);
 
-  if (!location.hash) location.hash = "#§firstPage§";
+  if (!location.hash) location.hash = "#§selectedPage§";
   showPage();
 </script>
 

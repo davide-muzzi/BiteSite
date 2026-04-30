@@ -24,10 +24,11 @@ const isWebsite = computed(() => route.name === 'restaurant' ? true : false);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  height: 100%;
+  min-height: 100%;
+  gap: 10px;
 }
 
 .router-wrapper {
-  flex: 1;
+  height: 100%;
 }
 </style>

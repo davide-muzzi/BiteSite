@@ -1,7 +1,7 @@
 <script setup>
-import { ref, reactive, onMounted, watch } from "vue";
+import { ref, reactive, onMounted, watch, computed } from "vue";
 import { useRoute } from "vue-router";
-import { Save, ChevronRight, Plus } from "lucide-vue-next";
+import { Save, ChevronRight, Plus, Trash2 } from "lucide-vue-next";
 import { getWebsite, updateWebsite } from "@/api/routes/project.js";
 import EditorSidebar from "@/components/editor-sidebar/EditorSidebar.vue";
 import parseWebsite from "@/website-parser/parseWebsite.js";
@@ -14,9 +14,10 @@ const isSaved = ref(true);
 const doneLoading = ref(false);
 const iframeRef = ref(null);
 const selectedElement = ref("");
-const selectedPage = ref("");
+const selectedPage = ref(0);
 const pageDropdownOpen = ref(false);
 const addPageInput = ref("");
+const pageSettingsOpen = ref(false);
 let ignoreWatch = true;
 
 const handleUpdateWebsite = async () => {
@@ -35,7 +36,7 @@ watch(() => website.value, () => {
 }, { deep: true });
 
 const loadPreview = () => {
-  const html = parseWebsite(website.value, selectedElement.value);
+  const html = parseWebsite(website.value, selectedElement.value, selectedPage.value);
   const doc = iframeRef.value.contentDocument;
 
   doc.open();
@@ -52,9 +53,10 @@ const togglePageDropdown = (_, page) => {
   pageDropdownOpen.value = !pageDropdownOpen.value;
   addPageInput.value = "";
 
-  if (!page) return;
+  if (!page && page !== 0) return;
 
   selectedPage.value = page;
+  loadPreview();
 }
 
 const handleAddPage = (page) => {
@@ -68,13 +70,18 @@ const handleAddPage = (page) => {
   loadPreview();
 }
 
+const handleDeletePage = () => {
+  const deletingPage = selectedPage.value;
+  selectedPage.value = 0;
+  website.value.pages.splice(deletingPage, 1);
+}
+
 onMounted(async () => {
   const result = await getWebsite(projectId.value);
 
   if (result.success) {
     website.value = result.website;
 
-    selectedPage.value = website.value.pages[0].name;
     loadPreview();
     doneLoading.value = true;
   }
@@ -93,7 +100,39 @@ onMounted(async () => {
                   @selectElement="handleSelectElement"
                 />
             </div>
-            <div></div>
+            <div
+              class="page-settings"
+              :class="{ 'open': pageSettingsOpen }"
+            >
+              <div @click="pageSettingsOpen = !pageSettingsOpen">
+                <ChevronRight/>
+                <div>Page Settings</div>
+              </div>
+              <div
+                class="page-settings-body"
+                v-if="pageSettingsOpen"
+              >
+                <div class="page-name-input">
+                  <div>Name:</div>
+                  <input type="text" v-model="website.pages[selectedPage].name"/>
+                </div>
+                <div class="page-color-input">
+                  <div>Background color:</div>
+                  <div>
+                    <input type="color" v-model="website.pages[selectedPage].backgroundColor"/>
+                    <input type="text" v-model="website.pages[selectedPage].backgroundColor"/>
+                  </div>
+                </div>
+                <button
+                  class="delete-page-button"
+                  v-if="selectedPage !== 0"
+                  @click="handleDeletePage"
+                >
+                  <Trash2/>
+                  <div>Delete</div>
+                </button>
+              </div>
+            </div>
         </div>
         <div class="editor-main">
             <div class="editor-topbar">
@@ -105,15 +144,15 @@ onMounted(async () => {
                     @click="togglePageDropdown"
                   >
                     <ChevronRight :class="{ 'open': pageDropdownOpen }"/>
-                    <div>{{ selectedPage}}</div>
+                    <div>{{ website.pages?.[selectedPage].name }}</div>
                   </div>
                   <div
                     class="page-dropdown-body"
                     v-if="pageDropdownOpen"
                   >
                     <div
-                      v-for="page of website.pages"
-                      @click="togglePageDropdown(_, page.name)"
+                      v-for="(page, index) of website.pages"
+                      @click="togglePageDropdown(_, index)"
                     >
                       {{ page.name }}
                     </div>
@@ -159,15 +198,121 @@ h2 {
     box-sizing: border-box;
     background-color: var(--card-color);
     border-top-right-radius: 25px;
+    border-bottom-right-radius: 25px;
     padding: 25px;
-    height: 100%;
+    min-height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 25px;
+}
+
+.page-settings {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  display: grid;
+}
+
+.page-settings * {
+  transition: 0.05s;
+}
+
+.page-settings > div:first-child {
+  display: flex;
+  align-items: center;
+  background-color: var(--accent);
+  color: white;
+  padding: 10px;
+  border-radius: 25px;
+  user-select: none;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 500;
+  grid-area: 1/1;
+  height: 45px;
+  box-sizing: border-box;
+}
+
+.page-settings-body {
+  width: 100%;
+  padding: 10px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.page-settings-body > div > div:first-child {
+  font-weight: 600;
+}
+
+.page-settings input {
+  border: none;
+  color: var(--font-color-dark-blue);
+  font-weight: 500;
+  outline: none;
+}
+
+.page-settings.open > div:first-child .lucide {
+  transform: rotate(90deg);
+}
+
+.page-name-input {
+  display: flex;
+  gap: 5px;
+  flex-direction: column;
+}
+
+.page-color-input {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  gap: 5px;
+}
+
+.page-color-input div:last-child {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  gap: 5px;
+}
+
+.page-settings input[type="text"] {
+  background-color: var(--card-color);
+  border-bottom: 2px solid var(--font-color-dark-blue);
+  flex: 1;
+}
+
+.delete-page-button {
+  background-color: var(--card-color);
+  display: flex;
+  color: var(--font-color-dark-blue);
+  border: 3px solid var(--font-color-dark-blue);
+  justify-content: center;
+  font-size: 18px;
+  gap: 10px;
+  font-weight: 550;
+  height: 40px;
+  align-items: center;
+  border-radius: 25px;
+}
+
+.delete-page-button .lucide {
+  width: 20px;
+  aspect-ratio: 1/1;
+}
+
+.delete-page-button:hover {
+  background-color: var(--font-color-dark-blue);
+  color: white;
 }
 
 .editor-page {
     display: flex;
-    margin-top: 80px;
     height: 100%;
     gap: 10px;
+    min-height: 100vh;
 }
 
 .editor-main {

@@ -6,7 +6,7 @@ import EditorComponent from './EditorComponent.vue'
 const props = defineProps(["website", "page"]);
 const emit = defineEmits(["selectElement"]);
 
-const selectedPage = computed(() => props.website.pages.find(page => page.name == props.page));
+const selectedPage = computed(() => props.website.pages[props.page]);
 </script>
 
 <template>

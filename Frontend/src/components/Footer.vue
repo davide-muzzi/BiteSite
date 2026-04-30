@@ -44,6 +44,7 @@ const isSimple = computed(() => props.variant === "simple");
 <style scoped>
 .site-footer {
   font-family: var(--font);
+  box-sizing: border-box;
 }
 
 .site-footer.default {

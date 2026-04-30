@@ -11,7 +11,7 @@ function objectToCSS(object) {
   return css
 }
 
-export default function parseWebsite(website, selectedElement) {
+export default function parseWebsite(website, selectedElement, selectedPage) {
   let htmlContent = websiteTemplate;
 
   const navbar = website.navbar;
@@ -39,7 +39,7 @@ export default function parseWebsite(website, selectedElement) {
       ${objectToCSS(navItem.style)}
     }
 
-    nav a:hover {
+    nav a[href="#${pages[selectedPage].name.toLowerCase()}"] {
       color: ${barItem.style.backgroundColor};
       background-color: ${navItem.style.color};
     }`;
@@ -51,7 +51,7 @@ export default function parseWebsite(website, selectedElement) {
     .replace(/§navbarHeight§/, barItem.style.height);
 
   htmlContent = htmlContent
-    .replace(/§firstPage§/, pages[0].name.toLowerCase());
+    .replace(/§selectedPage§/, pages[selectedPage].name.toLowerCase());
 
   let pagesHtml = "";
   let pagesCss = "";
