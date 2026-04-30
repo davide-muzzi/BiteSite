@@ -10,7 +10,7 @@
             id: 1,
             username: "Julius Maximus24",
             date: "11.11.2011",
-            rating: 4,
+            rating: 1,
             title: "Lecker",
             text: "AHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH"
         },
