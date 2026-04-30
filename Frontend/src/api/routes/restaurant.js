@@ -23,3 +23,7 @@ export async function getRestaurantsReviews(projectId) {
 export async function getReservations(projectId) {
   return request('get', `/restaurants/get-reservations?projectId=${projectId}`);
 }
+
+export async function acceptReservation(reservationId) {
+  return request('patch', '/restaurants/accept-reservation', { data: { reservationId } });
+}

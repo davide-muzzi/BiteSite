@@ -5,7 +5,7 @@ import { Search, TriangleAlert, X } from 'lucide-vue-next'
 import BackButton from '@/components/BackButton.vue'
 import ReservationRow from '@/components/ReservationRow.vue'
 import ReservationPagination from '@/components/ReservationPagination.vue'
-import { getReservations } from '@/api/routes/restaurant.js'
+import { getReservations, acceptReservation } from '@/api/routes/restaurant.js'
 
 const route = useRoute()
 const activeTab = ref('requests')
@@ -58,6 +58,13 @@ function setTab(tab) {
 function handlePageChange(page) {
   currentPage.value = page
 }
+
+async function handleAccept(reservationId) {
+  const response = await acceptReservation(reservationId)
+  if (!response.success) return
+  const reservation = reservations.value.find(r => r.reservationId === reservationId)
+  if (reservation) reservation.status = 'accepted'
+}
 </script>
 
 <template>
@@ -91,7 +98,7 @@ function handlePageChange(page) {
 
       <div class="list">
         <ReservationRow v-for="reservation in currentData" :key="reservation.reservationId" :reservation="reservation"
-          :tab="activeTab" />
+          :tab="activeTab" @accept="handleAccept" />
       </div>
 
       <ReservationPagination :current-page="currentPage" :total-pages="totalPages" @page-change="handlePageChange" />
