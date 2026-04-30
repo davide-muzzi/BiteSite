@@ -276,23 +276,6 @@ const toggleDropdown = (_, font) => {
   border-bottom: 2px solid var(--font-color-dark-blue);
 }
 
-.content-input input[type="color"] {
-  background-color: var(--font-color-dark-blue);
-  padding: 1px;
-  width: 24px;
-  height: 24px;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-.content-input input[type="color"]::-moz-color-swatch,
-.content-input input[type="color"]::-webkit-color-swatch {
-  border-radius: 4px;
-  border: none;
-  width: 92%;
-  height: 92%;
-}
-
 .content-input > div {
   display: flex;
   flex-direction: column;
