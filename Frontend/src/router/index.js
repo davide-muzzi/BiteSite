@@ -11,6 +11,7 @@ import RegisterView from '@/views/RegisterView.vue'
 import Step01Register from '@/components/register-steps/Step01Register.vue'
 import Step02Register from '@/components/register-steps/Step02Register.vue'
 import Step03Register from '@/components/register-steps/Step03Register.vue'
+import Editor from '@/views/Editor.vue'
 import NewsletterView from '@/views/NewsletterView.vue'
 import WebsiteView from '@/views/WebsiteView.vue'
 import ChangePlanView from '@/views/ChangePlanView.vue'
@@ -19,6 +20,7 @@ import AboutPage from '@/views/footer-links/AboutPage.vue'
 import LegalPage from '@/views/footer-links/LegalPage.vue'
 import ContactPage from '@/views/footer-links/ContactPage.vue'
 import ManageReviewsView from '@/views/ManageReviewsView.vue'
+import ReservationsView from '@/views/ReservationsView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -75,6 +77,11 @@ const router = createRouter({
       ],
     },
     {
+      path: '/editor',
+      name: 'editor',
+      component: Editor,
+    },
+    {
       path: '/:id/newsletter',
       name: 'newsletter',
       component: NewsletterView,
@@ -113,6 +120,11 @@ const router = createRouter({
       path: '/manage-reviews',
       name: 'managereviews',
       component: ManageReviewsView
+    },
+    {
+      path: '/:id/reservations',
+      name: 'reservations',
+      component: ReservationsView,
     },
   ],
 })

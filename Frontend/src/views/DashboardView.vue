@@ -12,6 +12,7 @@ import {
   Save
 } from "lucide-vue-next";
 import BackButton from "@/components/BackButton.vue";
+import { getAllRestaurants, getRestaurantsTags, getRestaurantsReviews } from "@/api/routes/restaurant.js";
 import { editProject, getSingleProject, togglePublish, deleteProject } from "@/api/routes/project.js";
 import router from "@/router";
 import { useRoute } from "vue-router";
@@ -30,8 +31,12 @@ const handleTogglePublish = async () =>  {
 }
 
 const handleEditProject = async (newTitle) => {
-  const result = await editProject(pageRoute.params.projectId, route.value, name.value, title.value);
-
+  const result = await editProject({
+    projectId: pageRoute.params.projectId,
+    route: route.value,
+    name: name.value,
+    title: title.value
+  });
   if (result.success) console.log("Edited project");
 };
 
@@ -43,6 +48,14 @@ const handleDeleteProject = async () => {
   window.location.href = 'http://localhost:5173/projects-overview'
 };
 
+const rating = ref(0)
+
+const restaurant = ref({
+  reviews: [],
+  averageRating: 0
+})
+
+
 onMounted(async () => {
   const result = await getSingleProject(pageRoute.params.projectId);
 
@@ -52,6 +65,31 @@ onMounted(async () => {
     route.value = result.project.websiteRoute;
     published.value = result.project.published;
   }
+
+  const reviewsResult = await getRestaurantsReviews(pageRoute.params.projectId);
+
+  if (reviewsResult.success) {
+    restaurant.value.reviews = reviewsResult.reviews;
+  } else {
+    restaurant.value.reviews = [];
+  }
+
+  let totalReviews = restaurant.value.reviews.length;
+  let sumReviews = 0;
+
+  for (const review of restaurant.value.reviews) {
+    sumReviews += Number(review.reviewRating); // sicherheitshalber casten
+  }
+
+  if (totalReviews > 0) {
+    restaurant.value.averageRating = sumReviews / totalReviews;
+    restaurant.value.sumReviews = sumReviews;
+  } else {
+    restaurant.value.averageRating = 0;
+    restaurant.value.sumReviews = 0;
+  }
+
+  rating.value = restaurant.value.averageRating;
 });
 </script>
 
@@ -129,9 +167,10 @@ onMounted(async () => {
 
                         <div class="rating-row">
                             <div>
-                                <div class="stat-label">39 Reviews</div>
+                              <div v-if="restaurant.reviews.length === 1"  class="stat-label">{{ restaurant.reviews.length }} Review</div>
+                                <div v-else class="stat-label">{{ restaurant.reviews.length }} Reviews</div>
                                 <div class="rating-value">
-                                    4.9
+                                 {{ restaurant.averageRating.toFixed(1) }}
                                     <Star class="star" />
                                 </div>
                             </div>

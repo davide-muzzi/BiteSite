@@ -255,7 +255,8 @@ function objectToCSS(object) {
   let css = "";
 
   for (const [key, value] of Object.entries(object)) {
-    css += `${key}: ${value} !important;\n`
+    const kebabKey = key.replace(/[A-Z]/g, capital => `-${capital.toLowerCase()}`);
+    css += `${kebabKey}: ${value};\n`
   }
 
   return css
@@ -267,31 +268,42 @@ async function makeWebsite(website, route, title) {
     "Error while reading website html file"
   );
 
-  htmlContent = htmlContent.replace(/\|websiteTitle\|/g, title);
+  htmlContent = htmlContent.replace(/§websiteTitle§/g, title);
 
   const navbar = website.navbar;
   const pages = website.pages;
 
   let navbarItems = "";
-
   for (const page of pages) {
     navbarItems += `<a href="#${page.name.toLowerCase()}">${page.name[0] + page.name.slice(1)}</a>\n`
   }
 
-  htmlContent = htmlContent
-    .replace(/\|navbarItems\|/, navbarItems)
-    .replace(/\|navbarBackground\|/g, navbar.backgroundColor)
-    .replace(/\|navbarColor\|/g, navbar.textColor)
-    .replace(/\|navbarHeight\|/g, navbar.height)
-    .replace(/\|navbarWidth\|/g, navbar.width)
-    .replace(/\|navbarBorderRadius\|/g, navbar.borderRadius)
-    .replace(/\|navbarAdditionalBarCSS\|/, objectToCSS(navbar.barCss))
-    .replace(/\|navbarAdditionalContainerCSS\|/, objectToCSS(navbar.containerCss))
-    .replace(/\|navbarAdditionalTitleCSS\|/, objectToCSS(navbar.titleCss))
-    .replace(/\|navbarAdditionalItemCSS\|/, objectToCSS(navbar.itemCss));
+  const navbarCss = `
+    nav {
+      ${objectToCSS(navbar.bar.style)}   
+    }
+
+    nav > div:first-child {
+      ${objectToCSS(navbar.title.style)}
+    }
+
+    nav a {
+      ${objectToCSS(navbar.navigation.style)}  
+    }
+
+    nav a:hover {
+      color: ${navbar.bar.style.backgroundColor};
+      background-color: ${navbar.navigation.style.color};
+    }`;
 
   htmlContent = htmlContent
-    .replace(/\|firstPage\|/, pages[0].name.toLowerCase());
+    .replace(/§navbarItems§/, navbarItems)
+    .replace(/§navbarCss§/, navbarCss)
+    .replace(/§navbarTitle§/, navbar.title.text)
+    .replace(/§navbarHeight§/, navbar.bar.style.height);
+
+  htmlContent = htmlContent
+    .replace(/§firstPage§/, pages[0].name.toLowerCase());
 
   let pagesHtml = "";
   let pagesCss = "";
@@ -302,12 +314,39 @@ async function makeWebsite(website, route, title) {
     }`;
 
     let componentsHtml = "";
-    for (const [index, component] of page.content.entries()) {
-      const componentId = `component-${page.name.toLowerCase()}-${index}`;
-      componentsHtml += `<div id="${componentId}">${component.html}</div>\n`;
-      pagesCss += `#${componentId}>* {
-        ${objectToCSS(component.css)}
-      }`;
+    for (const [componentIndex, component] of page.components.entries()) {
+
+      let componentCss = "";
+      for (const [contentIndex, content] of component.content.entries()) {
+        const idRegex = new RegExp(`class="${content.id}"`, "g");
+        const idReplace = `${content.id}-${page.name.toLowerCase()}-${componentIndex}-${contentIndex}`;
+
+        component.html = component.html.replace(idRegex, `class="${idReplace}"`);
+
+        let additionalCss = ""; 
+
+        if (content.types.includes("text")) {
+          const textRegex = new RegExp(`§${content.id}§`, "g");
+
+          component.html = component.html.replace(textRegex, content.text);
+        }
+
+        if (content.types.includes("container")) {
+          additionalCss += "display: flex;";
+        }
+
+        if (content.hidden) {
+          additionalCss += "display: none !important;";
+        }
+
+        componentCss += `\n.${idReplace} {
+          ${additionalCss}
+          ${objectToCSS(content.style)}
+        }`;
+      }
+
+      pagesCss += componentCss;
+      componentsHtml += component.html;
     }
 
     pagesHtml += `<div class="page" id="${page.name.toLowerCase()}">
@@ -316,9 +355,8 @@ async function makeWebsite(website, route, title) {
   }
 
   htmlContent = htmlContent
-    .replace(/\|pageContent\|/, pagesHtml)
-    .replace(/\|pageCss\|/, pagesCss)
-    .replace(/§/g, "");
+    .replace(/§pageContent§/, pagesHtml)
+    .replace(/§pageCss§/, pagesCss);
 
   await safeOperation(
     () => writeFile(`./websites/${route}.html`, htmlContent),

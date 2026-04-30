@@ -1,24 +1,63 @@
 <script setup>
+import { ref, onMounted, computed } from "vue";
 import { Search, Star } from "lucide-vue-next";
+import { getAllRestaurants, getRestaurantsTags, getRestaurantsReviews } from "@/api/routes/restaurant.js";
 
-const restaurants = [
-  {
-    id: "pizza-palace",
-    icon: "🍕",
-    name: "Pizza Place",
-    tags: ["Italian", "Pizza"],
-    rating: 5,
-    website: "https://pizza.example.com",
-  },
-  {
-    id: "sushi-star",
-    icon: "🍣",
-    name: "Sushi Star",
-    tags: ["Sushi", "Asian", "Fresh"],
-    rating: 4,
-    website: "https://sushistar.example.com",
-  },
-];
+const restaurants = ref([]);
+
+onMounted(async () => {
+  const result = await getAllRestaurants();
+  console.log("Restaurants:", result);
+
+  if (result.success) {
+    restaurants.value = result.projects;
+
+    for (const restaurant of restaurants.value) {
+
+      const tagsResult = await getRestaurantsTags(restaurant.projectId);
+      console.log(tagsResult);
+
+      if (tagsResult.success) {
+        restaurant.tags = tagsResult.tags;
+      } else {
+        restaurant.tags = [];
+      }
+
+      const reviewsResult = await getRestaurantsReviews(restaurant.projectId);
+
+      if (reviewsResult.success) {
+        restaurant.reviews = reviewsResult.reviews;
+        console.log(reviewsResult);
+      } else {
+        restaurant.reviews = [];
+      }
+
+      let totalReviews = restaurant.reviews.length;
+      let sumReviews = 0;
+
+      for (const review of restaurant.reviews) {
+        sumReviews += review.reviewRating;      }
+
+      if (totalReviews > 0) {
+        restaurant.averageRating = sumReviews / totalReviews;
+      } else {
+        restaurant.averageRating = 0;
+      }
+    }
+  }
+});
+
+const searchQuery = ref("");
+const sortedRestaurants = computed(() => {
+
+  return restaurants.value
+    .filter(r => r.websiteTitle.toLowerCase().includes(searchQuery.value.toLowerCase()))
+    .sort((a, b) => b.averageRating - a.averageRating)
+});
+
+function visitSite(url) {
+  window.location.href = url
+}
 </script>
 
 <template>
@@ -29,34 +68,32 @@ const restaurants = [
         <p>Browse standout restaurant sites created by BiteSite clients and rated top-notch.</p>
       </div>
       <div class="search">
-        <input type="search" placeholder="Search restaurants..." />
+        <input type="search" v-model="searchQuery" placeholder="Search restaurants..."/>
         <button type="button" aria-label="Search">
           <Search class="search-icon" />
         </button>
       </div>
     </div>
 
+
     <div class="restaurant-list">
-      <article v-for="restaurant in restaurants" :key="restaurant.id" class="restaurant-card">
-        <span class="icon">{{ restaurant.icon }}</span>
+      <article v-for="restaurant in sortedRestaurants" :key="restaurant.id" class="restaurant-card">
+         <span class="icon">{{ restaurant.icon }}</span>
         <div class="details">
           <div class="title-row">
-            <h2>{{ restaurant.name }}</h2>
-            <div class="rating" :aria-label="`Rated ${restaurant.rating} stars`">
-              <span>{{ restaurant.rating.toFixed(1) }}</span>
-              <Star class="star" />
+            <h2>{{ restaurant.websiteTitle }}</h2>
+             <div class="rating" :aria-label="`Rated ${restaurant.averageRating} stars`">
+               {{ restaurant.averageRating ? restaurant.averageRating.toFixed(1) : "0.0" }}               <Star class="star" />
             </div>
           </div>
           <div class="tags">
             <span v-for="tag in restaurant.tags" :key="tag" class="tag">
-              #{{ tag }}
+              {{ tag.name }}
             </span>
           </div>
         </div>
-        <div v-if="restaurant.website" class="actions">
-          <a :href="restaurant.website" class="visit-link" target="_blank" rel="noopener">
-            Visit Site
-          </a>
+         <div  class="actions">
+           <div class="visit-link" @click="visitSite(restaurant.websiteRoute)">Visit Site</div>
         </div>
       </article>
     </div>
