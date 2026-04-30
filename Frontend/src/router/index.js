@@ -117,7 +117,7 @@ const router = createRouter({
       component: WebsiteView
     },
     {
-      path: '/manage-reviews',
+      path: '/manage-reviews/:projectId',
       name: 'managereviews',
       component: ManageReviewsView
     },

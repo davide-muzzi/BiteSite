@@ -91,6 +91,15 @@ onMounted(async () => {
 
   rating.value = restaurant.value.averageRating;
 });
+
+
+// const handleProjectClick = async () => {
+//   if (project.projectId === 0) {
+//     router.push("/create-project");
+//   } else {
+//     router.push(`/dashboard/${pageRoute.params.projectId}};
+//   }
+// };
 </script>
 
 <template>
@@ -224,16 +233,17 @@ onMounted(async () => {
                     Manage Reservations
                 </button>
 
-                <button class="main-btn">
-                    <Star class="icon" />
+                <button class="main-btn" @click="router.push(`/manage-reviews/${pageRoute.params.projectId}`)">
+                   <Star class="icon" />
                     Manage Reviews
                 </button>
 
             </div>
 
         </div>
-
     </div>
+
+
 </template>
 
 <style scoped>
