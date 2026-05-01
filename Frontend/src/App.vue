@@ -58,9 +58,6 @@ const isWebsite = computed(() => route.name === 'restaurant' ? true : false);
     z-index: 9999;
     background: var(--background);
     padding: 2rem;
-    margin-right: 2rem;
-    margin-left: -2rem;
-    margin-top: -8rem;
   }
 
   .mobile-wall__card {
