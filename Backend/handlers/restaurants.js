@@ -2,10 +2,11 @@ import { db } from "../database/db.js";
 import { safeOperation, checkReq, safeOperations } from "../error-handling.js";
 import { existsSync } from "fs";
 import { readFile } from "fs/promises";
+import { basename } from "path";
 import { mailer } from "../mailer.js";
 
 export async function serveWebsite(req, res) {
-  const { route } = req.params;
+  const route = basename(req.params.route);
 
   const websitePath = `./websites/${route}.html`;
 
