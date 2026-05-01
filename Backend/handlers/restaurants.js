@@ -42,8 +42,6 @@ export async function subscribeToNewsletter(req, res) {
 
   if (!project)
     return res.status(404).json({ success: false, message: "Project not found" });
-  if (project.fk_user_id !== req.session.user.id)
-    return res.status(403).json({ success: false, message: "Not your project" });
 
   const existingSubscriber = await safeOperation(
     () => db.get(
