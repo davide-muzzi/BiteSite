@@ -2,6 +2,7 @@
 import router from "@/router";
 import { checkLogin } from "@/api/routes/user.js";
 import { onMounted, ref } from "vue";
+import { Star } from "lucide-vue-next";
 
 const loggedIn = ref("");
 
@@ -23,7 +24,7 @@ onMounted(async () => {
       </p>
       <div class="hero-actions">
         <button class="btn-primary" @click="router.push(loggedIn ? '/projects-overview' : '/register')">
-          Get Started Free
+          Get Started
         </button>
         <button class="btn-ghost" @click="router.push('/top-restaurants')">
           Browse Restaurants
@@ -48,7 +49,7 @@ onMounted(async () => {
       <div class="step">
         <div class="step-number">01</div>
         <h3>Create your account</h3>
-        <p>Sign up in seconds. No credit card required to get started.</p>
+        <p>Sign up in seconds and set up your first project right away.</p>
       </div>
       <div class="step-divider" />
       <div class="step">
@@ -71,22 +72,22 @@ onMounted(async () => {
     <h2 class="section-title">Why BiteSite?</h2>
     <div class="features">
       <div class="feature-card">
-        <div class="feature-icon">✦</div>
+        <Star class="feature-icon" :size="22" />
         <h3>No coding required</h3>
         <p>Our intuitive editor lets anyone build a professional site — no tech knowledge needed.</p>
       </div>
       <div class="feature-card">
-        <div class="feature-icon">◈</div>
+        <Star class="feature-icon" :size="22" />
         <h3>Ready-made templates</h3>
         <p>Start from a curated restaurant template or build a fully custom design from scratch.</p>
       </div>
       <div class="feature-card">
-        <div class="feature-icon">◉</div>
+        <Star class="feature-icon" :size="22" />
         <h3>Effortless hosting</h3>
         <p>We handle the technical side. Your site goes live instantly, always fast and secure.</p>
       </div>
       <div class="feature-card">
-        <div class="feature-icon">◆</div>
+        <Star class="feature-icon" :size="22" />
         <h3>Easy to use</h3>
         <p>Designed for hospitality teams, not developers. Update your content in minutes.</p>
       </div>
@@ -98,7 +99,7 @@ onMounted(async () => {
     <h2 class="cta-title">Ready to get your restaurant online?</h2>
     <p class="cta-sub">Join restaurants already growing with BiteSite.</p>
     <button class="btn-primary cta-btn" @click="router.push(loggedIn ? '/projects-overview' : '/register')">
-      Start for Free
+      Start Now
     </button>
   </section>
 </template>
@@ -255,7 +256,7 @@ onMounted(async () => {
   font-size: 52px;
   font-weight: 900;
   color: var(--accent);
-  opacity: 0.2;
+  opacity: 1;
   line-height: 1;
   margin-bottom: 20px;
 }
@@ -304,9 +305,9 @@ onMounted(async () => {
 }
 
 .feature-icon {
-  font-size: 22px;
   color: var(--accent);
   margin-bottom: 18px;
+  display: block;
 }
 
 .feature-card h3 {
