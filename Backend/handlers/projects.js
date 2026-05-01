@@ -11,7 +11,7 @@ const escapeHtml = (str) => String(str)
 
 export async function createProject(req, res) {
   const { name, title, route, tags, templateName } = req.body;
-  checkReq(!name || !title || !route || !tags || !templateName);
+  checkReq(!name.trim() || !title.trim() || !route.trim() || !tags.trim() || !templateName);
 
   const routeProject = await safeOperation(
     () => db.get("select project_id, fk_user_id from projects where website_route = ?", [route.toLowerCase()]),
@@ -155,11 +155,11 @@ export async function editProject(req, res) {
   if (project.fk_user_id !== req.session.user.id)
     return res.status(403).json({ success: false, message: "Not your project" });
 
-  if (route && route !== project.website_route)
+  if (route.trim() && route !== project.website_route)
     await editRoute(projectId, route, project.website_route, project.published);
-  if (title && title !== project.website_title)
+  if (title.trim() && title !== project.website_title)
     await editTitle(projectId, title, JSON.parse(project.website), project.website_route);
-  if (name && name !== project.name)
+  if (name.trim() && name !== project.name)
     await editName(projectId, name);
 
   res.status(200).json({ success: true, message: "Successfully edited project" });

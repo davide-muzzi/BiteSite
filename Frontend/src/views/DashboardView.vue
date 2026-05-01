@@ -34,13 +34,18 @@ const handleTogglePublish = async () =>  {
 }
 
 const handleEditProject = async (newTitle) => {
+  if (
+    !title.value.trim() ||
+    !name.value.trim() ||
+    !route.value.trim()
+  ) return;
+
   const result = await editProject({
     projectId: pageRoute.params.projectId,
     route: route.value,
     name: name.value,
     title: title.value
   });
-  if (result.success) console.log("Edited project");
 };
 
 const handleDeleteProject = async () => {
