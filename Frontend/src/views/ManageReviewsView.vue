@@ -24,11 +24,13 @@
 
     const reviewCount = computed(() => reviews.value.length)
 
+    // AI 
     const averageRating = computed(() => {
         if (reviewCount.value === 0) return 0
         const sum = reviews.value.reduce((acc, r) => acc + r.rating, 0)
         return (sum / reviewCount.value).toFixed(1)
     })
+    // AI
 
 </script>
 
