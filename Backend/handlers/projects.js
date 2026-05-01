@@ -10,8 +10,15 @@ const escapeHtml = (str) => String(str)
   .replace(/'/g, "&#39;");
 
 export async function createProject(req, res) {
-  const { name, tags, templateName } = req.body;
-  checkReq(!name || !tags || !templateName);
+  const { name, title, route, tags, templateName } = req.body;
+  checkReq(!name || !title || !route || !tags || !templateName);
+
+  const routeProject = await safeOperation(
+    () => db.get("select project_id, fk_user_id from projects where website_route = ?", [route.toLowerCase()]),
+    "Error while checking if route exists"
+  );
+
+  if (routeProject) return res.status(409).json({ success: false, message: "Route is already registered" });
 
   if (templateName !== "blank") return res.status(400).json({ success: false, message: "Not a recognized template" });
   const template = {
@@ -107,7 +114,7 @@ export async function createProject(req, res) {
     "Error while inserting tag references"
   );
 
-  res.status(200).json({ success: true, message: "Successfully created project" });
+  res.status(200).json({ success: true, message: "Successfully created project", projectId: projectInsert.lastID });
 }
 
 export async function deleteProject(req, res) {

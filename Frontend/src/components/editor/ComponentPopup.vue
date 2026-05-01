@@ -87,7 +87,6 @@ onMounted(() => {
   left: 325px;
   top: -70px;
   width: calc((100vw - 350px) - 20px);
-  height: 50vh;
   background-color: var(--card-color);
   border-top-right-radius: 25px;
   border-bottom-right-radius: 25px;

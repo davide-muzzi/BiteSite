@@ -9,7 +9,8 @@ import {
   User,
   Trash,
   Check,
-  Save
+  Save,
+  Copy
 } from "lucide-vue-next";
 import BackButton from "@/components/BackButton.vue";
 import { getAllRestaurants, getRestaurantsTags, getRestaurantsReviews } from "@/api/routes/restaurant.js";
@@ -24,6 +25,7 @@ const published = ref(false);
 const title = ref("");
 const route = ref("");
 const name = ref("");
+const apiUrl = ref(import.meta.env.VITE_API_URL + "/restaurants/website/");
 
 const handleTogglePublish = async () =>  {
   const result = await togglePublish(pageRoute.params.projectId);
@@ -44,9 +46,7 @@ const handleEditProject = async (newTitle) => {
 const handleDeleteProject = async () => {
   const result = await deleteProject(pageRoute.params.projectId)
 
-  if (result.success) console.log("Deleted Project");
-
-  window.location.href = 'http://localhost:5173/projects-overview'
+  if (result.success) router.push("/projects-overview");
 };
 
 const rating = ref(0)
@@ -55,6 +55,10 @@ const restaurant = ref({
   reviews: [],
   averageRating: 0
 })
+
+const copyUrlToClipboard = async () => {
+  await navigator.clipboard.writeText(apiUrl.value + route.value);
+}
 
 
 onMounted(async () => {
@@ -125,11 +129,14 @@ onMounted(async () => {
                 </div>
 
                 <div class="field">
-                    <label>Route (must be unique):</label>
+                    <div class="route-label-line">
+                      <label>Route (must be unique):</label>
+                      <Copy @click="copyUrlToClipboard"/>
+                    </div>
 
                     <div class="subdomain">
                         <div class="domain">
-                            bitesite.com/restaurant/
+                          {{ apiUrl }}
                         </div>
                         <input class="sub-input" placeholder="bitesfood" v-model="route"/>
                         <Check class="icon check" />
@@ -248,6 +255,10 @@ onMounted(async () => {
 </template>
 
 <style scoped>
+* {
+  box-sizing: border-box;
+}
+
 .dashboard {
     padding: 40px 80px;
     font-family: var(--font);
@@ -419,5 +430,20 @@ button {
 .icon {
     width: 18px;
     height: 18px;
+}
+
+.route-label-line {
+  display: flex;
+  justify-content: space-between;
+}
+
+.route-label-line .lucide {
+  width: 20px;
+  aspect-ratio: 1/1;
+  cursor: pointer;
+}
+
+.route-label-line .lucide:active {
+  transform: scale(0.9);
 }
 </style>

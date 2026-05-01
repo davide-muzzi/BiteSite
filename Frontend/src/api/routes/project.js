@@ -1,7 +1,7 @@
 import request from '../request.js';
 
-export async function createProject(name, tags, templateName) {
-  return request('post', '/projects/create', { data: { name, tags, templateName } })
+export async function createProject(name, title, route, tags, templateName) {
+  return request('post', '/projects/create', { data: { name, title, route, tags, templateName } })
 }
 
 export async function editProject({ projectId, route, name, title }) {
