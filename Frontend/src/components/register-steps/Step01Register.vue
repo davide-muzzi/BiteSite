@@ -14,7 +14,7 @@ const errorMessage = ref('');
 const handleregister = async () => {
     if (!username.value.trim()) return;
     if (!email.value.includes("@")) return;
-    if (password.value.length < 3) return;
+    if (password.value.length < 8) return;
 
     const result = await checkRegister(username.value, email.value);
 
