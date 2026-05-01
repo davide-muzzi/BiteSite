@@ -39,3 +39,7 @@ export async function editSubscription(subscription) {
 export async function cancelSubscription() {
   return request('patch', '/users/cancel-subscription')
 }
+
+export async function payment() {
+  return request('post', '/users/payment')
+}

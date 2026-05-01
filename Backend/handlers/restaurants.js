@@ -174,3 +174,19 @@ export async function getRestaurantsReviews(req, res) {
     reviews: formattedReviews
   });
 }
+
+export async function writeRestaurantsReviews(req, res) {
+  const { name, rating, title, message, fk_project_id } = req.body;
+  const date = new Date().toISOString().split("T")[0]; 
+  // ^^^^chatgpt
+    
+  checkReq(!name || !rating || !title || !message || !date || !fk_project_id);
+
+  await safeOperation(
+    () => db.run("insert into reviews (name, rating, title, message, date, fk_project_id) values (?,?,?,?,?,?)",
+    [name, rating, title, message, date, fk_project_id]),
+    "Error while inserting project into database"
+  );
+
+  res.status(200).json({ success: true, message: "Successfully saved review" });
+}

@@ -11,6 +11,7 @@ restaurantRouter.post("/newsletter/send", checkAuth, routeWrapper(restaurantHand
 restaurantRouter.get("/get", routeWrapper(restaurantHandlers.getAllRestaurants));
 restaurantRouter.get("/get-tags", routeWrapper(restaurantHandlers.getRestaurantsTags));
 restaurantRouter.get("/get-reviews", routeWrapper(restaurantHandlers.getRestaurantsReviews));
+restaurantRouter.post("/save-reviews", routeWrapper(restaurantHandlers.writeRestaurantsReviews));
 
 
 
