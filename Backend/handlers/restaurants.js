@@ -176,7 +176,7 @@ export async function getRestaurantsReviews(req, res) {
   const { projectId } = req.query;
 
   const restaurantsReviews = await safeOperation(
-    () => db.all('select * from reviews where fk_project_id = ?', projectId), "Error while getting tags from database"
+    () => db.all('select * from reviews where fk_project_id = ?', [projectId]), "Error while getting tags from database"
   );
   const formattedReviews = restaurantsReviews.map(review => ({
     reviewId: review.review_id,
