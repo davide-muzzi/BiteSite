@@ -12,7 +12,7 @@ const isWebsite = computed(() => route.name === 'restaurant' ? true : false);
 <template>
   <div class="mobile-wall">
     <div class="mobile-wall__card">
-      <img src="/bitesite-favicon.svg" alt="BiteSite Logo" class="mobile-wall__logo" />
+      <span class="mobile-wall__logo">BiteSite</span>
       <div class="mobile-wall__icon">🖥️</div>
       <h1 class="mobile-wall__title">Switch to desktop</h1>
       <p class="mobile-wall__text">
@@ -58,6 +58,9 @@ const isWebsite = computed(() => route.name === 'restaurant' ? true : false);
     z-index: 9999;
     background: var(--background);
     padding: 2rem;
+    margin-right: 2rem;
+    margin-left: -2rem;
+    margin-top: -8rem;
   }
 
   .mobile-wall__card {
@@ -70,10 +73,10 @@ const isWebsite = computed(() => route.name === 'restaurant' ? true : false);
   }
 
   .mobile-wall__logo {
-    width: 72px;
-    height: 72px;
-    border-radius: 18px;
-    box-shadow: 0 4px 24px rgba(253, 4, 60, 0.15);
+    font-family: var(--font), sans-serif;
+    font-size: 2rem;
+    font-weight: 900;
+    color: var(--accent);
   }
 
   .mobile-wall__icon {
