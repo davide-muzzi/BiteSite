@@ -23,10 +23,6 @@
 <style scoped>
 .site-footer {
   font-family: var(--font);
-  box-sizing: border-box;
-}
-
-.site-footer.default {
   background: #1b133d;
   color: white;
   padding: 48px 60px;
