@@ -2,10 +2,11 @@ import { db } from "../database/db.js";
 import { safeOperation, checkReq, safeOperations } from "../error-handling.js";
 import { existsSync } from "fs";
 import { readFile } from "fs/promises";
+import { basename } from "path";
 import { mailer } from "../mailer.js";
 
 export async function serveWebsite(req, res) {
-  const { route } = req.params;
+  const route = basename(req.params.route);
 
   const websitePath = `./websites/${route}.html`;
 
@@ -42,8 +43,6 @@ export async function subscribeToNewsletter(req, res) {
 
   if (!project)
     return res.status(404).json({ success: false, message: "Project not found" });
-  if (project.fk_user_id !== req.session.user.id)
-    return res.status(403).json({ success: false, message: "Not your project" });
 
   const existingSubscriber = await safeOperation(
     () => db.get(
@@ -176,7 +175,7 @@ export async function getRestaurantsReviews(req, res) {
   const { projectId } = req.query;
 
   const restaurantsReviews = await safeOperation(
-    () => db.all('select * from reviews where fk_project_id = ?', projectId), "Error while getting tags from database"
+    () => db.all('select * from reviews where fk_project_id = ?', [projectId]), "Error while getting tags from database"
   );
   const formattedReviews = restaurantsReviews.map(review => ({
     reviewId: review.review_id,
@@ -295,7 +294,7 @@ export async function requestReservation(req, res) {
 
   await safeOperation(
     () => db.run(
-      "insert into reservations (name, email, location, people, date, time, status, fk_project_id) values (?, ?, ?, ?, ?, ?, 'pending', ?)",
+      "insert into reservations (name, email, location, people, date, time, status, fk_project_id) values (?, ?, ?, ?, ?, ?, 'open', ?)",
       [name.trim(), email.trim().toLowerCase(), location?.trim() ?? null, people, date.trim(), time.trim(), projectId]
     ),
     "Error while saving reservation"
