@@ -14,7 +14,58 @@ export async function createProject(req, res) {
   checkReq(!name || !tags || !templateName);
 
   if (templateName !== "blank") return res.status(400).json({ success: false, message: "Not a recognized template" });
-  const template = [];
+  const template = {
+    "navbar": {
+      "name": "Navbar",
+      "content": [
+        {
+          "name": "Title",
+          "types": [
+            "text"
+          ],
+          "text": "Title",
+          "style": {
+            "color": "red",
+            "fontFamily": "Arial",
+            "fontSize": "22px",
+            "fontWeight": 600
+          }
+        },
+        {
+          "name": "Navigation",
+          "types": [
+            "text",
+            "ro-text"
+          ],
+          "style": {
+            "color": "red",
+            "fontFamily": "Arial",
+            "fontSize": "15px",
+            "fontWeight": 600
+          }
+        },
+        {
+          "name": "Bar",
+          "types": [
+            "bar"
+          ],
+          "style": {
+            "backgroundColor": "#222222",
+            "height": "50px"
+          }
+        }
+      ]
+    },
+    "pages": [
+      {
+        "name": "Home",
+        "backgroundColor": "#ffffff",
+        "components": [
+                
+        ]
+      }
+    ]
+};
 
   const tagSelectPlaceholders = tags.map(() => "?").join(",");
 
