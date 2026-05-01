@@ -31,3 +31,7 @@ export async function acceptReservation(reservationId) {
 export async function rejectReservation(reservationId) {
   return request('patch', '/restaurants/reject-reservation', { data: { reservationId } });
 }
+
+export async function saveReview(name, rating, title, message, fk_project_id = []) {
+  return request('post', '/restaurants/save-reviews', { data: { name, rating, title, message, fk_project_id } });
+}

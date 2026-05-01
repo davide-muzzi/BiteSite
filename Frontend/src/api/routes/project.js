@@ -23,3 +23,11 @@ export async function togglePublish(projectId) {
 export async function deleteProject(projectId) {
   return request('delete', '/projects/delete', { data: { projectId } });
 }
+
+export async function getWebsite(projectId) {
+  return request('get', '/projects/website', { params: { projectId } })
+}
+
+export async function updateWebsite(projectId, website) {
+  return request('patch', '/projects/update-website', { data: { projectId, website } });
+}
