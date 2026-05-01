@@ -261,3 +261,26 @@ export async function rejectReservation(req, res) {
 
   res.status(200).json({ success: true, message: "Reservation rejected" });
 }
+
+export async function requestReservation(req, res) {
+  const { projectId, name, email, location, people, date, time } = req.body;
+  checkReq(!projectId || !name?.trim() || !email?.trim() || !people || !date?.trim() || !time?.trim());
+
+  const project = await safeOperation(
+    () => db.get("select project_id from projects where project_id = ? and published = 1", [projectId]),
+    "Error while getting project from database"
+  );
+
+  if (!project)
+    return res.status(404).json({ success: false, message: "Project not found" });
+
+  await safeOperation(
+    () => db.run(
+      "insert into reservations (name, email, location, people, date, time, status, fk_project_id) values (?, ?, ?, ?, ?, ?, 'pending', ?)",
+      [name.trim(), email.trim().toLowerCase(), location?.trim() ?? null, people, date.trim(), time.trim(), projectId]
+    ),
+    "Error while saving reservation"
+  );
+
+  res.status(200).json({ success: true, message: "Reservation successfully requested" });
+}
