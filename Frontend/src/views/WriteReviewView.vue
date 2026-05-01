@@ -5,6 +5,7 @@ import { Star } from 'lucide-vue-next'
 
 const route = useRoute()
 
+const reviewName = ref('')
 const reviewTitle = ref('')
 const reviewMessage = ref('')
 const reviewRating = ref(0)
@@ -51,6 +52,11 @@ const handleSubmit = () => {
                             @click="setRating(n)"
                         />
                     </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="name">Name</label>
+                    <input id="name" type="text" v-model="reviewName" required>
                 </div>
 
                 <div class="form-group">
