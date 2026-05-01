@@ -21,18 +21,29 @@ export async function smtpVerifier() {
   });
 }
 
-export async function mailer(from, recipients = [], subject, text) {
+export async function mailer(from, recipients = [], subject, text, unsubscribeBaseUrl) {
   if (!recipients.length) throw new Error("No recipients provided");
 
-  const deliveries = recipients.map((email) =>
+  const deliveries = recipients.map((email) => {
     // Sends one SMTP call per recipient; stay under ?? subscribers or rate limits will kick in
-    // When thewshold exceeded, switch to single BCC’d message or bulk provider
-    mailConfig.sendMail({
+    // When threshold exceeded, switch to single BCC’d message or bulk provider
+    const unsubscribeUrl = unsubscribeBaseUrl
+      ? `${unsubscribeBaseUrl}&email=${encodeURIComponent(email)}`
+      : null;
+
+    return mailConfig.sendMail({
       from: `${from} <${process.env.SMTP_USER}>`,
       to: email,
-      subject: subject,
-      text: text,
-    }),
-  );
+      subject,
+      text: unsubscribeUrl ? `${text}\n\n---\nTo unsubscribe: ${unsubscribeUrl}` : text,
+      ...(unsubscribeUrl && {
+        headers: {
+          "List-Unsubscribe": `<${unsubscribeUrl}>`,
+          "List-Unsubscribe-Post": "List-Unsubscribe=One-Click",
+        },
+      }),
+    });
+  });
+
   await Promise.all(deliveries);
 }

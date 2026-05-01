@@ -8,6 +8,8 @@ const restaurantRouter = express.Router();
 restaurantRouter.get("/website/:route", routeWrapper(restaurantHandlers.serveWebsite));
 restaurantRouter.post("/newsletter/subscribe", routeWrapper(restaurantHandlers.subscribeToNewsletter));
 restaurantRouter.post("/newsletter/send", checkAuth, routeWrapper(restaurantHandlers.sendNewsletter));
+restaurantRouter.get("/newsletter/unsubscribe", routeWrapper(restaurantHandlers.unsubscribeFromNewsletter));
+restaurantRouter.post("/newsletter/unsubscribe", routeWrapper(restaurantHandlers.unsubscribeFromNewsletter));
 restaurantRouter.get("/get", routeWrapper(restaurantHandlers.getAllRestaurants));
 restaurantRouter.get("/get-tags", routeWrapper(restaurantHandlers.getRestaurantsTags));
 restaurantRouter.get("/get-reviews", routeWrapper(restaurantHandlers.getRestaurantsReviews));
