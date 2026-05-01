@@ -5,7 +5,8 @@ export default function upload(uploadDir) {
     const form = formidable({
       uploadDir: uploadDir,
       keepExtensions: true,
-      maxFileSize: 10 * 1024 * 1024
+      maxFileSize: 10 * 1024 * 1024,
+      filter: ({ mimetype }) => mimetype && mimetype.startsWith('image/')
     })
 
     try {

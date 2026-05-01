@@ -21,6 +21,7 @@ import LegalPage from '@/views/footer-links/LegalPage.vue'
 import ContactPage from '@/views/footer-links/ContactPage.vue'
 import ManageReviewsView from '@/views/ManageReviewsView.vue'
 import ReservationsView from '@/views/ReservationsView.vue'
+import WriteReviewView from '@/views/WriteReviewView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -125,6 +126,11 @@ const router = createRouter({
       path: '/:id/reservations',
       name: 'reservations',
       component: ReservationsView,
+    },
+    {
+      path: '/write-review',
+      name: 'writereview',
+      component: WriteReviewView,
     },
   ],
 })

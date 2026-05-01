@@ -14,6 +14,9 @@ export async function register(req, res) {
   const { username, email, password, subscription } = req.body;
   checkReq(!username || !email || !password || !subscription);
 
+  if (password.length < 8)
+    return res.status(400).json({ success: false, message: "Password must be at least 8 characters" });
+
   const [dbUsername, dbEmail] = await safeOperations([
     () => db.get("select * from users where username = ?", [username]),
     () => db.get("select * from users where email = ?", [email]),

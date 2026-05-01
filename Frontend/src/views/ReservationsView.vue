@@ -1,14 +1,20 @@
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
+import { useRoute } from 'vue-router'
 import { Search, TriangleAlert, X } from 'lucide-vue-next'
 import BackButton from '@/components/BackButton.vue'
 import ReservationRow from '@/components/ReservationRow.vue'
 import ReservationPagination from '@/components/ReservationPagination.vue'
+import { getReservations, acceptReservation, rejectReservation } from '@/api/routes/restaurant.js'
 
+const route = useRoute()
 const activeTab = ref('requests')
 const searchQuery = ref('')
 const currentPage = ref(1)
 const warningDismissed = ref(false)
+const reservations = ref([])
+
+const ITEMS_PER_PAGE = 7
 
 const tabs = [
   { key: 'requests', label: 'Reservation Requests' },
@@ -16,51 +22,55 @@ const tabs = [
   { key: 'history', label: 'Reservation History' },
 ]
 
-const mockRequests = [
-  { id: 1, name: 'Example User 1', email: 'example.user@domain.com', location: 'Lucerne City', people: 4, date: '21.12.25', time: '9:30 pm' },
-  { id: 2, name: 'Example User 2', email: 'example.user@domain.com', location: 'Lucerne City', people: 4, date: '21.12.25', time: '9:30 pm' },
-  { id: 3, name: 'Example User 3', email: 'example.user@domain.com', location: 'Lucerne City', people: 4, date: '21.12.25', time: '9:30 pm' },
-  { id: 4, name: 'Example User 4', email: 'example.user@domain.com', location: 'Lucerne City', people: 4, date: '21.12.25', time: '9:30 pm' },
-  { id: 5, name: 'Example User 5', email: 'example.user@domain.com', location: 'Lucerne City', people: 4, date: '21.12.25', time: '9:30 pm' },
-]
+const filteredByTab = computed(() => {
+  if (activeTab.value === 'requests') return reservations.value.filter(r => r.status === 'open')
+  if (activeTab.value === 'accepted') return reservations.value.filter(r => r.status === 'accepted')
+  return reservations.value.filter(r => r.status !== 'open')
+})
 
-const mockAccepted = [
-  { id: 1, name: 'Example User 26', email: 'example.user@domain.com', location: 'Lucerne City', people: 4, date: '21.12.25', time: '9:30 pm' },
-  { id: 2, name: 'Example User 27', email: 'example.user@domain.com', location: 'Lucerne City', people: 4, date: '21.12.25', time: '9:30 pm' },
-  { id: 3, name: 'Example User 28', email: 'example.user@domain.com', location: 'Lucerne City', people: 4, date: '21.12.25', time: '9:30 pm' },
-  { id: 4, name: 'Example User 29', email: 'example.user@domain.com', location: 'Lucerne City', people: 4, date: '21.12.25', time: '9:30 pm' },
-  { id: 5, name: 'Example User 30', email: 'example.user@domain.com', location: 'Lucerne City', people: 4, date: '21.12.25', time: '9:30 pm' },
-]
-
-const mockHistory = [
-  { id: 1, name: 'Example User 26', email: 'example.user@domain.com', location: 'Lucerne City', people: 4, date: '21.12.25', time: '9:30 pm', status: 'Accepted' },
-  { id: 2, name: 'Example User 27', email: 'example.user@domain.com', location: 'Lucerne City', people: 4, date: '21.12.25', time: '9:30 pm', status: 'Rejected' },
-  { id: 3, name: 'Example User 26', email: 'example.user@domain.com', location: 'Lucerne City', people: 4, date: '21.12.25', time: '9:30 pm', status: 'Accepted' },
-  { id: 4, name: 'Example User 31', email: 'example.user@domain.com', location: 'Lucerne City', people: 4, date: '21.12.25', time: '9:30 pm', status: 'Rejected' },
-  { id: 5, name: 'Example User 32', email: 'example.user@domain.com', location: 'Lucerne City', people: 4, date: '21.12.25', time: '9:30 pm', status: 'Rejected' },
-]
+const filteredData = computed(() => {
+  const query = searchQuery.value.trim().toLowerCase()
+  if (!query) return filteredByTab.value
+  return filteredByTab.value.filter(r =>
+    r.name.toLowerCase().includes(query) || r.email.toLowerCase().includes(query)
+  )
+})
 
 const currentData = computed(() => {
-  if (activeTab.value === 'requests') return mockRequests
-  if (activeTab.value === 'accepted') return mockAccepted
-  return mockHistory
+  const start = (currentPage.value - 1) * ITEMS_PER_PAGE
+  return filteredData.value.slice(start, start + ITEMS_PER_PAGE)
 })
 
 const activeTabIndex = computed(() => tabs.findIndex(t => t.key === activeTab.value))
 
-const totalPages = computed(() => 7)
+const totalPages = computed(() => Math.max(1, Math.ceil(filteredData.value.length / ITEMS_PER_PAGE)))
+
+onMounted(async () => {
+  const response = await getReservations(route.params.id)
+  if (response.success) reservations.value = response.reservations
+})
 
 function setTab(tab) {
   activeTab.value = tab
   currentPage.value = 1
 }
 
-function handleSearch() {
-  console.log('Search:', searchQuery.value)
-}
-
 function handlePageChange(page) {
   currentPage.value = page
+}
+
+async function handleAccept(reservationId) {
+  const response = await acceptReservation(reservationId)
+  if (!response.success) return
+  const reservation = reservations.value.find(r => r.reservationId === reservationId)
+  if (reservation) reservation.status = 'accepted'
+}
+
+async function handleReject(reservationId) {
+  const response = await rejectReservation(reservationId)
+  if (!response.success) return
+  const reservation = reservations.value.find(r => r.reservationId === reservationId)
+  if (reservation) reservation.status = 'denied'
 }
 </script>
 
@@ -69,8 +79,8 @@ function handlePageChange(page) {
     <div class="top-bar">
       <BackButton />
       <div class="search">
-        <input v-model="searchQuery" type="search" placeholder="Search ..." @keydown.enter.prevent="handleSearch" />
-        <button type="button" @click="handleSearch" aria-label="Search">
+        <input v-model="searchQuery" type="search" placeholder="Search ..." />
+        <button type="button" aria-label="Search">
           <Search class="search-icon" />
         </button>
       </div>
@@ -94,8 +104,8 @@ function handlePageChange(page) {
       </div>
 
       <div class="list">
-        <ReservationRow v-for="reservation in currentData" :key="reservation.id" :reservation="reservation"
-          :tab="activeTab" />
+        <ReservationRow v-for="reservation in currentData" :key="reservation.reservationId" :reservation="reservation"
+          :tab="activeTab" @accept="handleAccept" @reject="handleReject" />
       </div>
 
       <ReservationPagination :current-page="currentPage" :total-pages="totalPages" @page-change="handlePageChange" />

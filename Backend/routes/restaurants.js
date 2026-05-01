@@ -8,11 +8,15 @@ const restaurantRouter = express.Router();
 restaurantRouter.get("/website/:route", routeWrapper(restaurantHandlers.serveWebsite));
 restaurantRouter.post("/newsletter/subscribe", routeWrapper(restaurantHandlers.subscribeToNewsletter));
 restaurantRouter.post("/newsletter/send", checkAuth, routeWrapper(restaurantHandlers.sendNewsletter));
+restaurantRouter.get("/newsletter/unsubscribe", routeWrapper(restaurantHandlers.unsubscribeFromNewsletter));
+restaurantRouter.post("/newsletter/unsubscribe", routeWrapper(restaurantHandlers.unsubscribeFromNewsletter));
 restaurantRouter.get("/get", routeWrapper(restaurantHandlers.getAllRestaurants));
 restaurantRouter.get("/get-tags", routeWrapper(restaurantHandlers.getRestaurantsTags));
 restaurantRouter.get("/get-reviews", routeWrapper(restaurantHandlers.getRestaurantsReviews));
 restaurantRouter.post("/save-reviews", routeWrapper(restaurantHandlers.writeRestaurantsReviews));
+restaurantRouter.get("/get-reservations", checkAuth, routeWrapper(restaurantHandlers.getReservations));
+restaurantRouter.patch("/accept-reservation", checkAuth, routeWrapper(restaurantHandlers.acceptReservation));
+restaurantRouter.patch("/reject-reservation", checkAuth, routeWrapper(restaurantHandlers.rejectReservation));
+restaurantRouter.post("/request-reservation", routeWrapper(restaurantHandlers.requestReservation));
 
-
-
-export default restaurantRouter
+export default restaurantRouter;
