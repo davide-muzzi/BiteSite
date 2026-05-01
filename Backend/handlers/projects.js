@@ -2,6 +2,13 @@ import { db } from "../database/db.js";
 import { safeOperation, checkReq, HttpError } from "../error-handling.js";
 import { readFile, writeFile, rename } from "fs/promises";
 
+const escapeHtml = (str) => String(str)
+  .replace(/&/g, "&amp;")
+  .replace(/</g, "&lt;")
+  .replace(/>/g, "&gt;")
+  .replace(/"/g, "&quot;")
+  .replace(/'/g, "&#39;");
+
 export async function createProject(req, res) {
   const { name, tags, templateName } = req.body;
   checkReq(!name || !tags || !templateName);
@@ -328,7 +335,7 @@ async function makeWebsite(website, route, title) {
         if (content.types.includes("text")) {
           const textRegex = new RegExp(`§${content.id}§`, "g");
 
-          component.html = component.html.replace(textRegex, content.text);
+          component.html = component.html.replace(textRegex, escapeHtml(content.text));
         }
 
         if (content.types.includes("container")) {
