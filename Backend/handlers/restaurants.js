@@ -295,7 +295,7 @@ export async function requestReservation(req, res) {
 
   await safeOperation(
     () => db.run(
-      "insert into reservations (name, email, location, people, date, time, status, fk_project_id) values (?, ?, ?, ?, ?, ?, 'pending', ?)",
+      "insert into reservations (name, email, location, people, date, time, status, fk_project_id) values (?, ?, ?, ?, ?, ?, 'open', ?)",
       [name.trim(), email.trim().toLowerCase(), location?.trim() ?? null, people, date.trim(), time.trim(), projectId]
     ),
     "Error while saving reservation"
