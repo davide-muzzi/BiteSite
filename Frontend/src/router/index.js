@@ -128,7 +128,7 @@ const router = createRouter({
       component: ReservationsView,
     },
     {
-      path: '/write-review',
+      path: '/write-review/:projectId',
       name: 'writereview',
       component: WriteReviewView,
     },

@@ -2,8 +2,12 @@
 import { ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { Star } from 'lucide-vue-next'
+import { saveReview } from "@/api/routes/restaurant.js";
 
 const route = useRoute()
+
+const pageRoute = useRoute()
+
 
 const reviewName = ref('')
 const reviewTitle = ref('')
@@ -24,8 +28,18 @@ const handleSubmit = () => {
         return
     }
     errorMessage.value = ''
-    // TODO: connect to backendz 
-    submitted.value = true
+  submitted.value = true
+}
+
+
+const handleSaveReview = async () => {
+  const result = await saveReview(reviewName.value, reviewRating.value, reviewTitle.value, reviewMessage.value, pageRoute.params.projectId)
+  if (result.success)
+    console.log("saved review")
+  else
+  console.log("couldn't saved review")
+
+
 }
 </script>
 
@@ -71,7 +85,7 @@ const handleSubmit = () => {
 
                 <div class="error-message" v-if="errorMessage">{{ errorMessage }}</div>
 
-                <button type="submit" class="submit-button">Submit Review</button>
+                <button type="submit" class="submit-button" @click="handleSaveReview()">Submit Review</button>
             </form>
         </div>
 
