@@ -1,72 +1,31 @@
-<script setup>
-import { computed } from "vue";
-
-const props = defineProps({
-  variant: {
-    type: String,
-    default: "default",
-  },
-});
-
-const isSimple = computed(() => props.variant === "simple");
-</script>
-
 <template>
-  <footer :class="['site-footer', isSimple ? 'simple' : 'default']">
-    <template v-if="isSimple">
-      <div class="simple-footer">
-        <span>© 2026 BiteSite</span>
-        <span><RouterLink to="/about">About</RouterLink> · <RouterLink to="/legal">Legal</RouterLink> · <RouterLink to="/contact">Contact</RouterLink></span>
-      </div>
-    </template>
-    <template v-else>
-      <div class="footer-content">
-        <div class="brand">
-          <h2>BiteSite</h2>
-          <p>Create, launch, and grow standout restaurant websites.</p>
-        </div>
-
-        <nav class="links">
-          <RouterLink to="/about">About</RouterLink>
-          <RouterLink to="/legal">Legal</RouterLink>
-          <RouterLink to="/contact">Contact</RouterLink>
-        </nav>
+  <footer class="site-footer">
+    <div class="footer-content">
+      <div class="brand">
+        <h2>BiteSite</h2>
+        <p>Create, launch, and grow standout restaurant websites.</p>
       </div>
 
-      <div class="footer-bottom">
-        <span>© 2026 BiteSite</span>
-        <span>Made with care for hospitality teams</span>
-      </div>
-    </template>
+      <nav class="links">
+        <RouterLink to="/about">About</RouterLink>
+        <RouterLink to="/legal">Legal</RouterLink>
+        <RouterLink to="/contact">Contact</RouterLink>
+      </nav>
+    </div>
+
+    <div class="footer-bottom">
+      <span>© 2026 BiteSite</span>
+      <span>Made with care for hospitality teams</span>
+    </div>
   </footer>
 </template>
 
 <style scoped>
 .site-footer {
   font-family: var(--font);
-}
-
-.site-footer.default {
   background: #1b133d;
   color: white;
   padding: 48px 60px;
-}
-
-.site-footer.simple {
-  background: transparent;
-  color: var(--font-color-dark-blue);
-  padding: 32px 40px 48px;
-  text-align: center;
-  text-decoration: none;
-}
-
-.simple-footer {
-  display: flex;
-  justify-content: center;
-  gap: 20px;
-  font-size: 15px;
-  font-weight: 600;
-  text-decoration: none;
 }
 
 .footer-content {
@@ -104,11 +63,6 @@ const isSimple = computed(() => props.variant === "simple");
   text-decoration: none;
   font-size: 15px;
   transition: opacity 0.2s ease;
-}
-
-.simple-footer a {
-  text-decoration: none;
-  color: inherit;
 }
 
 .links a:hover {
