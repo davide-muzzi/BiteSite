@@ -5,8 +5,7 @@ import NavBar from './components/NavBar.vue';
 import Footer from './components/Footer.vue';
 
 const route = useRoute();
-const footerVariant = computed(() => route.name === 'home' ? 'simple' : 'default');
-const isWebsite = computed(() => route.name === 'restaurant' ? true : false);
+const isWebsite = computed(() => route.name === 'restaurant');
 </script>
 
 <template>
@@ -27,7 +26,7 @@ const isWebsite = computed(() => route.name === 'restaurant' ? true : false);
     <div class="router-wrapper">
       <RouterView />
     </div>
-    <Footer :variant="footerVariant" v-if="!isWebsite" />
+    <Footer v-if="!isWebsite" />
   </div>
 </template>
 
