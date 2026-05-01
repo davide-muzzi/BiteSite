@@ -2,7 +2,7 @@
 import router from "@/router";
 import { checkLogin } from "@/api/routes/user.js";
 import { onMounted, ref } from "vue";
-import { Star } from "lucide-vue-next";
+import { Sparkles } from "lucide-vue-next";
 
 const loggedIn = ref("");
 
@@ -72,22 +72,22 @@ onMounted(async () => {
     <h2 class="section-title">Why BiteSite?</h2>
     <div class="features">
       <div class="feature-card">
-        <Star class="feature-icon" :size="22" />
+        <Sparkles class="feature-icon" :size="22" />
         <h3>No coding required</h3>
         <p>Our intuitive editor lets anyone build a professional site — no tech knowledge needed.</p>
       </div>
       <div class="feature-card">
-        <Star class="feature-icon" :size="22" />
+        <Sparkles class="feature-icon" :size="22" />
         <h3>Ready-made templates</h3>
         <p>Start from a curated restaurant template or build a fully custom design from scratch.</p>
       </div>
       <div class="feature-card">
-        <Star class="feature-icon" :size="22" />
+        <Sparkles class="feature-icon" :size="22" />
         <h3>Effortless hosting</h3>
         <p>We handle the technical side. Your site goes live instantly, always fast and secure.</p>
       </div>
       <div class="feature-card">
-        <Star class="feature-icon" :size="22" />
+        <Sparkles class="feature-icon" :size="22" />
         <h3>Easy to use</h3>
         <p>Designed for hospitality teams, not developers. Update your content in minutes.</p>
       </div>
