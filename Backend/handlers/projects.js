@@ -2,12 +2,70 @@ import { db } from "../database/db.js";
 import { safeOperation, checkReq, HttpError } from "../error-handling.js";
 import { readFile, writeFile, rename } from "fs/promises";
 
+const escapeHtml = (str) => String(str)
+  .replace(/&/g, "&amp;")
+  .replace(/</g, "&lt;")
+  .replace(/>/g, "&gt;")
+  .replace(/"/g, "&quot;")
+  .replace(/'/g, "&#39;");
+
 export async function createProject(req, res) {
   const { name, tags, templateName } = req.body;
   checkReq(!name || !tags || !templateName);
 
   if (templateName !== "blank") return res.status(400).json({ success: false, message: "Not a recognized template" });
-  const template = [];
+  const template = {
+    "navbar": {
+      "name": "Navbar",
+      "content": [
+        {
+          "name": "Title",
+          "types": [
+            "text"
+          ],
+          "text": "Title",
+          "style": {
+            "color": "red",
+            "fontFamily": "Arial",
+            "fontSize": "22px",
+            "fontWeight": 600
+          }
+        },
+        {
+          "name": "Navigation",
+          "types": [
+            "text",
+            "ro-text"
+          ],
+          "style": {
+            "color": "red",
+            "fontFamily": "Arial",
+            "fontSize": "15px",
+            "fontWeight": 600
+          }
+        },
+        {
+          "name": "Bar",
+          "types": [
+            "bar"
+          ],
+          "style": {
+            "backgroundColor": "#222222",
+            "height": "50px"
+          }
+        }
+      ]
+    },
+    "pages": [
+      {
+        "name": "Home",
+        "backgroundColor": "#ffffff",
+        "components": [
+                
+        ]
+      }
+    ]
+};
 
   const tagSelectPlaceholders = tags.map(() => "?").join(",");
 
@@ -56,9 +114,19 @@ export async function deleteProject(req, res) {
   const { projectId } = req.body;
   checkReq(!projectId)
 
+  const project = await safeOperation(
+    () => db.get("select fk_user_id from projects where project_id = ?", [projectId]),
+    "Error while fetching project"
+  );
+
+  if (!project)
+    return res.status(404).json({ success: false, message: "Project not found" });
+  if (project.fk_user_id !== req.session.user.id)
+    return res.status(403).json({ success: false, message: "Not your project" });
+
   await safeOperation(
     () => db.run("delete from projects where project_id = ?", [projectId]),
-    "Error while deleting user"
+    "Error while deleting project"
   );
 
   res.status(200).json({ success: true, message: "Successfully deleted project" });
@@ -334,7 +402,7 @@ async function makeWebsite(website, route, title) {
         if (content.types.includes("text") && !content.types.includes("ro-text")) {
           const textRegex = new RegExp(`§${content.id}§`, "g");
 
-          componentHtml = componentHtml.replace(textRegex, content.text);
+          componentHtml = componentHtml.replace(textRegex, escapeHtml(content.text));
         }
 
         if (content.types.includes("container")) {

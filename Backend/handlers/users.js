@@ -7,13 +7,15 @@ export async function userdata(req, res) {
     () => db.get("select user_id, username, email, subscription from users where user_id = ?", [req.session.user.id]),
     "Error while fetching userdata from database"
   )
-
   res.status(200).json({ success: true, message: "Successfully retrieved user from database", user })
 }
 
 export async function register(req, res) {
   const { username, email, password, subscription } = req.body;
   checkReq(!username || !email || !password || !subscription);
+
+  if (password.length < 8)
+    return res.status(400).json({ success: false, message: "Password must be at least 8 characters" });
 
   const [dbUsername, dbEmail] = await safeOperations([
     () => db.get("select * from users where username = ?", [username]),

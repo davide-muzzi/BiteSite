@@ -2,10 +2,11 @@ import { db } from "../database/db.js";
 import { safeOperation, checkReq } from "../error-handling.js";
 import { existsSync } from "fs";
 import { readFile } from "fs/promises";
+import { basename } from "path";
 import { mailer } from "../mailer.js";
 
 export async function serveWebsite(req, res) {
-  const { route } = req.params;
+  const route = basename(req.params.route);
 
   const websitePath = `./websites/${route}.html`;
 
@@ -42,8 +43,6 @@ export async function subscribeToNewsletter(req, res) {
 
   if (!project)
     return res.status(404).json({ success: false, message: "Project not found" });
-  if (project.fk_user_id !== req.session.user.id)
-    return res.status(403).json({ success: false, message: "Not your project" });
 
   const existingSubscriber = await safeOperation(
     () => db.get(
@@ -92,13 +91,10 @@ export async function sendNewsletter(req, res) {
 
   const recipientList = subscribers.map((subscriber) => subscriber.email);
 
+  const unsubscribeBaseUrl = `${process.env.BACKEND_URL}/restaurants/newsletter/unsubscribe?projectId=${projectId}`;
+
   await safeOperation(
-    () => mailer(
-      project.name,
-      recipientList,
-      subject,
-      body,
-    ),
+    () => mailer(project.name, recipientList, subject, body, unsubscribeBaseUrl),
     "Error while sending newsletter",
   );
 
@@ -106,6 +102,28 @@ export async function sendNewsletter(req, res) {
     success: true,
     message: `Newsletter sent to ${recipientList.length} subscriber${recipientList.length > 1 ? "s" : ""}`,
   });
+}
+
+export async function unsubscribeFromNewsletter(req, res) {
+  const { email, projectId } = req.query;
+
+  if (!email || !projectId)
+    return res.status(400).send("<h1>Invalid unsubscribe link</h1>");
+
+  await safeOperation(
+    () => db.run(
+      "delete from newsletter_subscribers where email = ? and fk_project_id = ?",
+      [decodeURIComponent(email).trim().toLowerCase(), projectId],
+    ),
+    "Error while unsubscribing",
+  );
+
+  if (req.method === "POST")
+    return res.status(200).send("Unsubscribed");
+
+  res.status(200).send(
+    `<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><title>Unsubscribed</title></head><body style="font-family:sans-serif;text-align:center;padding:3rem"><h1>You've been unsubscribed</h1><p>You will no longer receive newsletters from this restaurant.</p></body></html>`,
+  );
 }
 
 export async function getAllRestaurants(req, res) {
@@ -157,7 +175,7 @@ export async function getRestaurantsReviews(req, res) {
   const { projectId } = req.query;
 
   const restaurantsReviews = await safeOperation(
-    () => db.all('select * from reviews where fk_project_id = ?', projectId), "Error while getting tags from database"
+    () => db.all('select * from reviews where fk_project_id = ?', [projectId]), "Error while getting tags from database"
   );
   const formattedReviews = restaurantsReviews.map(review => ({
     reviewId: review.review_id,
@@ -173,4 +191,129 @@ export async function getRestaurantsReviews(req, res) {
     message: "Successfully got reviews from database",
     reviews: formattedReviews
   });
+}
+
+export async function writeRestaurantsReviews(req, res) {
+  const { name, rating, title, message, fk_project_id } = req.body;
+  const date = new Date().toISOString().split("T")[0]; 
+  // ^^^^chatgpt
+    
+  checkReq(!name || !rating || !title || !message || !date || !fk_project_id);
+
+  await safeOperation(
+    () => db.run("insert into reviews (name, rating, title, message, date, fk_project_id) values (?,?,?,?,?,?)",
+    [name, rating, title, message, date, fk_project_id]),
+    "Error while inserting project into database"
+  );
+
+  res.status(200).json({ success: true, message: "Successfully saved review" });
+}
+export async function getReservations(req, res) {
+  const { projectId } = req.query;
+  checkReq(!projectId);
+
+  const project = await safeOperation(
+    () => db.get("select fk_user_id from projects where project_id = ?", [projectId]),
+    "Error while getting project from database"
+  );
+
+  if (!project)
+    return res.status(404).json({ success: false, message: "Project not found" });
+  if (project.fk_user_id !== req.session.user.id)
+    return res.status(403).json({ success: false, message: "Not your project" });
+
+  const reservations = await safeOperation(
+    () => db.all("select * from reservations where fk_project_id = ?", [projectId]),
+    "Error while getting reservations from database"
+  );
+
+  const formattedReservations = reservations.map(reservation => ({
+    reservationId: reservation.reservation_id,
+    name: reservation.name,
+    email: reservation.email,
+    location: reservation.location,
+    people: reservation.people,
+    date: reservation.date,
+    time: reservation.time,
+    status: reservation.status,
+  }));
+
+  res.status(200).json({
+    success: true,
+    message: "Successfully got reservations from database",
+    reservations: formattedReservations
+  });
+}
+
+export async function acceptReservation(req, res) {
+  const { reservationId } = req.body;
+  checkReq(!reservationId);
+
+  const reservation = await safeOperation(
+    () => db.get(
+      "select reservations.reservation_id, projects.fk_user_id from reservations inner join projects on projects.project_id = reservations.fk_project_id where reservations.reservation_id = ?",
+      [reservationId]
+    ),
+    "Error while getting reservation from database"
+  );
+
+  if (!reservation)
+    return res.status(404).json({ success: false, message: "Reservation not found" });
+  if (reservation.fk_user_id !== req.session.user.id)
+    return res.status(403).json({ success: false, message: "Not your project" });
+
+  await safeOperation(
+    () => db.run("update reservations set status = 'accepted' where reservation_id = ?", [reservationId]),
+    "Error while updating reservation status"
+  );
+
+  res.status(200).json({ success: true, message: "Reservation accepted" });
+}
+
+export async function rejectReservation(req, res) {
+  const { reservationId } = req.body;
+  checkReq(!reservationId);
+
+  const reservation = await safeOperation(
+    () => db.get(
+      "select reservations.reservation_id, projects.fk_user_id from reservations inner join projects on projects.project_id = reservations.fk_project_id where reservations.reservation_id = ?",
+      [reservationId]
+    ),
+    "Error while getting reservation from database"
+  );
+
+  if (!reservation)
+    return res.status(404).json({ success: false, message: "Reservation not found" });
+  if (reservation.fk_user_id !== req.session.user.id)
+    return res.status(403).json({ success: false, message: "Not your project" });
+
+  await safeOperation(
+    () => db.run("update reservations set status = 'denied' where reservation_id = ?", [reservationId]),
+    "Error while updating reservation status"
+  );
+
+  res.status(200).json({ success: true, message: "Reservation rejected" });
+}
+
+export async function requestReservation(req, res) {
+  const { projectId, name, email, location, people, date, time } = req.body;
+  checkReq(!projectId || !name?.trim() || !email?.trim() || !people || !date?.trim() || !time?.trim());
+
+  const project = await safeOperation(
+    () => db.get("select project_id from projects where project_id = ? and published = 1", [projectId]),
+    "Error while getting project from database"
+  );
+
+  if (!project)
+    return res.status(404).json({ success: false, message: "Project not found" });
+
+  await safeOperation(
+    () => db.run(
+      "insert into reservations (name, email, location, people, date, time, status, fk_project_id) values (?, ?, ?, ?, ?, ?, 'open', ?)",
+      [name.trim(), email.trim().toLowerCase(), location?.trim() ?? null, people, date.trim(), time.trim(), projectId]
+    ),
+    "Error while saving reservation"
+  );
+
+  res.status(200).json({ success: true, message: "Reservation successfully requested" });
 }
