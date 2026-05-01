@@ -7,6 +7,11 @@ import ComponentPopup from './ComponentPopup.vue';
 const props = defineProps(["website", "page"]);
 const emit = defineEmits(["selectElement"]);
 
+const handleSelectElement = (element, componentIndex) => {
+  emit("selectElement",
+  `${element.id}-${props.website.pages[props.page].name.toLowerCase()}-${componentIndex}-${element.contentIndex}`);
+}
+
 const selectedPage = computed(() => props.website.pages[props.page]);
 </script>
 
@@ -15,12 +20,12 @@ const selectedPage = computed(() => props.website.pages[props.page]);
     <EditorComponent
       :component="website.navbar"
       disableDelete="true"
-      @selectElement="(id) => emit('selectElement', id)"
+      @selectElement="handleSelectElement"
     />
     <EditorComponent
       :component="component"
       v-for="(component, index) of selectedPage.components"
-      @selectElement="(id) => emit('selectElement', id)"
+      @selectElement="(element) => handleSelectElement(element, index)"
       @delete="selectedPage.components.splice(index, 1)"
     />
     <ComponentPopup @addComponent="(component) => website.pages[page].components.push(component)"/>

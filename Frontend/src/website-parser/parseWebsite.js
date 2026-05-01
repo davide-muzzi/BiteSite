@@ -95,7 +95,7 @@ export default function parseWebsite(website, selectedElement, selectedPage) {
           additionalCss += "display: none !important;";
         }
 
-        if (selectedElement === content.id) {
+        if (selectedElement === idReplace) {
           additionalCss += "box-shadow: 0 0 0 1px black, 0 0 0 2px red, 0 0 0 3px black;";
         }
 
