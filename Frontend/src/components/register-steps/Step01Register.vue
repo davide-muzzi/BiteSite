@@ -9,6 +9,7 @@ const registerStore = useRegisterStore();
 const username = ref('');
 const email = ref('');
 const password = ref('');
+const errorMessage = ref('');
 
 const handleregister = async () => {
     if (!username.value.trim()) return;
