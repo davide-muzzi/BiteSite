@@ -1,9 +1,9 @@
 <script setup>
-import { ref, reactive, onMounted, watch, computed } from "vue";
+import { ref, reactive, onMounted, watch, computed, onUnmounted } from "vue";
 import { useRoute } from "vue-router";
 import { Save, ChevronRight, Plus, Trash2 } from "lucide-vue-next";
 import { getWebsite, updateWebsite } from "@/api/routes/project.js";
-import EditorSidebar from "@/components/editor-sidebar/EditorSidebar.vue";
+import EditorSidebar from "@/components/editor/EditorSidebar.vue";
 import parseWebsite from "@/website-parser/parseWebsite.js";
 
 const route = useRoute();
@@ -18,6 +18,7 @@ const selectedPage = ref(0);
 const pageDropdownOpen = ref(false);
 const addPageInput = ref("");
 const pageSettingsOpen = ref(false);
+const pageDropdownRef = ref(null);
 let ignoreWatch = true;
 
 const handleUpdateWebsite = async () => {
@@ -42,6 +43,10 @@ const loadPreview = () => {
   doc.open();
   doc.write(html);
   doc.close();
+
+  doc.addEventListener("click", () => {
+    if (pageDropdownOpen.value) togglePageDropdown();
+  });
 }
 
 const handleSelectElement = (id) => {
@@ -76,6 +81,14 @@ const handleDeletePage = () => {
   website.value.pages.splice(deletingPage, 1);
 }
 
+const handleClickOutsidePageDropdown = (event) => {
+  if (!pageDropdownOpen.value) return;
+
+  if (!pageDropdownRef.value?.contains(event.target)) {
+    togglePageDropdown();
+  }
+}
+
 onMounted(async () => {
   const result = await getWebsite(projectId.value);
 
@@ -86,6 +99,11 @@ onMounted(async () => {
     doneLoading.value = true;
   }
 
+  window.addEventListener("click", handleClickOutsidePageDropdown);
+});
+
+onUnmounted(() => {
+  window.removeEventListener("click", handleClickOutsidePageDropdown);
 });
 </script>
 
@@ -138,6 +156,7 @@ onMounted(async () => {
             <div class="editor-topbar">
                 <div
                   class="page-dropdown"
+                  ref="pageDropdownRef"
                 >
                   <div
                     class="page-dropdown-head"

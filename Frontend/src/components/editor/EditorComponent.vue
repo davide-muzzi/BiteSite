@@ -1,11 +1,11 @@
 <script setup>
 import { ref } from 'vue';
-import { ChevronRight } from "lucide-vue-next";
+import { ChevronRight, X } from "lucide-vue-next";
 
 import EditorContent from "./EditorContent.vue";
 
-const props = defineProps(["component"]);
-const emit = defineEmits(["selectContent"]);
+const props = defineProps(["component", "disableDelete"]);
+const emit = defineEmits(["selectElement", "delete"]);
 
 const isOpen = ref(false);
 const openContent = ref("");
@@ -22,8 +22,14 @@ const changeOpenContent = (name) => {
 <template>
     <div class="component-dropdown">
         <button class="dropdown-header" @click="isOpen = !isOpen">
-            <ChevronRight class="chevron-icon" :class="{ 'open': isOpen }"/>
-            <div>{{ component.name }}</div>
+            <div>
+              <ChevronRight class="chevron-icon" :class="{ 'open': isOpen }"/>
+              <div>{{ component.name }}</div>
+            </div>
+            <X
+              v-if="!disableDelete"
+              @click.stop="emit('delete')"
+            />
         </button>
 
         <div class="dropdown-content" :class="{ 'open': isOpen }">
@@ -53,8 +59,9 @@ const changeOpenContent = (name) => {
 .dropdown-header {
     display: flex;
     align-items: center;
+    justify-content: space-between;
     width: 100%;
-    padding-left: 10px;
+    padding: 0 10px;
     height: 50px;
     border-radius: 25px;
     border: none;
@@ -64,7 +71,12 @@ const changeOpenContent = (name) => {
     font-weight: 600;
     font-size: 22px;
     z-index: 10;
-    gap: 5px;
+}
+
+.dropdown-header > div {
+  display: flex;
+  gap: 5px;
+  align-items: center;
 }
 
 .dropdown-content {
