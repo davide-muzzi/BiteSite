@@ -63,9 +63,19 @@ export async function deleteProject(req, res) {
   const { projectId } = req.body;
   checkReq(!projectId)
 
+  const project = await safeOperation(
+    () => db.get("select fk_user_id from projects where project_id = ?", [projectId]),
+    "Error while fetching project"
+  );
+
+  if (!project)
+    return res.status(404).json({ success: false, message: "Project not found" });
+  if (project.fk_user_id !== req.session.user.id)
+    return res.status(403).json({ success: false, message: "Not your project" });
+
   await safeOperation(
     () => db.run("delete from projects where project_id = ?", [projectId]),
-    "Error while deleting user"
+    "Error while deleting project"
   );
 
   res.status(200).json({ success: true, message: "Successfully deleted project" });
