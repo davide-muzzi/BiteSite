@@ -92,13 +92,10 @@ export async function sendNewsletter(req, res) {
 
   const recipientList = subscribers.map((subscriber) => subscriber.email);
 
+  const unsubscribeBaseUrl = `${process.env.BACKEND_URL}/restaurants/newsletter/unsubscribe?projectId=${projectId}`;
+
   await safeOperation(
-    () => mailer(
-      project.name,
-      recipientList,
-      subject,
-      body,
-    ),
+    () => mailer(project.name, recipientList, subject, body, unsubscribeBaseUrl),
     "Error while sending newsletter",
   );
 
@@ -106,6 +103,28 @@ export async function sendNewsletter(req, res) {
     success: true,
     message: `Newsletter sent to ${recipientList.length} subscriber${recipientList.length > 1 ? "s" : ""}`,
   });
+}
+
+export async function unsubscribeFromNewsletter(req, res) {
+  const { email, projectId } = req.query;
+
+  if (!email || !projectId)
+    return res.status(400).send("<h1>Invalid unsubscribe link</h1>");
+
+  await safeOperation(
+    () => db.run(
+      "delete from newsletter_subscribers where email = ? and fk_project_id = ?",
+      [decodeURIComponent(email).trim().toLowerCase(), projectId],
+    ),
+    "Error while unsubscribing",
+  );
+
+  if (req.method === "POST")
+    return res.status(200).send("Unsubscribed");
+
+  res.status(200).send(
+    `<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><title>Unsubscribed</title></head><body style="font-family:sans-serif;text-align:center;padding:3rem"><h1>You've been unsubscribed</h1><p>You will no longer receive newsletters from this restaurant.</p></body></html>`,
+  );
 }
 
 export async function getAllRestaurants(req, res) {
