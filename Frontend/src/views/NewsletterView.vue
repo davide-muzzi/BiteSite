@@ -1,7 +1,7 @@
 <script setup>
-import { computed, ref } from 'vue';
+import { computed, ref, onMounted } from 'vue';
 import BackButton from '@/components/BackButton.vue';
-import { sendNewsletter } from '@/api/routes/restaurant.js';
+import { sendNewsletter, getNewsletterSubscriberCount } from '@/api/routes/restaurant.js';
 import { useRoute } from 'vue-router';
 import router from "@/router";
 
@@ -9,7 +9,12 @@ const route = useRoute();
 
 const subject = ref('');
 const body = ref('');
-const subscribers = ref(617);
+const subscribers = ref(0);
+
+onMounted(async () => {
+    const result = await getNewsletterSubscriberCount(route.params.id);
+    if (result?.success) subscribers.value = result.count;
+});
 const uploads = ref([]);
 
 let nextUploadId = 1;

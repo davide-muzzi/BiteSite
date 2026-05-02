@@ -126,6 +126,18 @@ export async function unsubscribeFromNewsletter(req, res) {
   );
 }
 
+export async function getSubscriberCount(req, res) {
+  const { projectId } = req.query;
+  checkReq(!projectId);
+
+  const row = await safeOperation(
+    () => db.get("select count(*) as count from newsletter_subscribers where fk_project_id = ?", [projectId]),
+    "Error while counting subscribers",
+  );
+
+  res.status(200).json({ success: true, count: row.count });
+}
+
 export async function getAllRestaurants(req, res) {
   const restaurants = await safeOperation(
     () => db.all("select project_id, name, website_title, website_route from projects where published = 1"),
