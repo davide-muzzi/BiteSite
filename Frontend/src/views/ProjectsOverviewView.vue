@@ -10,10 +10,10 @@ import {
 } from "lucide-vue-next";
 
 const templates = [
-  { id: 1, title: "Template 1" },
-  { id: 2, title: "Template 2" },
-  { id: 3, title: "Template 3" },
-  { id: 4, title: "Template catalogue" }
+  { id: "blank",     name: "Blank",  desc: "Start from scratch",     navColor: "#222222", pageBg: "#ffffff" },
+  { id: "simple",    name: "Simple", desc: "Clean & minimal",        navColor: "#1a1a1a", pageBg: "#ffffff" },
+  { id: "warm",      name: "Warm",   desc: "Cozy, earthy tones",     navColor: "#6b3a2a", pageBg: "#fdf6ec" },
+  { id: "catalogue", name: "Template catalogue", desc: null, navColor: null, pageBg: null },
 ];
 
 const projects = ref([{
@@ -38,12 +38,11 @@ const thumbDragStartX = ref(0);
 const thumbDragStartScrollLeft = ref(0);
 
 function handleTemplateClick(template) {
-  if (template.title === "Template catalogue") {
+  if (template.id === "catalogue") {
     router.push({ name: "templates" });
     return;
   }
-
-  console.log("Template clicked:", template.title);
+  router.push({ path: "/create-project", query: { template: template.id } });
 }
 
 function handleProjectClick(project) {
@@ -207,22 +206,35 @@ onUnmounted(() => {
         <div class="templates-grid">
           <button v-for="template in templates" :key="template.id" class="template-card" type="button"
             @click="handleTemplateClick(template)">
-            <div class="template-preview">
-              <div v-if="template.title !== 'Template catalogue'" class="template-image-placeholder">
-                <span>{{ template.title }}</span>
-              </div>
 
-              <div v-else class="catalogue-placeholder">
-                <div class="catalogue-layer layer-1"></div>
-                <div class="catalogue-layer layer-2"></div>
-                <div class="catalogue-layer layer-3"></div>
+            <template v-if="template.id === 'catalogue'">
+              <div class="template-preview catalogue-preview">
+                <div class="catalogue-placeholder">
+                  <div class="catalogue-layer layer-1"></div>
+                  <div class="catalogue-layer layer-2"></div>
+                  <div class="catalogue-layer layer-3"></div>
+                </div>
               </div>
-            </div>
+              <div class="template-footer catalogue-footer">
+                <span class="template-card-name">Template catalogue</span>
+                <ArrowRight class="catalogue-arrow" />
+              </div>
+            </template>
 
-            <div v-if="template.title === 'Template catalogue'" class="catalogue-label">
-              <span>Template catalogue</span>
-              <ArrowRight class="catalogue-arrow" />
-            </div>
+            <template v-else>
+              <div class="mini-preview" :style="{ backgroundColor: template.pageBg }">
+                <div class="mini-nav" :style="{ backgroundColor: template.navColor }"></div>
+                <div class="mini-content-area">
+                  <div class="mini-block" :style="{ backgroundColor: template.navColor }"></div>
+                  <div class="mini-block mini-block-sm" :style="{ backgroundColor: template.navColor }"></div>
+                </div>
+              </div>
+              <div class="template-footer">
+                <span class="template-card-name">{{ template.name }}</span>
+                <span class="template-card-desc">{{ template.desc }}</span>
+              </div>
+            </template>
+
           </button>
         </div>
       </div>
@@ -324,8 +336,9 @@ onUnmounted(() => {
   padding: 0;
   overflow: hidden;
   cursor: pointer;
+  display: flex;
+  flex-direction: column;
   transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
-  min-height: 170px;
 }
 
 .template-card:hover {
@@ -334,35 +347,74 @@ onUnmounted(() => {
   border-color: var(--font-color-dark-blue);
 }
 
-.template-preview {
-  height: 100%;
-  min-height: 170px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: #efefef;
+.mini-preview {
+  height: 120px;
+  width: 100%;
+  flex-shrink: 0;
 }
 
-.template-image-placeholder {
+.mini-nav {
+  height: 14px;
   width: 100%;
-  height: 100%;
-  min-height: 170px;
+}
+
+.mini-content-area {
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.mini-block {
+  height: 22px;
+  width: 100%;
+  border-radius: 4px;
+  opacity: 0.12;
+}
+
+.mini-block-sm {
+  width: 55%;
+  height: 12px;
+  opacity: 0.07;
+}
+
+.template-footer {
+  padding: 10px 14px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.catalogue-preview {
+  height: 120px;
+  background: #efefef;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg,
-      #dbdbdb 0%,
-      #efefef 50%,
-      #d9d9d9 100%);
-  color: #7d7d7d;
-  font-size: 0.95rem;
-  font-weight: 600;
+}
+
+.catalogue-footer {
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.template-card-name {
+  font-size: 14px;
+  font-weight: 700;
+  color: #111;
+}
+
+.template-card-desc {
+  font-size: 11px;
+  font-weight: 500;
+  color: rgba(32, 32, 32, 0.5);
 }
 
 .catalogue-placeholder {
   position: relative;
   width: 180px;
-  height: 95px;
+  height: 80px;
 }
 
 .catalogue-layer {
@@ -372,50 +424,33 @@ onUnmounted(() => {
 }
 
 .layer-1 {
-  width: 86px;
-  height: 56px;
+  width: 80px;
+  height: 52px;
   background: #fd043c;
   top: 0;
-  left: 18px;
+  left: 14px;
 }
 
 .layer-2 {
-  width: 86px;
-  height: 56px;
+  width: 80px;
+  height: 52px;
   background: #41308f;
-  top: 20px;
-  left: 48px;
+  top: 16px;
+  left: 44px;
 }
 
 .layer-3 {
-  width: 86px;
-  height: 56px;
+  width: 80px;
+  height: 52px;
   background: #1e1e1e;
-  top: 38px;
-  left: 78px;
-}
-
-.catalogue-label {
-  position: absolute;
-  left: 50%;
-  bottom: 16px;
-  transform: translateX(-50%);
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  color: #111;
-  font-size: 0.95rem;
-  font-weight: 600;
-  white-space: nowrap;
-}
-
-.template-card:last-child {
-  position: relative;
+  top: 32px;
+  left: 74px;
 }
 
 .catalogue-arrow {
   width: 16px;
   height: 16px;
+  flex-shrink: 0;
 }
 
 .projects-header {

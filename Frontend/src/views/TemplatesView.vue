@@ -1,23 +1,16 @@
 ﻿<script setup>
 import BackButton from '@/components/BackButton.vue';
+import router from '@/router';
 
 const templates = [
-    { id: 1, name: "Template 01" },
-    { id: 2, name: "Template 02" },
-    { id: 3, name: "Template 03" },
-    { id: 4, name: "Template 04" },
-    { id: 5, name: "Template 05" },
-    { id: 6, name: "Template 06" },
-    { id: 7, name: "Template 07" },
-    { id: 8, name: "Template 08" },
-    { id: 9, name: "Template 09" },
-    { id: 10, name: "Template 10" },
-    { id: 11, name: "Template 11" },
-    { id: 12, name: "Template 12" },
-]
+    { id: "blank",  name: "Blank",  desc: "Start from scratch. One empty page, ready to build.",  navColor: "#222222", pageBg: "#ffffff" },
+    { id: "simple", name: "Simple", desc: "Clean, minimal layout with a welcome section and review CTA.", navColor: "#1a1a1a", pageBg: "#ffffff" },
+    { id: "warm",   name: "Warm",   desc: "Earthy tones with a reservation form and review section.", navColor: "#6b3a2a", pageBg: "#fdf6ec" },
+    { id: "dark",   name: "Dark",   desc: "Moody dark theme with gold accents and a booking form.",  navColor: "#111111", pageBg: "#1a1a1a" },
+];
 
 function handleTemplateClick(template) {
-    console.log("Template clicked:", template)
+    router.push({ path: "/create-project", query: { template: template.id } });
 }
 </script>
 
@@ -33,18 +26,18 @@ function handleTemplateClick(template) {
             <div class="template-grid">
                 <article v-for="template in templates" :key="template.id" class="template-card"
                     @click="handleTemplateClick(template)">
-                    <div class="template-thumbnail">
-
-                        <div class="template-placeholder">
-                            Template
+                    <div class="template-thumbnail" :style="{ backgroundColor: template.pageBg }">
+                        <div class="thumb-nav" :style="{ backgroundColor: template.navColor }"></div>
+                        <div class="thumb-body">
+                            <div class="thumb-block" :style="{ backgroundColor: template.navColor }"></div>
+                            <div class="thumb-block thumb-block-sm" :style="{ backgroundColor: template.navColor }"></div>
+                            <div class="thumb-block thumb-block-xs" :style="{ backgroundColor: template.navColor }"></div>
                         </div>
-
                         <div class="thumbnail-overlay">
                             <h2>{{ template.name }}</h2>
                         </div>
-
                     </div>
-
+                    <p class="template-desc">{{ template.desc }}</p>
                 </article>
             </div>
         </section>
@@ -102,7 +95,8 @@ function handleTemplateClick(template) {
     height: 220px;
     border-radius: 22px;
     overflow: hidden;
-    background: #d9d9d9;
+    display: flex;
+    flex-direction: column;
     transition: transform 0.18s ease, box-shadow 0.18s ease;
 }
 
@@ -111,17 +105,37 @@ function handleTemplateClick(template) {
     box-shadow: 0 14px 30px rgba(49, 38, 110, 0.12);
 }
 
-.template-placeholder {
+.thumb-nav {
+    height: 18px;
     width: 100%;
-    height: 100%;
+    flex-shrink: 0;
+}
+
+.thumb-body {
+    padding: 16px 18px;
     display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 34px;
-    font-weight: 700;
-    color: rgba(0, 0, 0, 0.2);
-    background: #d3d3d3;
-    user-select: none;
+    flex-direction: column;
+    gap: 10px;
+    flex: 1;
+}
+
+.thumb-block {
+    height: 28px;
+    width: 100%;
+    border-radius: 5px;
+    opacity: 0.13;
+}
+
+.thumb-block-sm {
+    width: 65%;
+    height: 18px;
+    opacity: 0.08;
+}
+
+.thumb-block-xs {
+    width: 40%;
+    height: 14px;
+    opacity: 0.06;
 }
 
 .thumbnail-overlay {
@@ -136,7 +150,15 @@ function handleTemplateClick(template) {
     font-size: 18px;
     font-weight: 800;
     color: white;
-    text-shadow: 0 2px 12px rgba(0, 0, 0, 0.28);
+    text-shadow: 0 2px 12px rgba(0, 0, 0, 0.5);
+}
+
+.template-desc {
+    margin: 10px 4px 0;
+    font-size: 13px;
+    font-weight: 500;
+    color: rgba(32, 32, 32, 0.55);
+    line-height: 1.4;
 }
 </style>
 

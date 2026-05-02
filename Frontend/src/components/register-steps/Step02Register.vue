@@ -76,6 +76,8 @@ function selectPlan(plan) {
                 </button>
             </article>
         </div>
+
+        <p class="disclaimer">No actual subscription or payment will be processed.</p>
     </section>
 </template>
 
@@ -211,5 +213,13 @@ function selectPlan(plan) {
 .plan-button:hover {
     background-color: var(--button-hover-color);
     transform: translateY(-2px);
+}
+
+.disclaimer {
+    text-align: center;
+    font-size: 13px;
+    font-weight: 600;
+    color: rgba(33, 33, 33, 0.45);
+    margin: 0;
 }
 </style>

@@ -92,6 +92,7 @@ const handleRegister = async () => {
             <p v-else>No subscription selected.</p>
         </article>
     </section>
+    <p class="disclaimer">Feel free to enter any card details — nothing will actually be charged.</p>
 </template>
 
 <style scoped>
@@ -251,5 +252,13 @@ const handleRegister = async () => {
     font-size: 22px;
     font-weight: 800;
     color: var(--accent);
+}
+
+.disclaimer {
+    text-align: center;
+    font-size: 13px;
+    font-weight: 600;
+    color: rgba(33, 33, 33, 0.45);
+    margin: 20px 0 0;
 }
 </style>
