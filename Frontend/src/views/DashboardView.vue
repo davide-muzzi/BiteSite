@@ -159,28 +159,6 @@ onMounted(async () => {
                 <!-- STATS -->
                 <div class="stats">
 
-                    <div class="stat-block">
-
-                        <div class="stat-title">
-                            Unique visitors
-                        </div>
-
-                        <div class="stat-grid">
-
-                            <div>
-                                <div class="stat-label">Last 24 hours</div>
-                                <div class="stat-number">393</div>
-                            </div>
-
-                            <div>
-                                <div class="stat-label">Last 30 days</div>
-                                <div class="stat-number">2'561</div>
-                            </div>
-
-                        </div>
-
-                    </div>
-
                     <div class="stat-block rating">
 
                         <div class="stat-title">
@@ -225,10 +203,6 @@ onMounted(async () => {
                         Delete Project
                     </button>
 
-                </div>
-
-                <div class="preview">
-                    <img src="https://placehold.co/600x350" />
                 </div>
 
                 <button class="main-btn" @click="router.push(`/editor/${projectId}`)">
@@ -339,18 +313,8 @@ input {
     margin-bottom: 10px;
 }
 
-.stat-grid {
-    display: flex;
-    gap: 60px;
-}
-
 .stat-label {
     font-size: 14px;
-}
-
-.stat-number {
-    font-size: 36px;
-    font-weight: 600;
 }
 
 .rating-value {
@@ -412,11 +376,6 @@ button {
     display: flex;
     align-items: center;
     gap: 6px;
-}
-
-.preview img {
-    width: 100%;
-    border-radius: 18px;
 }
 
 .main-btn {
