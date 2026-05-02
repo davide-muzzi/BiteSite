@@ -229,7 +229,7 @@ onMounted(async () => {
                     Manage Newsletter
                 </button>
 
-                <button class="main-btn">
+                <button class="main-btn" @click="router.push(`/${projectId}/reservations`)">
                     <User class="icon" />
                     Manage Reservations
                 </button>
