@@ -2,8 +2,12 @@
 import { ref } from 'vue';
 import BackButton from '@/components/BackButton.vue';
 import { createProject } from '../api/routes/project.js';
+import router from "@/router";
 
 const name = ref("");
+const title = ref("");
+const route = ref("");
+const errorMessage = ref("");
 
 const newTag = ref("");
 
@@ -27,9 +31,16 @@ const handleCreateProject = async () => {
   console.log(name.value);
   const result = await createProject(
     name.value,
+    title.value,
+    route.value,
     tags.value.map(tag => tag.tagName),
     templateName.value
-  );  if (result.success) window.location.href = "/editor";
+  );
+
+  if (result.success)
+    router.push(`/dashboard/${result.projectId}`);
+  else
+    errorMessage.value = result.message;
 }
 
 </script>
@@ -47,6 +58,14 @@ const handleCreateProject = async () => {
             <div class="field-group">
                 <label>Name</label>
                 <input v-model="name" type="text" placeholder="Enter project name ..." />
+            </div>
+            <div class="field-group">
+                <label>Website Title</label>
+                <input v-model="title" type="text" placeholder="Enter website title ..." />
+            </div>
+            <div class="field-group">
+                <label>Website URL Route (must be unique)</label>
+                <input v-model="route" type="text" placeholder="Enter website route ..." />
             </div>
 
             <div class="field-group">
@@ -71,6 +90,7 @@ const handleCreateProject = async () => {
             <button class="create-btn" type="button" @click="handleCreateProject()">
                 Create
             </button>
+            <div class="error-message" v-if="errorMessage">{{ errorMessage }}</div>
         </div>
     </section>
 </template>
@@ -217,5 +237,11 @@ const handleCreateProject = async () => {
 .create-btn:hover {
     background: var(--button-hover-color);
     transform: translateY(-2px);
+}
+
+.error-message {
+  color: red;
+  text-align: center;
+  font-size: 18px;
 }
 </style>

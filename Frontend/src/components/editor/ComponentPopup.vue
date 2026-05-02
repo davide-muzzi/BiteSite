@@ -1,7 +1,7 @@
 <script setup>
 import { Plus } from "lucide-vue-next";
 import { ref, onMounted } from "vue";
-import components from "@/assets/components/components.js";
+import components from "@/website-components/components.js";
 
 import ComponentDropdown from "./ComponentDropdown.vue";
 
@@ -87,11 +87,13 @@ onMounted(() => {
   left: 325px;
   top: -70px;
   width: calc((100vw - 350px) - 20px);
-  height: 50vh;
   background-color: var(--card-color);
   border-top-right-radius: 25px;
   border-bottom-right-radius: 25px;
   padding: 10px;
   box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
 }
 </style>

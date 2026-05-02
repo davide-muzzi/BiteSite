@@ -1,7 +1,6 @@
 <script setup>
 import { ref } from "vue";
 import { ChevronRight } from "lucide-vue-next";
-import components from "@/assets/components/components.js";
 
 const props = defineProps(["category"]);
 const emit = defineEmits(["addComponent"]);
@@ -33,7 +32,10 @@ const toggleDropdown = (_, component) => {
       class="component"
       v-for="component of category.components"
       @click="toggleDropdown(_, component)"
-    >{{ component.name }}</div>
+    >
+    <img :src="`/website-components/${category.name}/${component.name}.png`">
+      <div>{{ component.name }}</div>
+    </div>
   </div>
 </template>
 <style scoped>
@@ -63,10 +65,23 @@ const toggleDropdown = (_, component) => {
 
 .dropdown-body {
   padding: 10px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 5px;
 }
 
 .component {
   user-select: none;
   cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  width: 300px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.component img {
+  height: 50px;
 }
 </style>

@@ -7,9 +7,11 @@ import {
   AlignStartVertical,
   AlignCenterVertical,
   AlignEndVertical,
+  AlignHorizontalSpaceBetween,
   AlignVerticalJustifyStart,
   AlignVerticalJustifyCenter,
   AlignVerticalJustifyEnd,
+  AlignVerticalSpaceBetween,
   ArrowDownUp,
   ArrowLeftRight,
 } from "lucide-vue-next";
@@ -150,6 +152,12 @@ const toggleDropdown = (_, font) => {
             >
               <AlignEndVertical/>
             </button>
+            <button
+              :class="{ 'selected': content.style.justifyContent === 'space-between' }"
+              @click="content.style.justifyContent = 'space-between'"
+            >
+              <AlignHorizontalSpaceBetween/>
+            </button>
           </div>
         </div>
         <div>
@@ -172,6 +180,12 @@ const toggleDropdown = (_, font) => {
               @click="content.style.alignItems = 'flex-end'"
             >
               <AlignVerticalJustifyEnd/>
+            </button>
+            <button
+              :class="{ 'selected': content.style.alignItems === 'space-between' }"
+              @click="content.style.alignItems = 'space-between'"
+            >
+              <AlignVerticalSpaceBetween/>
             </button>
           </div>
         </div>
@@ -301,6 +315,7 @@ const toggleDropdown = (_, font) => {
 .font-dropdown {
   position: relative;
   display: grid;
+  margin-bottom: 7px;
 }
 
 .font-dropdown > div {
@@ -393,7 +408,7 @@ const toggleDropdown = (_, font) => {
 }
 
 .align-radio {
-  width: 120px;
+  width: 160px;
 }
 
 .flow-radio {

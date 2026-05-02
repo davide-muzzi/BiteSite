@@ -10,8 +10,15 @@ const escapeHtml = (str) => String(str)
   .replace(/'/g, "&#39;");
 
 export async function createProject(req, res) {
-  const { name, tags, templateName } = req.body;
-  checkReq(!name || !tags || !templateName);
+  const { name, title, route, tags, templateName } = req.body;
+  checkReq(!name.trim() || !title.trim() || !route.trim() || !tags.trim() || !templateName);
+
+  const routeProject = await safeOperation(
+    () => db.get("select project_id, fk_user_id from projects where website_route = ?", [route.toLowerCase()]),
+    "Error while checking if route exists"
+  );
+
+  if (routeProject) return res.status(409).json({ success: false, message: "Route is already registered" });
 
   if (templateName !== "blank") return res.status(400).json({ success: false, message: "Not a recognized template" });
   const template = {
@@ -107,7 +114,7 @@ export async function createProject(req, res) {
     "Error while inserting tag references"
   );
 
-  res.status(200).json({ success: true, message: "Successfully created project" });
+  res.status(200).json({ success: true, message: "Successfully created project", projectId: projectInsert.lastID });
 }
 
 export async function deleteProject(req, res) {
@@ -148,11 +155,11 @@ export async function editProject(req, res) {
   if (project.fk_user_id !== req.session.user.id)
     return res.status(403).json({ success: false, message: "Not your project" });
 
-  if (route && route !== project.website_route)
+  if (route.trim() && route !== project.website_route)
     await editRoute(projectId, route, project.website_route, project.published);
-  if (title && title !== project.website_title)
+  if (title.trim() && title !== project.website_title)
     await editTitle(projectId, title, JSON.parse(project.website), project.website_route);
-  if (name && name !== project.name)
+  if (name.trim() && name !== project.name)
     await editName(projectId, name);
 
   res.status(200).json({ success: true, message: "Successfully edited project" });
@@ -185,7 +192,7 @@ async function editRoute(projectId, route, oldRoute, published) {
 
 async function editTitle(projectId, title, website, route) {
   await safeOperation(
-    () => makeWebsite(website, route, title),
+    () => makeWebsite(website, route, title, projectId),
     "Error while making website"
   );
 
@@ -284,7 +291,7 @@ export async function updateWebsite(req, res) {
     return res.status(403).json({ success: false, message: "Not your project" });
 
   await safeOperation(
-    () => makeWebsite(website, project.website_route, project.website_title),
+    () => makeWebsite(website, project.website_route, project.website_title, projectId),
     "Error while making website"
   );
 
@@ -330,7 +337,7 @@ function objectToCSS(object) {
   return css
 }
 
-async function makeWebsite(website, route, title) {
+async function makeWebsite(website, route, title, projectId) {
   let htmlContent = await safeOperation(
     () => readFile("./websites/.template.html", "utf-8"),
     "Error while reading website html file"
@@ -372,9 +379,7 @@ async function makeWebsite(website, route, title) {
     .replace(/§navbarItems§/, navbarItems)
     .replace(/§navbarCss§/, navbarCss)
     .replace(/§navbarTitle§/, titleItem.text)
-    .replace(/§navbarHeight§/, barItem.style.height);
-
-  htmlContent = htmlContent
+    .replace(/§navbarHeight§/, barItem.style.height)
     .replace(/§firstPage§/, pages[0].name.toLowerCase());
 
   let pagesHtml = "";
@@ -436,7 +441,8 @@ async function makeWebsite(website, route, title) {
 
   htmlContent = htmlContent
     .replace(/§pageContent§/, pagesHtml)
-    .replace(/§pageCss§/, pagesCss);
+    .replace(/§pageCss§/, pagesCss)
+    .replace(/§projectId§/, projectId);
 
   await safeOperation(
     () => writeFile(`./websites/${route}.html`, htmlContent),

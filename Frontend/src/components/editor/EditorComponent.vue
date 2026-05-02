@@ -36,10 +36,10 @@ const changeOpenContent = (name) => {
             <EditorContent
               :content="content"
               :openContent="openContent"
-              v-for="content of component.content"
+              v-for="(content, index) of component.content"
               v-if="isOpen"
               @open="changeOpenContent"
-              @click="emit('selectElement', content.id)"
+              @click="emit('selectElement', { id: content.id, contentIndex: index })"
             />
         </div>
     </div>

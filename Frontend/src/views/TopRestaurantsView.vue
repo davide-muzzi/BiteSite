@@ -2,8 +2,10 @@
 import { ref, onMounted, computed } from "vue";
 import { Search, Star } from "lucide-vue-next";
 import { getAllRestaurants, getRestaurantsTags, getRestaurantsReviews } from "@/api/routes/restaurant.js";
+import router from "@/router";
 
 const restaurants = ref([]);
+const apiUrl = import.meta.env.VITE_API_URL + "/restaurants/website/";
 
 onMounted(async () => {
   const result = await getAllRestaurants();
@@ -47,6 +49,10 @@ onMounted(async () => {
   }
 });
 
+const visitPage = (route) => {
+  window.location.href = apiUrl + route;
+}
+
 const searchQuery = ref("");
 const sortedRestaurants = computed(() => {
 
@@ -54,10 +60,6 @@ const sortedRestaurants = computed(() => {
     .filter(r => r.websiteTitle.toLowerCase().includes(searchQuery.value.toLowerCase()))
     .sort((a, b) => b.averageRating - a.averageRating)
 });
-
-function visitSite(url) {
-  window.location.href = url
-}
 </script>
 
 <template>
@@ -92,8 +94,8 @@ function visitSite(url) {
             </span>
           </div>
         </div>
-         <div  class="actions">
-           <div class="visit-link" @click="visitSite(restaurant.websiteRoute)">Visit Site</div>
+         <div class="actions">
+           <div class="visit-link" @click="visitPage(restaurant.websiteRoute)">Visit Site</div>
         </div>
       </article>
     </div>
@@ -207,6 +209,8 @@ function visitSite(url) {
   font-weight: 700;
   text-decoration: none;
   transition: background 0.2s ease;
+  cursor: pointer;
+  user-select: none;
 }
 
 .visit-link:hover {
