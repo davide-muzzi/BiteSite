@@ -32,7 +32,8 @@ onMounted(async () => {
   gap: 36px;
   align-items: center;
   font-family: var(--font);
-  position: relative;
+  position: sticky;
+  top: 0;
   z-index: 10;
   background: white;
   border-bottom: 1px solid rgba(49, 38, 110, 0.08);
