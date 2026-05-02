@@ -48,6 +48,7 @@ const handleregister = async () => {
             <div class="form-group">
                 <label for="password">Password</label>
                 <input id="password" type="password" v-model="password" placeholder="Password..." required />
+                <p class="field-hint">At least 8 characters</p>
             </div>
 
             <button type="submit" class="register-button">
@@ -121,6 +122,13 @@ const handleregister = async () => {
     font-size: 18px;
     font-weight: 600;
     box-sizing: border-box;
+}
+
+.field-hint {
+    margin: 6px 0 0 12px;
+    font-size: 13px;
+    font-weight: 600;
+    color: rgba(49, 38, 110, 0.45);
 }
 
 .register-button {
