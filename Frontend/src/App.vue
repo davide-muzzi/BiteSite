@@ -24,7 +24,7 @@ const isEditor = computed(() => route.name === 'editor');
   </div>
 
   <div class="site-wrapper" :class="{ 'site-wrapper--editor': isEditor }">
-    <NavBar v-if="!isWebsite" />
+    <NavBar v-if="!isWebsite" :sticky="!isEditor" />
     <BackButton v-if="isEditor" class="editor-back" />
     <div class="router-wrapper">
       <RouterView />

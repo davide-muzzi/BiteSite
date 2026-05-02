@@ -2,6 +2,8 @@
 import { checkLogin } from "@/api/routes/user.js";
 import { onMounted, ref } from "vue";
 
+const props = defineProps({ sticky: { type: Boolean, default: true } });
+
 const loggedIn = ref("");
 
 onMounted(async () => {
@@ -12,7 +14,7 @@ onMounted(async () => {
 </script>
 
 <template>
-  <nav class="nav">
+  <nav class="nav" :class="{ 'nav--sticky': sticky }">
     <RouterLink to="/" class="logo">BiteSite</RouterLink>
 
     <div class="nav-links">
@@ -32,12 +34,16 @@ onMounted(async () => {
   gap: 36px;
   align-items: center;
   font-family: var(--font);
-  position: sticky;
-  top: 0;
-  z-index: 10;
+  position: relative;
+  z-index: 99999;
   background: white;
   border-bottom: 1px solid rgba(49, 38, 110, 0.08);
   box-shadow: 0 2px 16px rgba(49, 38, 110, 0.06);
+}
+
+.nav--sticky {
+  position: sticky;
+  top: 0;
 }
 
 .logo {
