@@ -11,7 +11,7 @@ function objectToCSS(object) {
   return css
 }
 
-export default function parseWebsite(website, selectedElement, selectedPage) {
+export default function parseWebsite(website, selectedElement, selectedPage, projectId) {
   let htmlContent = websiteTemplate;
 
   const navbar = website.navbar;
@@ -48,9 +48,7 @@ export default function parseWebsite(website, selectedElement, selectedPage) {
     .replace(/§navbarItems§/, navbarItems)
     .replace(/§navbarCss§/, navbarCss)
     .replace(/§navbarTitle§/, titleItem.text)
-    .replace(/§navbarHeight§/, barItem.style.height);
-
-  htmlContent = htmlContent
+    .replace(/§navbarHeight§/, barItem.style.height)
     .replace(/§selectedPage§/, pages[selectedPage].name.toLowerCase());
 
   let pagesHtml = "";
@@ -116,7 +114,8 @@ export default function parseWebsite(website, selectedElement, selectedPage) {
 
   htmlContent = htmlContent
     .replace(/§pageContent§/, pagesHtml)
-    .replace(/§pageCss§/, pagesCss);
+    .replace(/§pageCss§/, pagesCss)
+    .replace(/§projectId§/, projectId);
 
   return htmlContent;
 }

@@ -37,7 +37,7 @@ watch(() => website.value, () => {
 }, { deep: true });
 
 const loadPreview = () => {
-  const html = parseWebsite(website.value, selectedElement.value, selectedPage.value);
+  const html = parseWebsite(website.value, selectedElement.value, selectedPage.value, projectId.value);
   const doc = iframeRef.value.contentDocument;
 
   doc.open();

@@ -192,7 +192,7 @@ async function editRoute(projectId, route, oldRoute, published) {
 
 async function editTitle(projectId, title, website, route) {
   await safeOperation(
-    () => makeWebsite(website, route, title),
+    () => makeWebsite(website, route, title, projectId),
     "Error while making website"
   );
 
@@ -291,7 +291,7 @@ export async function updateWebsite(req, res) {
     return res.status(403).json({ success: false, message: "Not your project" });
 
   await safeOperation(
-    () => makeWebsite(website, project.website_route, project.website_title),
+    () => makeWebsite(website, project.website_route, project.website_title, projectId),
     "Error while making website"
   );
 
@@ -337,7 +337,7 @@ function objectToCSS(object) {
   return css
 }
 
-async function makeWebsite(website, route, title) {
+async function makeWebsite(website, route, title, projectId) {
   let htmlContent = await safeOperation(
     () => readFile("./websites/.template.html", "utf-8"),
     "Error while reading website html file"
@@ -379,9 +379,7 @@ async function makeWebsite(website, route, title) {
     .replace(/§navbarItems§/, navbarItems)
     .replace(/§navbarCss§/, navbarCss)
     .replace(/§navbarTitle§/, titleItem.text)
-    .replace(/§navbarHeight§/, barItem.style.height);
-
-  htmlContent = htmlContent
+    .replace(/§navbarHeight§/, barItem.style.height)
     .replace(/§firstPage§/, pages[0].name.toLowerCase());
 
   let pagesHtml = "";
@@ -443,7 +441,8 @@ async function makeWebsite(website, route, title) {
 
   htmlContent = htmlContent
     .replace(/§pageContent§/, pagesHtml)
-    .replace(/§pageCss§/, pagesCss);
+    .replace(/§pageCss§/, pagesCss)
+    .replace(/§projectId§/, projectId);
 
   await safeOperation(
     () => writeFile(`./websites/${route}.html`, htmlContent),
