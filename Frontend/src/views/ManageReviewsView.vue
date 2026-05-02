@@ -3,6 +3,7 @@
     import { ref, computed, onMounted } from 'vue'
     import { useRoute } from 'vue-router'
     import { getRestaurantsReviews } from '@/api/routes/restaurant.js'
+    import BackButton from '@/components/BackButton.vue'
 
     const pageRoute = useRoute()
     const reviewsEnabled = ref(true)
@@ -36,6 +37,7 @@
 
 <template>
   <div class="manage-reviews">
+    <BackButton />
     <div class="header">
       <div class="header-text">
         <span class="label">Enable Reviews</span>

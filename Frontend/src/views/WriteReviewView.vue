@@ -3,6 +3,7 @@ import { ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { Star } from 'lucide-vue-next'
 import { saveReview } from "@/api/routes/restaurant.js";
+import BackButton from '@/components/BackButton.vue'
 
 const route = useRoute()
 
@@ -45,6 +46,7 @@ const handleSaveReview = async () => {
 
 <template>
     <section class="review-page">
+        <BackButton />
         <div class="page-header">
             <h1>Write a Review</h1>
         </div>
