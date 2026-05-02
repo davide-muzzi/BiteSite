@@ -11,7 +11,7 @@ const escapeHtml = (str) => String(str)
 
 export async function createProject(req, res) {
   const { name, title, route, tags, templateName } = req.body;
-  checkReq(!name.trim() || !title.trim() || !route.trim() || !tags.trim() || !templateName);
+  checkReq(!name.trim() || !title.trim() || !route.trim() || !tags || !templateName);
 
   const routeProject = await safeOperation(
     () => db.get("select project_id, fk_user_id from projects where website_route = ?", [route.toLowerCase()]),
