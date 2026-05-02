@@ -272,6 +272,7 @@ const sortedRestaurants = computed(() => {
 }
 
 .star {
+  fill: #ffb400;
   color: #ffb400;
   font-size: 26px;
 }
