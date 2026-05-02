@@ -27,13 +27,16 @@ onMounted(async () => {
 
 <style scoped>
 .nav {
-  padding: 32px 50px 0;
+  padding: 20px 50px;
   display: flex;
   gap: 36px;
   align-items: center;
   font-family: var(--font);
   position: relative;
   z-index: 10;
+  background: white;
+  border-bottom: 1px solid rgba(49, 38, 110, 0.08);
+  box-shadow: 0 2px 16px rgba(49, 38, 110, 0.06);
 }
 
 .logo {
