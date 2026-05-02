@@ -1,8 +1,11 @@
 <script setup>
 import { ref } from 'vue';
+import { useRoute } from 'vue-router';
 import BackButton from '@/components/BackButton.vue';
 import { createProject } from '../api/routes/project.js';
 import router from "@/router";
+
+const currentRoute = useRoute();
 
 const name = ref("");
 const title = ref("");
@@ -13,7 +16,15 @@ const newTag = ref("");
 
 const tags = ref([]);
 
-const templateName = ref("blank");
+const validTemplates = ["blank", "simple", "warm", "dark"];
+const templateName = ref(validTemplates.includes(currentRoute.query.template) ? currentRoute.query.template : "blank");
+
+const templates = [
+  { id: "blank",  label: "Blank",  desc: "Start from scratch",           accent: "#dddddd", dark: false },
+  { id: "simple", label: "Simple", desc: "Clean & minimal",              accent: "#1a1a1a", dark: true  },
+  { id: "warm",   label: "Warm",   desc: "Cozy, earthy tones",           accent: "#6b3a2a", dark: true  },
+  { id: "dark",   label: "Dark",   desc: "Moody with a gold accent",     accent: "#111111", dark: true  },
+];
 
 function addTag() {
     const newTagName = `#${newTag.value}`;
@@ -83,6 +94,31 @@ const handleCreateProject = async () => {
                         @keydown.enter.prevent="addTag()" />
                     <button class="add-tag-btn" type="button" @click="addTag">
                         +
+                    </button>
+                </div>
+            </div>
+
+            <div class="field-group">
+                <label>Template</label>
+                <div class="template-picker">
+                    <button
+                        v-for="tpl in templates"
+                        :key="tpl.id"
+                        type="button"
+                        class="template-card"
+                        :class="{ selected: templateName === tpl.id }"
+                        @click="templateName = tpl.id"
+                    >
+                        <div class="template-swatch" :style="{ backgroundColor: tpl.accent }">
+                            <div v-if="tpl.id === 'warm'" class="swatch-bar" style="background:#f5deb3"></div>
+                            <div v-else-if="tpl.id === 'dark'" class="swatch-bar" style="background:#d4a843"></div>
+                            <div v-else-if="tpl.id === 'simple'" class="swatch-bar" style="background:#ffffff"></div>
+                            <div v-else class="swatch-bar" style="background:#222222"></div>
+                        </div>
+                        <div class="template-info">
+                            <span class="template-name">{{ tpl.label }}</span>
+                            <span class="template-desc">{{ tpl.desc }}</span>
+                        </div>
                     </button>
                 </div>
             </div>
@@ -243,5 +279,68 @@ const handleCreateProject = async () => {
   color: red;
   text-align: center;
   font-size: 18px;
+}
+
+.template-picker {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+}
+
+.template-card {
+    display: flex;
+    flex-direction: column;
+    border-radius: 16px;
+    border: 2px solid transparent;
+    overflow: hidden;
+    cursor: pointer;
+    background: #f9f6f1;
+    transition: border-color 0.15s ease, transform 0.15s ease;
+    padding: 0;
+    text-align: left;
+}
+
+.template-card:hover {
+    transform: translateY(-2px);
+    border-color: color-mix(in srgb, var(--accent) 40%, transparent);
+}
+
+.template-card.selected {
+    border-color: var(--accent);
+}
+
+.template-swatch {
+    height: 72px;
+    width: 100%;
+    display: flex;
+    align-items: flex-end;
+    padding-bottom: 10px;
+    padding-left: 10px;
+}
+
+.swatch-bar {
+    height: 8px;
+    width: 60%;
+    border-radius: 4px;
+    opacity: 0.7;
+}
+
+.template-info {
+    padding: 10px 14px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.template-name {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--font-color-dark-blue);
+}
+
+.template-desc {
+    font-size: 12px;
+    font-weight: 500;
+    color: rgba(32, 32, 32, 0.55);
 }
 </style>

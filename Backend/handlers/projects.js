@@ -1,6 +1,7 @@
 import { db } from "../database/db.js";
 import { safeOperation, checkReq, HttpError } from "../error-handling.js";
 import { readFile, writeFile, rename } from "fs/promises";
+import extraTemplates from "../templates/index.js";
 
 const escapeHtml = (str) => String(str)
   .replace(/&/g, "&amp;")
@@ -20,8 +21,10 @@ export async function createProject(req, res) {
 
   if (routeProject) return res.status(409).json({ success: false, message: "Route is already registered" });
 
-  if (templateName !== "blank") return res.status(400).json({ success: false, message: "Not a recognized template" });
-  const template = {
+  if (templateName !== "blank" && !extraTemplates[templateName])
+    return res.status(400).json({ success: false, message: "Not a recognized template" });
+
+  const blankTemplate = {
     "navbar": {
       "name": "Navbar",
       "content": [
@@ -73,6 +76,8 @@ export async function createProject(req, res) {
       }
     ]
 };
+
+  const template = templateName === "blank" ? blankTemplate : extraTemplates[templateName];
 
   const tagSelectPlaceholders = tags.map(() => "?").join(",");
 
