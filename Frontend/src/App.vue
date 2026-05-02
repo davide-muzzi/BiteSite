@@ -3,6 +3,7 @@ import { computed } from 'vue';
 import { RouterView, useRoute } from 'vue-router';
 import NavBar from './components/NavBar.vue';
 import Footer from './components/Footer.vue';
+import BackButton from './components/BackButton.vue';
 
 const route = useRoute();
 const isWebsite = computed(() => route.name === 'restaurant');
@@ -24,6 +25,7 @@ const isEditor = computed(() => route.name === 'editor');
 
   <div class="site-wrapper" :class="{ 'site-wrapper--editor': isEditor }">
     <NavBar v-if="!isWebsite" />
+    <BackButton v-if="isEditor" class="editor-back" />
     <div class="router-wrapper">
       <RouterView />
     </div>
@@ -41,6 +43,11 @@ const isEditor = computed(() => route.name === 'editor');
 
 .site-wrapper--editor {
   gap: 10px;
+}
+
+.editor-back {
+  padding: 12px 50px 0;
+  margin-bottom: 0;
 }
 
 .router-wrapper {
