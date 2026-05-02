@@ -220,6 +220,46 @@ const toggleDropdown = (_, font) => {
           </div>
         </div>
       </div>
+      <div v-if="content.types.includes('input')">
+        <div>
+          <label>Placeholder:</label>
+          <input v-model="content.text" type="text" />
+        </div>
+        <div>
+          <label>Width:</label>
+          <input v-model="content.style.width" type="text">
+        </div>
+        <div>
+          <label>Height:</label>
+          <input v-model="content.style.height" type="text">
+        </div>
+        <div>
+          <label>Font size:</label>
+          <input v-model="content.style.fontSize" type="text">
+        </div>
+        <div>
+          <label>Background color:</label>
+          <div class="color-input">
+            <input v-model="content.style.backgroundColor" type="color" />
+            <input v-model="content.style.backgroundColor" type="text"/>
+          </div>
+        </div>
+        <div>
+          <label>Text color:</label>
+          <div class="color-input">
+            <input v-model="content.style.color" type="color" />
+            <input v-model="content.style.color" type="text"/>
+          </div>
+        </div>
+        <div>
+          <label>Border radius:</label>
+          <input v-model="content.style.borderRadius" type="text">
+        </div>
+        <div>
+          <label>Padding:</label>
+          <input v-model="content.style.padding" type="text">
+        </div>
+      </div>
     </div>
   </div>
 </template>

@@ -79,6 +79,12 @@ export default function parseWebsite(website, selectedElement, selectedPage, pro
           componentHtml = componentHtml.replace(textRegex, content.text);
         }
 
+        if (content.types.includes("input")) {
+          const textRegex = new RegExp(`§${content.id}§`, "g");
+
+          componentHtml = componentHtml.replace(textRegex, content.text);
+        }
+
         if (content.types.includes("container")) {
           additionalCss += "display: flex;";
 

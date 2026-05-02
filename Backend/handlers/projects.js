@@ -413,6 +413,12 @@ async function makeWebsite(website, route, title, projectId) {
           componentHtml = componentHtml.replace(textRegex, escapeHtml(content.text));
         }
 
+        if (content.types.includes("input")) {
+          const textRegex = new RegExp(`§${content.id}§`, "g");
+
+          componentHtml = componentHtml.replace(textRegex, escapeHtml(content.text));
+        }
+
         if (content.types.includes("container")) {
           additionalCss += "display: flex;";
 
