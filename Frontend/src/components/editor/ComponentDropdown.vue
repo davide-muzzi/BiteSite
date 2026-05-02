@@ -33,7 +33,7 @@ const toggleDropdown = (_, component) => {
       v-for="component of category.components"
       @click="toggleDropdown(_, component)"
     >
-    <img :src="`/website-components/${category.name}/${component.name}.png`">
+    <img :src="`/website-components/${category.name}/${component.name}.png`" @error="$event.target.style.display='none'">
       <div>{{ component.name }}</div>
     </div>
   </div>
