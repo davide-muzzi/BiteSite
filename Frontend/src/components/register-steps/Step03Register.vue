@@ -30,69 +30,71 @@ const handleRegister = async () => {
 </script>
 
 <template>
-    <section class="checkout-grid">
-        <article class="step-card">
-            <header class="card-header">
-                <h2>Secure payment information</h2>
-            </header>
+    <div class="checkout-wrapper">
+        <section class="checkout-grid">
+            <article class="step-card">
+                <header class="card-header">
+                    <h2>Secure payment information</h2>
+                </header>
 
-            <form class="register-form" @submit.prevent="handleRegister()">
-                <div class="form-group">
-                    <label for="cardnumber">Card Number</label>
-                    <input id="cardnumber" type="text" inputmode="numeric" autocomplete="cc-number" v-model="cardnumber"
-                        placeholder="1234 5678 9101 1121" required />
-                </div>
-
-                <div class="form-group">
-                    <label for="cardholdername">Cardholder Name</label>
-                    <input id="cardholdername" type="text" autocomplete="cc-name" v-model="cardholdername"
-                        placeholder="Full Name" required />
-                </div>
-
-                <div class="form-split">
+                <form class="register-form" @submit.prevent="handleRegister()">
                     <div class="form-group">
-                        <label for="mmyy">Expiry</label>
-                        <input id="mmyy" type="text" inputmode="numeric" autocomplete="cc-exp" v-model="mmyy"
-                            placeholder="MM/YY" required />
+                        <label for="cardnumber">Card Number</label>
+                        <input id="cardnumber" type="text" inputmode="numeric" autocomplete="cc-number" v-model="cardnumber"
+                            placeholder="1234 5678 9101 1121" required />
                     </div>
 
                     <div class="form-group">
-                        <label for="cvv">CVV</label>
-                        <input id="cvv" type="password" inputmode="numeric" autocomplete="cc-csc" maxlength="4"
-                            v-model="cvv" placeholder="123" required />
+                        <label for="cardholdername">Cardholder Name</label>
+                        <input id="cardholdername" type="text" autocomplete="cc-name" v-model="cardholdername"
+                            placeholder="Full Name" required />
                     </div>
+
+                    <div class="form-split">
+                        <div class="form-group">
+                            <label for="mmyy">Expiry</label>
+                            <input id="mmyy" type="text" inputmode="numeric" autocomplete="cc-exp" v-model="mmyy"
+                                placeholder="MM/YY" required />
+                        </div>
+
+                        <div class="form-group">
+                            <label for="cvv">CVV</label>
+                            <input id="cvv" type="password" inputmode="numeric" autocomplete="cc-csc" maxlength="4"
+                                v-model="cvv" placeholder="123" required />
+                        </div>
+                    </div>
+
+                    <button type="submit" class="payment-button" :disabled="!buttonenabled">
+                        Pay
+                    </button>
+                </form>
+            </article>
+
+            <article class="step-card overview-card">
+                <header class="card-header">
+                    <h2>Your selection:</h2>
+                    <h2 v-if="selected" class="selected-name">{{ selected.name }}</h2>
+                </header>
+
+                <div v-if="selected" class="overview-content">
+                    <p class="price">
+                        {{ selected.currency }} {{ selected.price.toFixed(2) }}
+                        <span>{{ selected.period }}</span>
+                    </p>
+
+                    <ul class="feature-list">
+                        <li v-for="(f, i) in selected.features" :key="i">
+                            <Check class="feature-icon" />
+                            <span>{{ f }}</span>
+                        </li>
+                    </ul>
                 </div>
 
-                <button type="submit" class="payment-button" :disabled="!buttonenabled">
-                    Pay
-                </button>
-            </form>
-        </article>
-
-        <article class="step-card overview-card">
-            <header class="card-header">
-                <h2>Your selection:</h2>
-                <h2 v-if="selected" class="selected-name">{{ selected.name }}</h2>
-            </header>
-
-            <div v-if="selected" class="overview-content">
-                <p class="price">
-                    {{ selected.currency }} {{ selected.price.toFixed(2) }}
-                    <span>{{ selected.period }}</span>
-                </p>
-
-                <ul class="feature-list">
-                    <li v-for="(f, i) in selected.features" :key="i">
-                        <Check class="feature-icon" />
-                        <span>{{ f }}</span>
-                    </li>
-                </ul>
-            </div>
-
-            <p v-else>No subscription selected.</p>
-        </article>
-    </section>
-    <p class="disclaimer">Feel free to enter any card details — nothing will actually be charged.</p>
+                <p v-else>No subscription selected.</p>
+            </article>
+        </section>
+        <p class="disclaimer">Feel free to enter any card details — nothing will actually be charged.</p>
+    </div>
 </template>
 
 <style scoped>
@@ -254,11 +256,18 @@ const handleRegister = async () => {
     color: var(--accent);
 }
 
+.checkout-wrapper {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: 20px;
+}
+
 .disclaimer {
     text-align: center;
     font-size: 13px;
     font-weight: 600;
     color: rgba(33, 33, 33, 0.45);
-    margin: 20px 0 0;
+    margin: 0;
 }
 </style>
