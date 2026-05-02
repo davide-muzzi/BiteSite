@@ -17,6 +17,7 @@ export default async function request(method, url, data = null) {
   } catch (error) {
     if (!error.response) {
       console.error('Network / CORS error:', error)
+      return { success: false, message: 'Could not reach the server. Please try again.' }
     }
 
     const { status, data: errorData } = error.response

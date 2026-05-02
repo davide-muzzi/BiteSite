@@ -1,6 +1,5 @@
 <script setup>
 import { ref } from 'vue';
-import BackButton from '@/components/BackButton.vue';
 import { login } from "@/api/routes/user.js";
 
 const email = ref('');
@@ -10,150 +9,222 @@ const errorMessage = ref('');
 const handleLogin = async () => {
   const result = await login(email.value, password.value);
 
-  if (result.success) 
+  if (result.success)
     window.location.href = "/projects-overview";
   else
     errorMessage.value = result.message;
 };
-
 </script>
 
 <template>
-  <section class="login-view">
-    <BackButton />
+  <div class="login-page">
 
-    <div class="page-header">
-      <h1>Welcome back</h1>
-      <p>Sign in to continue building and managing your BiteSite presence.</p>
+    <!-- Left branding panel -->
+    <div class="left-panel">
+      <div class="panel-body">
+        <p class="panel-eyebrow">Restaurant website builder</p>
+        <h2 class="panel-headline">Your restaurant's<br />digital home.</h2>
+        <ul class="panel-perks">
+          <li>No coding required</li>
+          <li>Ready-made templates</li>
+          <li>Effortless hosting</li>
+        </ul>
+      </div>
     </div>
 
-    <div class="login-card">
-      <form class="login-form" @submit.prevent="handleLogin">
-        <div class="form-group">
-          <label for="email">E-Mail</label>
-          <input id="email" type="email" v-model="email" placeholder="E-Mail..." required />
-        </div>
+    <!-- Right form panel -->
+    <div class="right-panel">
+      <div class="form-wrap">
+        <p class="eyebrow">Welcome back</p>
+        <h1>Sign in</h1>
+        <p class="sub">Don't have an account? <RouterLink to="/register">Register</RouterLink></p>
 
-        <div class="form-group">
-          <label for="password">Password</label>
-          <input id="password" type="password" v-model="password" placeholder="Password..." required />
-        </div>
+        <form class="login-form" @submit.prevent="handleLogin">
+          <div class="form-group">
+            <label for="email">E-Mail</label>
+            <input id="email" type="email" v-model="email" placeholder="you@example.com" required />
+          </div>
 
-        <button type="submit" class="login-button">
-          Login
-        </button>
-      </form>
+          <div class="form-group">
+            <label for="password">Password</label>
+            <input id="password" type="password" v-model="password" placeholder="••••••••" required />
+          </div>
 
-      <p class="register-text">
-        Don't have an account?
-        <RouterLink to="/register">Register</RouterLink>
-      </p>
-      <div class="error-message" v-if="errorMessage">{{ errorMessage }}</div>
+          <button type="submit" class="login-button">Sign in</button>
+        </form>
+
+        <div class="error-message" v-if="errorMessage">{{ errorMessage }}</div>
+      </div>
     </div>
-  </section>
+
+  </div>
 </template>
 
 <style scoped>
-.login-view {
-  min-height: calc(100vh - 160px);
-  padding: 42px 78px 80px;
-  background: var(--background);
+.login-page {
+  display: flex;
+  min-height: calc(100vh - 72px);
   font-family: var(--font);
-  color: var(--font-color-dark-blue);
-  box-sizing: border-box;
 }
 
-.page-header {
-  margin: 32px auto;
-  max-width: 520px;
-  text-align: center;
-}
-
-.page-header h1 {
-  margin: 0 0 6px;
-  font-size: 48px;
-  font-weight: 800;
-}
-
-.page-header p {
-  margin: 0;
-  font-size: 18px;
-  color: rgba(32, 32, 32, 0.65);
-  font-weight: 600;
-}
-
-.login-card {
-  width: 100%;
-  max-width: 520px;
-  margin: 0 auto;
-  background: white;
-  border-radius: 28px;
-  padding: 40px 48px 48px;
-  box-shadow: 0 28px 60px rgba(49, 38, 110, 0.12);
+/* ── Left panel ── */
+.left-panel {
+  flex: 0 0 420px;
+  background: #1b133d;
+  color: white;
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  padding: 48px 52px;
+  gap: 0;
+}
+
+.panel-body {
+  margin-top: auto;
+  margin-bottom: auto;
+}
+
+.panel-eyebrow {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.5);
+  margin: 0 0 20px;
+}
+
+.panel-headline {
+  font-size: clamp(28px, 2.5vw, 40px);
+  font-weight: 800;
+  line-height: 1.15;
+  margin: 0 0 36px;
+}
+
+.panel-perks {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.panel-perks li {
+  font-size: 15px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.75);
+  padding-left: 20px;
+  position: relative;
+}
+
+.panel-perks li::before {
+  content: '—';
+  position: absolute;
+  left: 0;
+  color: var(--accent);
+}
+
+/* ── Right panel ── */
+.right-panel {
+  flex: 1;
+  background: var(--background);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 48px;
+}
+
+.form-wrap {
+  width: 100%;
+  max-width: 440px;
+}
+
+.eyebrow {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin: 0 0 12px;
+}
+
+h1 {
+  font-size: clamp(32px, 3vw, 44px);
+  font-weight: 800;
+  color: var(--font-color-dark-blue);
+  margin: 0 0 8px;
+}
+
+.sub {
+  font-size: 15px;
+  color: #6b6b8a;
+  font-weight: 600;
+  margin: 0 0 36px;
+}
+
+.sub a {
+  color: var(--font-color-dark-blue);
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.sub a:hover {
+  text-decoration: underline;
 }
 
 .login-form {
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 20px;
 }
 
 .form-group label {
   display: block;
-  font-size: 18px;
+  font-size: 15px;
   font-weight: 700;
-  margin-bottom: 10px;
+  color: var(--font-color-dark-blue);
+  margin-bottom: 8px;
 }
 
 .form-group input {
   width: 100%;
-  height: 64px;
+  height: 56px;
   border-radius: 999px;
   border: none;
-  background: #f9f6f1;
-  padding: 0 28px;
+  background: white;
+  padding: 0 24px;
   font-family: var(--font);
-  font-size: 18px;
-  font-weight: 600;
+  font-size: 16px;
+  font-weight: 500;
   color: #2b2b2b;
   box-sizing: border-box;
+  box-shadow: 0 2px 8px rgba(49, 38, 110, 0.07);
 }
 
 .login-button {
   width: 100%;
-  height: 64px;
+  height: 56px;
   border-radius: 999px;
   border: none;
-  background-color: var(--accent);
+  background: var(--accent);
   color: white;
-  font-size: 18px;
+  font-family: var(--font);
+  font-size: 17px;
   font-weight: 700;
   cursor: pointer;
+  margin-top: 8px;
   transition: background 0.2s ease, transform 0.2s ease;
 }
 
 .login-button:hover {
-  background-color: var(--button-hover-color);
+  background: var(--button-hover-color);
   transform: translateY(-2px);
-}
-
-.register-text {
-  text-align: center;
-  font-size: 16px;
-  font-weight: 600;
-}
-
-.register-text a {
-  color: var(--font-color-dark-blue);
-  font-weight: 800;
 }
 
 .error-message {
   margin-top: 16px;
-  color: red;
+  color: var(--accent);
+  font-size: 14px;
+  font-weight: 600;
   text-align: center;
 }
 </style>
