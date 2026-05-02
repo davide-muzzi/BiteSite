@@ -33,10 +33,7 @@ onMounted(async () => {
     </div>
     <div class="hero-visual">
       <div class="hero-image-frame">
-        <!-- Replace this div with <img src="..." alt="..." /> once you have the image -->
-        <div class="hero-image-placeholder">
-          <span>Add your image here</span>
-        </div>
+        <img src="@/assets/homepage_image.png" alt="Restaurant website preview" />
       </div>
     </div>
   </section>
@@ -164,23 +161,15 @@ onMounted(async () => {
 .hero-image-frame {
   width: 100%;
   max-width: 540px;
-  aspect-ratio: 16 / 10;
   border-radius: 16px;
   overflow: hidden;
   box-shadow: 0 32px 80px rgba(49, 38, 110, 0.15);
 }
 
-.hero-image-placeholder {
+.hero-image-frame img {
   width: 100%;
-  height: 100%;
-  background: linear-gradient(135deg, var(--card-color) 0%, #ffd6b0 100%);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #b08060;
-  font-family: var(--font);
-  font-size: 15px;
-  font-weight: 600;
+  height: auto;
+  display: block;
 }
 
 /* ── Buttons ── */
