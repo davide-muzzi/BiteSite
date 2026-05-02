@@ -90,7 +90,10 @@ export async function createProject(req, res) {
   );
 
   const projectInsert = await safeOperation(
-    () => db.run("insert into projects (name, website, fk_user_id) values (?,?,?)", [name, JSON.stringify(template), req.session.user.id]),
+    () => db.run(
+      "insert into projects (name, website, website_title, website_route, fk_user_id) values (?,?,?,?,?)",
+      [name, JSON.stringify(template), title.trim(), route.trim(), req.session.user.id]
+    ),
     "Error while inserting project into database"
   );
 
