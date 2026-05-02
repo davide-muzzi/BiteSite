@@ -210,7 +210,7 @@ onMounted(async () => {
                     Open in editor
                 </button>
 
-                <button class="main-btn" @click="router.push(`/${1}/newsletter`)">
+                <button class="main-btn" @click="router.push(`/${projectId}/newsletter`)">
                     <Mail class="icon" />
                     Manage Newsletter
                 </button>
