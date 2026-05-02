@@ -1,3 +1,5 @@
+const apiUrl = import.meta.env.VITE_API_URL || '';
+
 const html = [
   '<div class="subscribe-container">',
     '<div class="subscribe-heading">§subscribe-heading§</div>',
@@ -12,7 +14,7 @@ const html = [
   'var inp=btn.previousElementSibling;',
   'if(!inp.value||!inp.value.includes(\'@\')){inp.style.outline=\'2px solid red\';return;}',
   'inp.style.outline=\'\';btn.disabled=true;',
-  'fetch(\'/restaurants/newsletter/subscribe\',{method:\'POST\',headers:{\'Content-Type\':\'application/json\'},body:JSON.stringify({email:inp.value,projectId:id})})',
+  `fetch('${apiUrl}/restaurants/newsletter/subscribe',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:inp.value,projectId:id})})`,
   '.then(function(r){return r.json();})',
   '.then(function(d){btn.textContent=d.success?\'Subscribed!\':d.message;})',
   '.catch(function(){btn.textContent=\'Try again\';btn.disabled=false;});}}',
