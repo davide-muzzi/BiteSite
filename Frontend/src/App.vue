@@ -6,6 +6,7 @@ import Footer from './components/Footer.vue';
 
 const route = useRoute();
 const isWebsite = computed(() => route.name === 'restaurant');
+const isEditor = computed(() => route.name === 'editor');
 </script>
 
 <template>
@@ -21,7 +22,7 @@ const isWebsite = computed(() => route.name === 'restaurant');
     </div>
   </div>
 
-  <div class="site-wrapper">
+  <div class="site-wrapper" :class="{ 'site-wrapper--editor': isEditor }">
     <NavBar v-if="!isWebsite" />
     <div class="router-wrapper">
       <RouterView />
@@ -36,6 +37,9 @@ const isWebsite = computed(() => route.name === 'restaurant');
   flex-direction: column;
   justify-content: space-between;
   min-height: 100%;
+}
+
+.site-wrapper--editor {
   gap: 10px;
 }
 
