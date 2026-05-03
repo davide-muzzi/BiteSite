@@ -145,6 +145,7 @@ const handleRegister = async () => {
     display: flex;
     flex-direction: column;
     gap: 18px;
+    flex: 1;
 }
 
 .form-group {
@@ -181,7 +182,7 @@ const handleRegister = async () => {
     height: 60px;
     border-radius: 999px;
     border: none;
-    margin-top: 8px;
+    margin-top: auto;
     background-color: var(--accent);
     color: #fff;
     font-size: 18px;
