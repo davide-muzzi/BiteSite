@@ -200,3 +200,9 @@ SQLite file is created automatically on first run via `setup.js`. Tables:
 - `reservations` — booking requests with status tracking
 - `newsletter_subscribers` — opt-in email list per project
 - `tags` / `project_tags` — category tags with many-to-many relation
+
+---
+
+## Note
+
+There are currently known bugs still living inside the code. Please check the list of open issues, and report any unlisted bugs.
